@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# DAW / audio (adjust for your DAW)
+*.peak
+*.reapeaks
+*.asd
+*.cfa
+*.pek
+
+# Bounces / exports can be huge — uncomment to ignore, or track selectively
+# bounces/
+# exports/
+
+# Env / secrets
+.env
+.env.*
