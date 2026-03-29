@@ -1,0 +1,7 @@
+Mic pre cell — three hardware-style controls (concept)
+-------------------------------------------------------
+1. 48V     — phantom on/off (knob + LED state)
+2. HPF     — high-pass: knob selects corner frequency (e.g. Off / 40 / 80 / 120 Hz — set in product spec)
+3. Phase   — polarity invert (often labeled Ø or PHASE; 180° — not 90° unless you add that later)
+
+Rendered mockup: system_q_mic_pre_visual.png
