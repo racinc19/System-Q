@@ -53,15 +53,27 @@ def main() -> None:
         Z,
         cmap="inferno",
         shading="auto",
-        alpha=0.92,
+        alpha=0.88,
     )
     pcm.set_clim(0, 1)
-    ax.plot(theta_c, r_c, color="white", linewidth=1.1, alpha=0.9)
 
-    # GATE — only perfect circle on the plot
-    gate_r = 0.68
+    # Mic pre "closing down": RED in the annulus between Gate (inside) and outer polar edge.
+    # Outer rim of the polarity graph = red (was white) — shows energy to tame.
+    gate_r = 0.50  # tighter = more "closed down" vs typical blob max ~0.9x
+    ax.fill_between(
+        theta,
+        gate_r,
+        r,
+        where=(r > gate_r),
+        color="#dc2626",
+        alpha=0.62,
+        interpolate=True,
+    )
+    ax.plot(theta_c, r_c, color="#b91c1c", linewidth=2.8, alpha=0.95, solid_capstyle="round")
+
+    # GATE — perfect circle; smaller so it visually closes off / contains the red ring
     tg = np.linspace(0, 2 * np.pi, 720)
-    ax.plot(tg, np.full_like(tg, gate_r), color="#00e5ff", linewidth=2.4, alpha=0.95)
+    ax.plot(tg, np.full_like(tg, gate_r), color="#22d3ee", linewidth=2.8, alpha=0.98)
 
     ax.set_ylim(0, 1.0)
     ax.set_yticklabels([])
