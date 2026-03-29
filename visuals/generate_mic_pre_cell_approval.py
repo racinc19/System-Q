@@ -1,6 +1,8 @@
 """
-Single CH01 approval: irregular polar balloon (NOT a perfect circle) + Gate (perfect circle only)
-+ three distinct knob treatments: 48V (green + tick), HPF (amber + freq ticks), Ø (cool minimal).
+Single CH01 approval: irregular polar + Gate + flat face-on indicators (no perspective knobs).
+- 48 VOLT: red text = ON
+- HPF: green shelf curve (high-pass shelf graphic)
+- Phase: yellow Ø (circle with slash), face-on
 525 x 450 @ 300 DPI for Fusion decal sizing.
 """
 from __future__ import annotations
@@ -9,6 +11,7 @@ import math
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 import numpy as np
 
 W_PX, H_PX = 525, 450
@@ -83,36 +86,58 @@ def main() -> None:
     fig.patch.set_facecolor("#070a0f")
     ax.set_facecolor("#070a0f")
 
-    ax_k = fig.add_axes([0.06, 0.04, 0.88, 0.14])
+    # Bottom strip: all face-on — no rotary knobs; flat icons + text
+    ax_k = fig.add_axes([0.04, 0.02, 0.92, 0.16])
     ax_k.set_xlim(0, 1)
     ax_k.set_ylim(0, 1)
     ax_k.axis("off")
     ax_k.set_facecolor("#070a0f")
 
-    positions = [0.17, 0.5, 0.83]
-    labels = ["48V", "HPF", "Ø"]
-    styles = [
-        {"edge": "#4ade80", "face": "#14532d"},
-        {"edge": "#fbbf24", "face": "#422006"},
-        {"edge": "#94a3b8", "face": "#1e293b"},
-    ]
+    # 1) 48 VOLT — red = ON (face-on typography)
+    ax_k.text(
+        0.17,
+        0.58,
+        "48 VOLT",
+        ha="center",
+        va="center",
+        color="#ef4444",
+        fontsize=13,
+        fontweight="bold",
+    )
+    ax_k.text(0.17, 0.22, "ON", ha="center", va="center", color="#ef4444", fontsize=9, alpha=0.9)
 
-    for x, lab, st in zip(positions, labels, styles):
-        circ = plt.Circle((x, 0.5), 0.12, facecolor=st["face"], edgecolor=st["edge"], linewidth=2.2)
-        ax_k.add_patch(circ)
-        ax_k.text(x, 0.5, lab, ha="center", va="center", color="#f1f5f9", fontsize=9, fontweight="bold")
-        # Tick marks — 48V few, HPF more (freq steps feel), Ø minimal
-        n_ticks = 4 if lab == "48V" else (12 if lab == "HPF" else 0)
-        for k in range(n_ticks):
-            ang = 2 * math.pi * k / n_ticks
-            r1, r2 = 0.085, 0.12
-            ax_k.plot(
-                [x + r1 * math.cos(ang), x + r2 * math.cos(ang)],
-                [0.5 + r1 * math.sin(ang), 0.5 + r2 * math.sin(ang)],
-                color=st["edge"],
-                lw=0.85,
-                alpha=0.75,
-            )
+    # 2) HPF — green shelf response (low freqs down, highs flat), face-on plot in center column
+    t = np.linspace(0, 1, 48)
+    # Shelf: low attenuation on left (low freq), rises to unity on right — classic HPF magnitude sketch
+    resp = np.empty_like(t, dtype=float)
+    m = t < 0.22
+    resp[m] = 0.08 + 0.1 * (t[m] / 0.22)
+    resp[~m] = 0.18 + 0.82 * ((t[~m] - 0.22) / (1 - 0.22)) ** 0.85
+    resp = np.clip(resp, 0, 1)
+    x_line = 0.36 + t * 0.28
+    y_line = 0.18 + resp * 0.68
+    ax_k.plot(x_line, y_line, color="#22c55e", linewidth=2.8, solid_capstyle="round")
+    ax_k.plot([0.36, 0.64], [0.18, 0.18], color="#14532d", linewidth=1.0, alpha=0.5)
+    ax_k.text(0.5, 0.92, "HPF", ha="center", va="top", color="#22c55e", fontsize=9, fontweight="bold")
+
+    # 3) Phase — yellow circle with diagonal (polarity invert), face-on
+    cx, cy, rad = 0.83, 0.48, 0.095
+    circ = mpatches.Circle(
+        (cx, cy),
+        rad,
+        fill=False,
+        edgecolor="#eab308",
+        linewidth=2.6,
+    )
+    ax_k.add_patch(circ)
+    ax_k.plot(
+        [cx - rad * 0.72, cx + rad * 0.72],
+        [cy + rad * 0.72, cy - rad * 0.72],
+        color="#eab308",
+        linewidth=2.4,
+        solid_capstyle="round",
+    )
+    ax_k.text(cx, 0.1, "PHASE", ha="center", va="bottom", color="#eab308", fontsize=8, fontweight="bold")
 
     fig.savefig(OUT, dpi=DPI, facecolor="#070a0f", edgecolor="none", pad_inches=0.05)
     plt.close()
