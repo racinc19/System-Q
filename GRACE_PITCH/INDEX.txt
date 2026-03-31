@@ -1,0 +1,36 @@
+GRACE DESIGN PITCH — PACKAGE INDEX
+==================================
+Folder: recording-environment\GRACE_PITCH\
+
+IN THIS FOLDER (copies / drafts for meetings)
+---------------------------------------------
+  PRODUCT_DESCRIPTION_GRACE_DRAFT.txt  — Product narrative for Grace Design (Lyons, CO)
+  CARD_LAYOUT.txt                    — Left cage 6 slots + right zone (same as house repo ref)
+  REMOTE_CONTROL_spec.txt             — Central surface, faders, parameter strip, scribble
+
+ELSEWHERE IN recording-environment (not duplicated here — use repo paths)
+-------------------------------------------------------------------------
+  html\SPEC_BOM_LEFT.html, html\SPEC_BOM_RIGHT.html  — Faceplate BOM / spec (browser)
+  html\VISUAL_CUBE_ENTRY_LEVEL.html  — Entry-level cube line (USB → analog cubes → knob / soft fader / transport)
+  html\SPEC_BOM_CUBE_ENTRY.html, GRACE_PITCH\CUBE_ENTRY_BOM_PRICING.xlsx  — Cube entry BOM + pricing
+  html\LEFT_UNIT_CANVAS.html
+  cad\system_q_left_rack.py, cad\system_q_left_rack.step
+  cad\system_q_left_rack_slideout.py, cad\system_q_left_rack_slideout.step
+  cad\generate_xlr5_male_female_step.py, cad\xlr5_male_panel.step, cad\xlr5_female_panel.step
+  cad\generate_rj45_step.py, cad\rj45_panel_jack.step
+  visuals\  — Console PNG builds, cells, full console art under visuals\Console\
+  TXT\      — Extra notes (SCREEN_PASTE_SIZE, PARAMETER_STRIP_3D_PLACEMENT, etc.)
+
+  Repo root PNGs / generators: generate_parameter_select_strip.py, visuals/STRIP_GRID_12x6_*.png,
+  visuals/STRIP_LABELS_REC_PRE_HARM_COMP_EQ_SHAPE.png,
+  PARAMETER_SELECT_COVER.png, PARAMETER_SELECT_STRETCH.png, etc.
+
+HOUSE REPO (Rodriquez) — optional cross-reference
+-------------------------------------------------
+  CARD_LAYOUT and PCB_card_layout_plan.txt may also live under the construction project
+  copy; GRACE_PITCH\CARD_LAYOUT.txt is the recording-console reference.
+
+BOM / PRICING EXPORTS
+---------------------
+  LEFT_RACK_BOM_PRICING.xlsx
+  RACKS_BOM_PRICING_COMBINED.xlsx

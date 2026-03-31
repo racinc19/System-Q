@@ -1,0 +1,136 @@
+REMOTE CONTROL SURFACE — FUNCTIONAL SPEC (living document)
+==========================================================
+
+MECHANICAL / FACE (industrial)
+------------------------------
+  • **Touch screen** — primary operator face (UI + touch targets for strips, etc.).
+  • **19" class** front — rack-style width; overall height per mechanical (TBD in CAD).
+  • **Enclosure:** Sleek **see-through** case; **LED** accent lighting; **dark acrylic** theme.
+  • **I/O on the side:** **12** × **mic/line** inputs, **gold-plated** connectors (layout on side panel).
+
+
+OVERVIEW (from prior notes)
+---------------------------
+  • **Control philosophy:** **Digital control of analog components** — touch, 6-DOF knob, and encoders are
+    the interface; the **audio path is analog**, not a menu of “firmware features.”
+  • 13 faders (1 master + 12 channels), transport + automation left, 6-DOF knob = universal controller.
+  • Encoder above each fader: **motorized** (physical angle = value); default pan; send layers
+    Send 1, Send 2, … — **tap / push the encoder** (integral push switch) to step or pick layer;
+    when layer changes, **all 13 encoders move** to match stored levels for that layer.
+  • Touch scribble strip: tap mute / double solo / return open; colors red / yellow / open;
+    **voice naming** — you can **name / label channels by voice** on the scribble strip.
+  • **Long press on the scribble strip touchscreen is disabled for record** — record is **not**
+    mapped to long-press on the strip (no arm/start take from long-press; avoids accidental
+    recording).
+  • Mic on unit: voice to strip + talkback.
+  • Right-hand **analog** controls (3×3 grid of **gold** knobs + monitor + bottom trio), CAD layout:
+      **Top row (3):** **headphone trims** (3).
+      **Middle row (3):** **output trims** (3) — speakers / mains.
+      **Bottom row of grid (3):** **input trims** (3).
+      **Large monitor knob:** main monitor level — **tap to mute**, tap again to unmute.
+      **Below that — 3 small gold knobs:** **talkback** · **mute** · **fine trim** (not fader mutes).
+      All of these knobs are **analog**. Same **backlit LED black acrylic** chassis as the racks.
+
+
+PARAMETER SELECT STRIP (touch) — layout like a **console channel strip** (not a single row of
+left‑to‑right stage buttons)
+----------------------------------------------------------------------
+  • **12 vertical columns** (one per channel), aligned above the faders / encoders. **Each**
+    column is a **stack of horizontal bands**, **top → bottom** in the **same order as the
+    rack stages** (see CARD_LAYOUT.txt + central controller spec): **REC** (top), **Preamp**,
+    **Harmonics**,
+    **Compressor**, **Equalizer**, **Transient design**, **Effects** (saturation / exciter / transient
+    region) (bottom). **EQ** must appear between **Comp** and **Transient** (was missing on early
+    UI). Converter / digital bridge is rack-side, not repeated as a strip row on the central
+    surface unless you add it deliberately.
+  • Each band is **not** just a label: it shows a **live miniature** of the **same UI you
+    have on the main console** for that stage — **shrunk** to fit the strip (e.g. tiny EQ
+    curve, comp GR meter, pre gain arc, harmonic drive bars, dry/wet, A/D levels). Touch
+    targets **read** like the real processor; values **update** from DSP so you see state at
+    a glance before you arm/edit.
+  • **One touch** on a band arms **that channel + that stage** (e.g. EQ on ch 3 = tap the
+    **Equalizer** band in column 3). No separate “select channel then select stage.”
+  • Bands stay **color-coded** by stage type; **graphics** carry the useful information, not
+    only text.
+  • **CAD / texture sizing (Blender or build):** The parameter-strip image is **not** a small
+    centered tile. It must **fill the entire active touch area** on the white panel and **line
+    up 1:1** with the **12 channel columns** below (knobs + faders). Same **width** as the
+    combined strip width; **column edges** in the texture align with **encoder** centers
+    (or fader slot centers). If the texture is the wrong pixel size or mapped as a tiny
+    centered quad, touch and visuals will not match hardware — **author the bitmap at the
+    resolution and aspect of the UV quad** (or give the generator **width × height** in
+    pixels from CAD). **Optional:** note **mm** size of the glass/touch opening for documentation.
+  • **Content:** **`PARAMETER_SELECT_COVER.png`** and **`PARAMETER_SELECT_STRETCH.png`**
+    (repo **root**) from **`FULL_CONSOLE_source.png`** / **`visuals/Console/FULL_CONSOLE_source.png`** —
+    **STRETCH** = warped to the full rectangle; **COVER** = cropped to aspect.
+    via **`generate_parameter_select_strip.py`**. Default is **cover + center crop**: scale the source
+    so the **372.293 × 51.308 mm** canvas (at **DPI**) is **fully filled** — no black letterbox bars; aspect
+    preserved; excess crops off the sides or top/bottom. Optional **`--letterbox`** = old shrink‑only +
+    black bars. **`--stretch`** = non‑uniform stretch (avoid unless needed).
+  • Motorized encoders + **6-DOF knob** edit the **armed** channel + stage on the **focus screen**.
+
+
+PARAMETER SELECTION (what the 6-DOF knob / encoders / display target)
+----------------------------------------------------------------
+  **Primary:** the **parameter select strip** (above). Each channel column has **stacked
+  horizontal bands** (console-style), **one band per** rack stage; **one tap** arms
+  **channel + stage** for the 6-DOF knob / encoders / focus screen.
+
+  Order matches **CARD_LAYOUT.txt** (left cage). The strip **mirrors** the big-console
+  controls in **mini form** (same parameters, same visual language) — **not** a two-step
+  “pick channel, then pick stage” elsewhere.
+
+  **Group / Bank 1 / Bank 2** (if present) may mean **group** master vs **two banks of layers**
+  for the same faders — **exact meaning** is fixed when you map DSP; those may be extra pads
+  on the strip or tied to swipe / bank keys.
+
+  **Secondary (optional):** soft keys, voice, or OLED labels can mirror or override armed
+  stage — **not** required for basic operation if every stage has a pad on the strip.
+
+  OLED / scribble can still show **current armed stage** next to the channel name. 6-DOF knob +
+  encoders apply to **armed channel + armed stage** until another strip pad is touched.
+
+
+SCRIBBLE STRIP — SWIPE TO MOVE FADERS / BANKS
+----------------------------------------------
+  In addition to **tap** (mute/solo) and **bank select buttons**:
+
+    • **Swipe** horizontally on the scribble strip (per strip or one long strip) to **shift
+      which channels or layers** the 12 faders control — i.e. **scroll the bank** without
+      only using physical “bank up/down” keys.
+
+    • Goal: **don’t have to hunt for bank buttons** — swipe is a fast alternative; **bank
+      selection controls remain** for explicit jumps.
+
+  Details to lock in routing / UX:
+    • Swipe **left** = previous bank / earlier channels; swipe **right** = next bank.
+    • Whether swipe is **global** (one gesture moves all 12 mappings) or **per-strip** —
+      user intent sounds like **one gesture moves the whole layer** (like scrolling a mixer page).
+    • Debounce vs tap: **short swipe** vs **tap** must not misfire mute/solo.
+
+
+INTEGRATION WITH PARAMETER SELECT
+----------------------------------
+  When user selects **Mic Pre** (etc.), the 6-DOF knob edits preamp gain / HPF / polarity — whatever that
+  stage exposes. Same for **Harmonics**, **Compressor**, **Transient**, **Exciter**.
+
+
+CONTROL LINK / NETWORK (controller transport)
+---------------------------------------------
+  • Primary controller link is **wired network** (Cat6 / Ethernet) to the control service.
+  • No wireless control path is required for normal operation.
+  • Audio conversion paths remain in rack hardware; the controller network carries control/state,
+    metering state, and UI synchronization.
+  • If a direct host tether is needed for service/setup, use a dedicated wired link (USB/Ethernet
+    per final hardware), but runtime control remains on the wired control network.
+
+  **Bank 1 / Bank 2** under **Group** may switch **which set of sends or VCAs** the faders
+  address — coordinate with **swipe** so bank buttons, swipe, and **parameter stage** stay
+  consistent on the display.
+
+
+OPEN ITEMS
+----------
+  • Exact list of **Exciter** and **Group** parameters on the 6-DOF knob.
+  • Whether **master fader** participates in swipe banking or stays fixed.
+  • Voice commands vs touch priority when both fire.

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Central controller — spec (visual)</title>
+  <style>
+    :root {
+      --bg: #0c1220;
+      --panel: #141c2e;
+      --border: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #c4a35a;
+      --accent2: #38bdf8;
+      --gold: #d4a574;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 1.25rem 1.5rem 2.5rem;
+      max-width: 52rem;
+      margin-inline: auto;
+      line-height: 1.45;
+    }
+    header { margin-bottom: 1.25rem; }
+    .badge {
+      display: inline-block;
+      background: #3d2e1a;
+      color: var(--gold);
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.35rem; font-weight: 700; margin: 0 0 0.35rem; letter-spacing: 0.02em; }
+    .lead { color: var(--muted); font-size: 0.92rem; margin: 0; max-width: 46rem; }
+    .flow-note {
+      margin-top: 1rem;
+      padding: 0.65rem 0.85rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .flow-note strong { color: var(--accent2); font-weight: 600; }
+    .rack {
+      margin-top: 1.25rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #0a1018;
+    }
+    .rack-cap {
+      background: linear-gradient(180deg, #1a2332 0%, #121a28 100%);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .face-row {
+      display: grid;
+      grid-template-columns: 9.5rem 1fr;
+      gap: 0.75rem 1rem;
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .face-row:last-child { border-bottom: none; }
+    .face-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent2);
+      padding-top: 0.1rem;
+    }
+    .face-value { font-size: 0.84rem; color: #cbd5e1; }
+    .face-value strong { color: var(--text); font-weight: 600; }
+    .gold { color: var(--gold); }
+    .section-label {
+      margin-top: 1.5rem;
+      margin-bottom: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    footer {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    @media (max-width: 640px) {
+      .face-row { grid-template-columns: 1fr; }
+    }
+    .nav { font-size: 0.8rem; margin-bottom: 1rem; }
+    .nav a { color: var(--accent2); }
+  </style>
+</head>
+<body>
+  <p class="nav">
+    <a href="VISUAL_LEFT_RACK.html">← Left rack</a>
+    &nbsp;·&nbsp;
+    <a href="VISUAL_RIGHT_RACK.html">Right rack →</a>
+    &nbsp;·&nbsp;
+    <a href="VISUAL_CUBE_ENTRY_LEVEL.html">Cube entry line →</a>
+  </p>
+
+  <header>
+    <span class="badge">CENTRAL CONTROLLER</span>
+    <h1>Wedge surface — faders, strips, 6-DOF knob, monitors</h1>
+    <p class="lead">
+      <strong>13 motorized faders</strong>: <strong>12</strong> line up with the analog output / summing and monitoring
+      section; <strong>1</strong> master. Faders track the DAW. Above each fader: a <strong>motorized encoder</strong>
+      for the <strong>12 outputs and pan</strong> (plus the master strip as designed). <strong>Push</strong> an
+      encoder to choose the send layer: e.g. push encoder <strong>1</strong> — all sends use <strong>send 1</strong>;
+      push encoder <strong>2</strong> — all sends use <strong>send 2</strong>, and so on.
+    </p>
+    <p class="flow-note">
+      <strong>Digital control, analog path:</strong> Touch and 6-DOF knob are <strong>digital control for analog
+      components</strong> — not a “firmware feature list.” The audio chain stays <strong>analog</strong>; the
+      screens set what the hardware does.
+    </p>
+    <p class="flow-note">
+      <strong>Parameter focus:</strong> When you pick a stage on the main touch grid, detail concentrates on the
+      <strong>smaller touchscreen to the right</strong> (above the control knob). The <strong class="gold">gold 6-DOF knob</strong>
+      is <strong>SpaceMouse-style</strong> parameter control for whatever stage is armed.
+    </p>
+  </header>
+
+  <p class="section-label">Face &amp; materials (same line as racks)</p>
+  <div class="rack" role="region" aria-label="Central controller enclosure">
+    <div class="rack-cap"><span>Chassis</span><span>backlit · acrylic · gold</span></div>
+    <div class="face-row">
+      <div class="face-label">Enclosure</div>
+      <div class="face-value"><strong>Backlit LED</strong> · <strong>black acrylic</strong> · <strong>see-through</strong> — same language as the left and right rack units.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Hardware</div>
+      <div class="face-value"><span class="gold">Gold</span>-finished knobs and the parameter <span class="gold">6-DOF knob</span> (polished gold / brass family).</div>
+    </div>
+  </div>
+
+  <p class="section-label">Main touchscreen (above faders &amp; encoders)</p>
+  <div class="rack" aria-label="Main parameter touch area">
+    <div class="rack-cap"><span>12 columns</span><span>one touch = channel + stage</span></div>
+    <div class="face-row">
+      <div class="face-label">What it does</div>
+      <div class="face-value">
+        This touch area selects which part of the analog chain you’re editing, per channel, in stack order:
+        <strong>REC</strong> · <strong>mic pre</strong> · <strong>harmonics</strong> · <strong>compressor</strong> · <strong>equalizer</strong> ·
+        <strong>transient design</strong> · <strong>effects</strong>. Stage definitions match the left rack —
+        not re-described here.
+      </div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Record location</div>
+      <div class="face-value"><strong>Record is on the main 12-column touchscreen strip</strong> (REC row per channel), not on scribble long-press.</div>
+    </div>
+  </div>
+
+  <p class="section-label">Left edge — transport &amp; automation</p>
+  <div class="rack">
+    <div class="rack-cap">Vertical touch strip</div>
+    <div class="face-row">
+      <div class="face-label">Transport</div>
+      <div class="face-value"><strong>Touchscreen</strong> — rewind, fast-forward, stop, play, record (standard transport cluster).</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Automation</div>
+      <div class="face-value">Icons / modes for <strong>automation</strong> and routing aids on the same left strip (layout per CAD).</div>
+    </div>
+  </div>
+
+  <p class="section-label">Scribble strip (below faders)</p>
+  <div class="rack">
+    <div class="rack-cap">Touch scribble · per-channel</div>
+    <div class="face-row">
+      <div class="face-label">Voice naming</div>
+      <div class="face-value">You can <strong>name channels by voice</strong> — assign / edit scribble labels with voice (in addition to touch).</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Bank</div>
+      <div class="face-value"><strong>Swipe</strong> horizontally to move fader banks / layers.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Mute / solo</div>
+      <div class="face-value"><strong>Single tap</strong> — mute. <strong>Double tap</strong> — solo. Tap again to release (same strip).</div>
+    </div>
+  </div>
+
+  <p class="section-label">Right — focus screen, 6-DOF knob, monitor controls</p>
+  <div class="rack">
+    <div class="rack-cap">Small touchscreen · 6-DOF knob · trims · monitor</div>
+    <div class="face-row">
+      <div class="face-label">Focus LCD</div>
+      <div class="face-value">Smaller <strong>touchscreen</strong> above the 6-DOF knob — shows the focused parameters for whichever rack stage you selected on the main grid.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">6-DOF knob</div>
+      <div class="face-value">Large <span class="gold">gold</span> SpaceMouse-style knob — <strong>6‑DOF parameter control</strong>; primary edit surface when a stage is armed.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">3×3 trims</div>
+      <div class="face-value">
+        <strong>Top row:</strong> 3× <strong>headphone trims</strong> ·
+        <strong>Middle row:</strong> 3× <strong>output trims</strong> ·
+        <strong>Bottom row:</strong> 3× <strong>input trims</strong>.
+      </div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Main monitor</div>
+      <div class="face-value">Large <span class="gold">gold</span> monitor level control — <strong>tap to mute</strong> monitor path, <strong>tap again</strong> to unmute.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Bottom trio</div>
+      <div class="face-value">Three small <span class="gold">gold</span> <strong>analog</strong> knobs: <strong>talkback</strong> · <strong>mute</strong> · <strong>fine trim</strong>.</div>
+    </div>
+  </div>
+
+  <p class="section-label">Controller link</p>
+  <div class="rack">
+    <div class="rack-cap">Control transport</div>
+    <div class="face-row">
+      <div class="face-label">Network</div>
+      <div class="face-value"><strong>Wired network (Cat6/Ethernet)</strong> is the primary controller path for control/state sync; no wireless control required.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Runtime role</div>
+      <div class="face-value">Controller link carries control/meter/state data; audio stays in rack conversion/analog paths.</div>
+    </div>
+  </div>
+
+  <footer>
+    Text spec only (no bitmap mock). See <code>GRACE_PITCH/REMOTE_CONTROL_spec.txt</code> ·
+    <a href="VISUAL_LEFT_RACK.html">Left rack</a> ·
+    <a href="VISUAL_RIGHT_RACK.html">Right rack</a>.
+  </footer>
+</body>
+</html>

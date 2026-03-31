@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Full specification &amp; BOM — LEFT</title>
+  <style>
+    :root { --bg: #0c1220; --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8; --border: #334155; }
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, Segoe UI, Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.45; margin: 0; padding: 1.5rem 2rem 3rem; max-width: 56rem; margin-inline: auto; }
+    h1 { font-size: 1.35rem; font-weight: 700; margin: 0 0 0.25rem; letter-spacing: 0.02em; }
+    .side { display: inline-block; background: #1e3a5f; color: #7dd3fc; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.85rem; font-weight: 700; margin-bottom: 1rem; }
+    .meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.05rem; margin: 1.75rem 0 0.6rem; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 0.35rem; }
+    h3 { font-size: 0.95rem; margin: 1rem 0 0.4rem; color: var(--text); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 0.5rem 0 1rem; }
+    th, td { border: 1px solid var(--border); padding: 0.45rem 0.55rem; text-align: left; vertical-align: top; }
+    th { background: #1e293b; color: #cbd5e1; font-weight: 600; }
+    tr:nth-child(even) td { background: rgba(255,255,255,0.03); }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    ul { margin: 0.4rem 0 0.8rem 1.1rem; padding: 0; }
+    li { margin: 0.25rem 0; }
+    .note { color: var(--muted); font-size: 0.85rem; margin-top: 0.35rem; }
+    footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <span class="side">LEFT</span>
+  <h1>Recording console left rack — specification &amp; bill of materials</h1>
+  <p class="meta">Unit: <strong>LEFT</strong> (channel / panel designation). Pair with <code>SPEC_BOM_RIGHT.html</code> for symmetric stereo or dual-mono builds.</p>
+
+  <h2>1. Document control</h2>
+  <table>
+    <tr><th>Field</th><th>Value</th></tr>
+    <tr><td>Title</td><td>Full specification &amp; BOM — LEFT</td></tr>
+    <tr><td>Revision</td><td>0.3</td></tr>
+    <tr><td>Applies to</td><td>LEFT enclosure with 6-slot stack, perforated slide-out rear panel, side cable routing, split power rails</td></tr>
+  </table>
+
+  <h2>2. Mechanical — left rack enclosure</h2>
+  <table>
+    <tr><th>Parameter</th><th>Value</th></tr>
+    <tr><td>Rack shell width</td><td>495.3 mm (19.5 in)</td></tr>
+    <tr><td>Rack shell height</td><td>266.7 mm (6U class)</td></tr>
+    <tr><td>Rack shell depth</td><td>304.8 mm (12 in)</td></tr>
+    <tr><td>Wall thickness</td><td>3.0 mm</td></tr>
+    <tr><td>Rear service concept</td><td>Whole perforated rear panel slides out on side rails; captive screw lock + pull handle</td></tr>
+    <tr><td>Cable routing</td><td>Side channels reserved for harnessing; tie tabs on both side walls (power on one side, signal on the other)</td></tr>
+    <tr><td>Inter-rack connector concept</td><td>5-pin XLR pair for 2 balanced channel transfer plus RJ45/system link as required</td></tr>
+    <tr><td>Reference STEP</td><td><code>cad/system_q_left_rack_slideout.step</code></td></tr>
+  </table>
+
+  <h2>3. Strip order (top → bottom)</h2>
+  <ol>
+    <li>Mic pre — 48 / PH / TBE (red/green indicators)</li>
+    <li>Harmonic ladder — H2–H6 relative bar display</li>
+    <li>Compressor — polar + oblong rings; ATT/REL/ratio/GR readout; LT / GT / TBE</li>
+    <li>EQ — response curve; LPF / HPF / TBE</li>
+    <li>FX — polar + oblong; TRN / CLR / XCT</li>
+  </ol>
+
+  <h2>4. Per-row artwork files (reference)</h2>
+  <p class="note">Each row is also generated as a separate strip PNG for layout checks (same width × 2.84 in height).</p>
+  <ul>
+    <li><code>mic_pre/MIC_PRE_12CH_19x2.84in_600DPI.png</code></li>
+    <li><code>strip_harmonic_ladder_19x2.84in_600dpi.png</code></li>
+    <li><code>compressor_strip_19x2.84in_600dpi.png</code></li>
+    <li><code>eq_strip_19x2.84in_600dpi.png</code></li>
+    <li><code>strip_fx_19x2.84in_600dpi.png</code></li>
+  </ul>
+
+  <h2>5. Electrical &amp; interface</h2>
+  <table>
+    <tr><th>Item</th><th>LEFT — notes</th></tr>
+    <tr><td>Host connection</td><td>Single USB to host carries bidirectional digital audio (no separate “USB in” / “USB out” cable for normal stereo I/O).</td></tr>
+    <tr><td>Analog I/O</td><td>List mic/line in, line/headphone out, etc. (TBD per PCB).</td></tr>
+    <tr><td>Power architecture</td><td>Split supplies: separate analog rails, digital rails, phantom 48V, and tube rails.</td></tr>
+    <tr><td>Analog rails</td><td>+15V / -15V (target budget 5A per rail for current planning).</td></tr>
+    <tr><td>Digital / control</td><td>+5V (logic/control), optional +12V auxiliaries as needed by cards.</td></tr>
+    <tr><td>Phantom</td><td>+48V rail for mic phantom distribution.</td></tr>
+    <tr><td>Tube bank</td><td>12 × 12AX7: heater rail (12.6V class) + B+ high-voltage rail (target set by final circuit).</td></tr>
+  </table>
+
+  <h2>6. Bill of materials (BOM) — LEFT</h2>
+  <p class="note">Quantities are for one LEFT unit unless noted. Pricing below is budgetary and should be verified at order time.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Qty</th>
+        <th>Designator</th>
+        <th>Description</th>
+        <th>Mfr part #</th>
+        <th>Vendor / notes</th>
+        <th class="num">Unit (USD)</th>
+        <th class="num">Ext (USD)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="num">1</td><td>CH-L</td><td>Left rack enclosure with slide-out rear panel + rails + side cable channels</td><td>Custom fab</td><td>Per <code>cad/system_q_left_rack_slideout.step</code></td><td class="num">450.00</td><td class="num">450.00</td></tr>
+      <tr><td class="num">1</td><td>PSU-24</td><td>AC/DC 24V front-end power supply, enclosed</td><td>Mean Well LRS-150-24</td><td>Main front-end feed for split rail architecture</td><td class="num">32.00</td><td class="num">32.00</td></tr>
+      <tr><td class="num">2</td><td>DC15-A/B</td><td>Isolated DC/DC dual output +15V/-15V modules</td><td>TRACO TEN 40-2415N</td><td>Analog rail generation (multiple modules for current headroom)</td><td class="num">58.00</td><td class="num">116.00</td></tr>
+      <tr><td class="num">1</td><td>PH-48</td><td>48V phantom power module</td><td>FiveFish Phantom Gen</td><td>Mic phantom rail source</td><td class="num">29.00</td><td class="num">29.00</td></tr>
+      <tr><td class="num">12</td><td>V1-V12</td><td>12AX7 / ECC83 dual triode tubes</td><td>JJ ECC83S (or equivalent)</td><td>Shared tube bank for preamp/comp/EQ tube path</td><td class="num">22.00</td><td class="num">264.00</td></tr>
+      <tr><td class="num">12</td><td>SK1-SK12</td><td>Noval 9-pin tube sockets, chassis or PCB mount</td><td>Belton Micalex 9-pin (or equivalent)</td><td>Match mount style to final tube board</td><td class="num">6.50</td><td class="num">78.00</td></tr>
+      <tr><td class="num">1</td><td>HV-B+</td><td>Tube B+ supply assembly (HV transformer/SMPS + rect/filter)</td><td>TBD by tube circuit</td><td>Target 200–300V class, budget placeholder only</td><td class="num">180.00</td><td class="num">180.00</td></tr>
+      <tr><td class="num">1</td><td>HTR-12V</td><td>Tube heater supply, regulated</td><td>TBD by tube circuit</td><td>12.6V class heater rail for 12 tubes</td><td class="num">65.00</td><td class="num">65.00</td></tr>
+      <tr><td class="num">1</td><td>CARD-SET</td><td>6-card electronics set (5 processing + converter)</td><td>Custom</td><td>Prototype estimate for assembled PCB set</td><td class="num">1500.00</td><td class="num">1500.00</td></tr>
+      <tr><td class="num">1</td><td>IO-CONN</td><td>I/O connector set (5-pin XLR male/female, RJ45, TRS, USB, power entry)</td><td>Mixed</td><td>Back/side panel connector hardware</td><td class="num">260.00</td><td class="num">260.00</td></tr>
+      <tr><td class="num">1</td><td>SRV-PNL</td><td>Perforated slide-out rear service panel assembly</td><td>Custom fab</td><td>Panel + rails + captive hardware set</td><td class="num">140.00</td><td class="num">140.00</td></tr>
+      <tr><td class="num">1</td><td>MECH-HW</td><td>Mechanical hardware set (standoffs, screws, rails, handle, tie points)</td><td>Mixed</td><td>Stainless hardware + cable management</td><td class="num">85.00</td><td class="num">85.00</td></tr>
+      <tr><td class="num">1</td><td>FAN-SET</td><td>Cooling set (fans, guards, filters)</td><td>Mixed</td><td>Thermal control for tube + PSU zones</td><td class="num">95.00</td><td class="num">95.00</td></tr>
+      <tr><td class="num">1</td><td colspan="5"><strong>Estimated subtotal (one LEFT rack)</strong></td><td class="num"><strong>3,294.00</strong></td></tr>
+    </tbody>
+  </table>
+
+  <footer>
+    Generated for Rodriquez / recording-environment visuals. Update revision when BOM is finalized.
+  </footer>
+</body>
+</html>

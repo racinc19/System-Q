@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cube entry system — signal flow (visual)</title>
+  <style>
+    :root {
+      --bg: #0c1220;
+      --panel: #141c2e;
+      --border: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --accent2: #38bdf8;
+      --gold: #d4a574;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 1.25rem 1.5rem 2.5rem;
+      max-width: 52rem;
+      margin-inline: auto;
+      line-height: 1.45;
+    }
+    header { margin-bottom: 1.25rem; }
+    .badge {
+      display: inline-block;
+      background: #14532d;
+      color: #86efac;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.35rem; font-weight: 700; margin: 0 0 0.35rem; letter-spacing: 0.02em; }
+    .lead { color: var(--muted); font-size: 0.92rem; margin: 0; max-width: 46rem; }
+    .flow-note {
+      margin-top: 1rem;
+      padding: 0.65rem 0.85rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .flow-note strong { color: var(--accent2); font-weight: 600; }
+    .rack {
+      margin-top: 1.25rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #0a1018;
+    }
+    .rack-cap {
+      background: linear-gradient(180deg, #1a2332 0%, #121a28 100%);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .face-row {
+      display: grid;
+      grid-template-columns: 9.5rem 1fr;
+      gap: 0.75rem 1rem;
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+    .face-row:last-child { border-bottom: none; }
+    .face-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent2);
+      padding-top: 0.1rem;
+    }
+    .face-value { font-size: 0.84rem; color: #cbd5e1; }
+    .face-value strong { color: var(--text); font-weight: 600; }
+    .gold { color: var(--gold); }
+    .section-label {
+      margin-top: 1.5rem;
+      margin-bottom: 0.35rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .flow-arrow {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--muted);
+      padding: 0.35rem 0.75rem;
+      background: rgba(56, 189, 248, 0.06);
+      border-bottom: 1px solid var(--border);
+    }
+    footer {
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    @media (max-width: 640px) {
+      .face-row { grid-template-columns: 1fr; }
+    }
+    .nav { font-size: 0.8rem; margin-bottom: 1rem; }
+    .nav a { color: var(--accent2); }
+  </style>
+</head>
+<body>
+  <p class="nav">
+    <a href="VISUAL_CENTRAL_CONTROLLER.html">← Central controller</a>
+  </p>
+
+  <header>
+    <span class="badge">ENTRY LEVEL · CUBE LINE</span>
+    <h1>Modular cubes — USB in, then analog, then control</h1>
+    <p class="lead">
+      A row of <strong>black cube modules</strong> defines the signal path left to right: computer link first, then line and mic inputs, then a <strong>large touch-and-turn knob</strong>, a <strong>soft LED fader</strong>, and a <strong>transport bar</strong>. Plug <strong>USB</strong> to the computer and you’re set — same application stack as the full desk (software name TBD).
+    </p>
+    <p class="flow-note">
+      <strong>Software story:</strong> the app is built to <strong>dial in sounds in hardware</strong> so you spend less on endless plugin subscriptions — “plug-in insurance” isn’t the model. One install, one USB link, session-ready.
+    </p>
+  </header>
+
+  <p class="section-label">Signal flow — cube modules (order)</p>
+  <div class="rack" role="region" aria-label="Cube signal flow">
+    <div class="rack-cap"><span>Cube 1 → 4</span><span>digital to analog</span></div>
+    <div class="face-row">
+      <div class="face-label">Cube 1 — USB</div>
+      <div class="face-value"><strong>8× USB</strong> — host / computer interface. This is where the machine ties in; same software as the rest of the ecosystem.</div>
+    </div>
+    <div class="flow-arrow">▼</div>
+    <div class="face-row">
+      <div class="face-label">Cube 2 — Line</div>
+      <div class="face-value"><strong>2× 1/4″ (TRS)</strong> — balanced or instrument line inputs.</div>
+    </div>
+    <div class="flow-arrow">▼</div>
+    <div class="face-row">
+      <div class="face-label">Cube 3 — Mic</div>
+      <div class="face-value"><strong>4× female XLR</strong> — microphone inputs.</div>
+    </div>
+    <div class="flow-arrow">▼</div>
+    <div class="face-row">
+      <div class="face-label">Cube 4 — Combo</div>
+      <div class="face-value"><strong>4× combo</strong> — XLR + 1/4″ on the same jack (mic/line/instrument as designed).</div>
+    </div>
+  </div>
+
+  <p class="section-label">After the cubes — surface controls</p>
+  <div class="rack" aria-label="Entry controls">
+    <div class="rack-cap"><span>Touch · fader · transport</span><span>entry-level strip</span></div>
+    <div class="face-row">
+      <div class="face-label">Knob</div>
+      <div class="face-value">Large <span class="gold">touch-and-turn</span> control — <strong>6 degrees of freedom</strong> (SpaceMouse-style). Whatever you <strong>touch</strong> on screen (or the armed target), <strong>turn</strong> maps to it.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Soft fader</div>
+      <div class="face-value"><strong>LED soft fader</strong> — level and automation are shown on the strip; <strong>LEDs follow</strong> playback/automation so you see where the ride is.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Transport</div>
+      <div class="face-value">Segmented <strong>transport bar</strong> — rewind, stop, play, record, etc. (layout per CAD).</div>
+    </div>
+  </div>
+
+  <p class="section-label">Product intent</p>
+  <div class="rack">
+    <div class="rack-cap"><span>Simple</span><span>one cable to host</span></div>
+    <div class="face-row">
+      <div class="face-label">Setup</div>
+      <div class="face-value"><strong>USB to computer</strong> — run the app, patch inputs on the cubes you need. No complex rack required for the entry line.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">Future cubes</div>
+      <div class="face-value">Variants may offer <strong>male vs female XLR</strong> (or other pinouts) so one cable type covers more cases — TBD per SKU.</div>
+    </div>
+    <div class="face-row">
+      <div class="face-label">App name</div>
+      <div class="face-value"><strong>TBD</strong> — placeholder until branding is locked; behavior matches the full-console software model (dial tones in hardware, fewer plugins required).</div>
+    </div>
+  </div>
+
+  <footer>
+    Text spec only (no bitmap mock). BOM: <a href="SPEC_BOM_CUBE_ENTRY.html">SPEC_BOM_CUBE_ENTRY.html</a> ·
+    <code>GRACE_PITCH/CUBE_ENTRY_BOM_PRICING.xlsx</code> ·
+    <a href="VISUAL_CENTRAL_CONTROLLER.html">Central controller</a> ·
+    <code>GRACE_PITCH/PRODUCT_DESCRIPTION_GRACE_DRAFT.txt</code>
+  </footer>
+</body>
+</html>
