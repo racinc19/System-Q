@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Rodriquez recording environment — studio control surface, racks, cubes, CAD & specs.">
+  <title>Rodriquez Recording Environment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #1a0a2e;
+      --bg2: #0a1929;
+      --accent: #00d4ff;
+      --gold: #ffd700;
+      --text: #f0f4f8;
+      --muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(165deg, var(--bg1) 0%, var(--bg2) 50%, #050810 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 3.5rem; }
+    .crumb {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .crumb a { color: var(--accent); text-decoration: none; }
+    .crumb a:hover { text-decoration: underline; }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.75rem, 4.5vw, 2.35rem);
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+    .tag {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 640px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(0,212,255,0.22);
+      border-radius: 14px;
+      padding: 1.35rem 1.4rem;
+    }
+    .card h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .card p, .card li { font-size: 0.95rem; color: var(--muted); }
+    .card ul { margin-top: 0.5rem; padding-left: 1.15rem; }
+    .card li { margin: 0.35rem 0; }
+    .card a { color: var(--gold); text-decoration: none; font-weight: 500; }
+    .card a:hover { text-decoration: underline; }
+    .hero-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.65rem 1.25rem;
+      border: 2px solid var(--accent);
+      border-radius: 999px;
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .hero-btn:hover {
+      background: rgba(0,212,255,0.15);
+      color: var(--text);
+    }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    footer a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="crumb">
+      <a href="https://aip2075.com/">AIP / Project 2075</a>
+      · <a href="https://5states.aip2075.com/">Six-State Alliance</a>
+      · <a href="https://gaii.pages.dev/">Guardian</a>
+    </p>
+
+    <h1>Recording Environment</h1>
+    <p class="tag">Rodriquez · System Q · session-ready studio architecture</p>
+
+    <p style="font-size: 1.08rem; color: var(--text); margin-bottom: 1.75rem; max-width: 42rem;">
+      One workspace for the <strong>operator surface</strong>, <strong>left/right racks</strong>, <strong>modular cube I/O</strong>,
+      and paths to <strong>musician workstations</strong>—CAD, BOM-style HTML, and Grace pitch materials live in this tree.
+    </p>
+
+    <a class="hero-btn" href="studio/index.html">Studio overview →</a>
+
+    <div class="grid" style="margin-top: 2rem;">
+      <div class="card">
+        <h2>INTERACTIVE SPECS</h2>
+        <ul>
+          <li><a href="html/VISUAL_CENTRAL_CONTROLLER.html">Central controller</a></li>
+          <li><a href="html/VISUAL_CUBE_ENTRY_LEVEL.html">Cube entry (USB → analog)</a></li>
+          <li><a href="html/VISUAL_LEFT_RACK.html">Left rack</a></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>GRACE / PITCH</h2>
+        <ul>
+          <li><a href="GRACE_PITCH/INDEX.txt">Package index</a> (text)</li>
+          <li><a href="GRACE_PITCH/PRODUCT_DESCRIPTION_GRACE_DRAFT.txt">Product description draft</a></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>CAD</h2>
+        <p>Step models & CadQuery sources under <strong>cad/</strong> (e.g. racks, panels, power parts). Regenerate from the matching <code>.py</code> where noted.</p>
+      </div>
+      <div class="card">
+        <h2>SOURCE</h2>
+        <p>GitHub: <a href="https://github.com/racinc19/System-Q" target="_blank" rel="noopener">racinc19/System-Q</a></p>
+      </div>
+    </div>
+
+    <footer>
+      Public host: <a href="https://rodriquez-recording.pages.dev/">rodriquez-recording.pages.dev</a>
+      · <a href="studio/index.html">/studio/</a>
+    </footer>
+  </div>
+</body>
+</html>
