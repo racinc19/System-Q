@@ -1,0 +1,11 @@
+Public recording / studio landing (Cloudflare Pages)
+====================================================
+
+Project: rodriquez-recording
+Live URL: https://rodriquez-recording.pages.dev/studio/
+
+Redeploy from this folder (production):
+  cd (this directory)
+  npx wrangler pages deploy . --project-name=rodriquez-recording --branch=main --commit-dirty=true
+
+Source repo (Git): https://github.com/racinc19/System-Q
