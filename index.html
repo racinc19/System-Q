@@ -3,149 +3,350 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Rodriquez recording environment — studio control surface, racks, cubes, CAD & specs.">
+  <meta name="description" content="Rodriquez Recording Environment — a unified, analog-first studio ecosystem. Session-ready for everyone.">
   <title>Rodriquez Recording Environment</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg1: #1a0a2e;
       --bg2: #0a1929;
+      --bg3: #050810;
       --accent: #00d4ff;
       --gold: #ffd700;
       --text: #f0f4f8;
       --muted: #94a3b8;
+      --card-bg: rgba(255,255,255,0.035);
+      --card-border: rgba(0,212,255,0.18);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(165deg, var(--bg1) 0%, var(--bg2) 50%, #050810 100%);
+      background: var(--bg3);
       color: var(--text);
-      min-height: 100vh;
-      line-height: 1.6;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
     }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 3.5rem; }
-    .crumb {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 1.25rem;
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(165deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
+      padding: 4.5rem 1.5rem 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
-    .crumb a { color: var(--accent); text-decoration: none; }
-    .crumb a:hover { text-decoration: underline; }
-    h1 {
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: clamp(1.75rem, 4.5vw, 2.35rem);
-      font-weight: 700;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 900;
       background: linear-gradient(90deg, var(--accent), var(--gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.02em;
+    }
+    .hero .sub {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    .hero-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+    .hero-nav a {
+      padding: 0.5rem 1.1rem;
+      border: 1.5px solid var(--card-border);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .hero-nav a:hover {
+      background: rgba(0,212,255,0.12);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem;
+    }
+    .section + .section { padding-top: 1rem; }
+    .section-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
       margin-bottom: 0.5rem;
     }
-    .tag {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-bottom: 2rem;
+    .section h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
     }
-    .grid {
+    .section p {
+      font-size: 1.02rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      max-width: 680px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    .divider {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .divider hr {
+      border: none;
+      border-top: 1px solid rgba(0,212,255,0.1);
+    }
+
+    /* ── CARD GRID ── */
+    .card-grid {
       display: grid;
       gap: 1rem;
       grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 3rem;
     }
     @media (min-width: 640px) {
-      .grid { grid-template-columns: 1fr 1fr; }
+      .card-grid { grid-template-columns: 1fr 1fr; }
     }
     .card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(0,212,255,0.22);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: 14px;
-      padding: 1.35rem 1.4rem;
+      padding: 1.4rem 1.5rem;
     }
-    .card h2 {
+    .card h3 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--accent);
-      letter-spacing: 0.1em;
-      margin-bottom: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
     }
-    .card p, .card li { font-size: 0.95rem; color: var(--muted); }
-    .card ul { margin-top: 0.5rem; padding-left: 1.15rem; }
-    .card li { margin: 0.35rem 0; }
-    .card a { color: var(--gold); text-decoration: none; font-weight: 500; }
-    .card a:hover { text-decoration: underline; }
-    .hero-btn {
-      display: inline-block;
-      margin-top: 1rem;
-      padding: 0.65rem 1.25rem;
-      border: 2px solid var(--accent);
-      border-radius: 999px;
-      color: var(--accent);
-      font-weight: 600;
+    .card p {
       font-size: 0.95rem;
-      text-decoration: none;
-      transition: background 0.2s, color 0.2s;
+      color: var(--muted);
+      line-height: 1.65;
     }
-    .hero-btn:hover {
-      background: rgba(0,212,255,0.15);
-      color: var(--text);
+    .card .highlight {
+      color: var(--gold);
+      font-weight: 500;
     }
+
+    /* ── FOOTER ── */
     footer {
-      margin-top: 2.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
       font-size: 0.82rem;
       color: var(--muted);
     }
-    footer a { color: var(--accent); }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { margin-top: 0.5rem; }
+    .footer-links a { margin-right: 1.25rem; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <p class="crumb">
-      <a href="https://aip2075.com/">AIP / Project 2075</a>
-      · <a href="https://5states.aip2075.com/">Six-State Alliance</a>
-      · <a href="https://gaii.pages.dev/">Guardian</a>
-    </p>
 
-    <h1>Recording Environment</h1>
-    <p class="tag">Rodriquez · System Q · session-ready studio architecture</p>
-
-    <p style="font-size: 1.08rem; color: var(--text); margin-bottom: 1.75rem; max-width: 42rem;">
-      One workspace for the <strong>operator surface</strong>, <strong>left/right racks</strong>, <strong>modular cube I/O</strong>,
-      and paths to <strong>musician workstations</strong>—CAD, BOM-style HTML, and Grace pitch materials live in this tree.
-    </p>
-
-    <a class="hero-btn" href="studio/index.html">Studio overview →</a>
-
-    <div class="grid" style="margin-top: 2rem;">
-      <div class="card">
-        <h2>INTERACTIVE SPECS</h2>
-        <ul>
-          <li><a href="html/VISUAL_CENTRAL_CONTROLLER.html">Central controller</a></li>
-          <li><a href="html/VISUAL_CUBE_ENTRY_LEVEL.html">Cube entry (USB → analog)</a></li>
-          <li><a href="html/VISUAL_LEFT_RACK.html">Left rack</a></li>
-        </ul>
-      </div>
-      <div class="card">
-        <h2>GRACE / PITCH</h2>
-        <ul>
-          <li><a href="GRACE_PITCH/INDEX.txt">Package index</a> (text)</li>
-          <li><a href="GRACE_PITCH/PRODUCT_DESCRIPTION_GRACE_DRAFT.txt">Product description draft</a></li>
-        </ul>
-      </div>
-      <div class="card">
-        <h2>CAD</h2>
-        <p>Step models & CadQuery sources under <strong>cad/</strong> (e.g. racks, panels, power parts). Regenerate from the matching <code>.py</code> where noted.</p>
-      </div>
-      <div class="card">
-        <h2>SOURCE</h2>
-        <p>GitHub: <a href="https://github.com/racinc19/System-Q" target="_blank" rel="noopener">racinc19/System-Q</a></p>
-      </div>
+  <!-- ════════════════ HERO ════════════════ -->
+  <div class="hero">
+    <div class="hero-inner">
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;">
+        <a href="https://aip2075.com/" style="color:var(--accent);text-decoration:none;">AIP / Project 2075</a>
+        &middot; <a href="https://5states.aip2075.com/" style="color:var(--accent);text-decoration:none;">Six-State Alliance</a>
+        &middot; <a href="https://gaii.pages.dev/" style="color:var(--accent);text-decoration:none;">Guardian</a>
+      </p>
+      <h1>Recording Environment</h1>
+      <p class="sub">Rodriquez &middot; System Q</p>
+      <p>
+        A unified, analog-first studio ecosystem. Plug in, track, mix&mdash;everyone in
+        the room knows what&rsquo;s happening, everyone controls their own world, and
+        the signal path stays as clean or as colored as you want it.
+      </p>
+      <nav class="hero-nav">
+        <a href="#ease">Ease of use</a>
+        <a href="#signal">Signal path</a>
+        <a href="#cubes">Cubes</a>
+        <a href="#controller">Controller</a>
+        <a href="#musician">Musician</a>
+        <a href="#mixing">Mixing</a>
+      </nav>
     </div>
-
-    <footer>
-      Public host: <a href="https://rodriquez-recording.pages.dev/">rodriquez-recording.pages.dev</a>
-      · <a href="studio/index.html">/studio/</a>
-    </footer>
   </div>
+
+  <!-- ════════════════ EASE OF USE & COHERENCE ════════════════ -->
+  <div class="section" id="ease">
+    <p class="section-label">01 &mdash; Philosophy</p>
+    <h2>Ease of Use &amp; Coherence</h2>
+    <p>
+      The whole point is that everyone in the session&mdash;engineer, producer, musician&mdash;can
+      do their own thing without stepping on each other. The system is coherent: what one person
+      changes is visible to everyone who needs to see it, and invisible to everyone who doesn&rsquo;t.
+    </p>
+    <p>
+      No manuals at the session. No &ldquo;which cable goes where.&rdquo; You show up, you plug in,
+      and the environment is ready. Quick, easy, simple&mdash;so the focus stays on the music.
+    </p>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ SIGNAL PATH ════════════════ -->
+  <div class="section" id="signal">
+    <p class="section-label">02 &mdash; Sound Quality</p>
+    <h2>Analog Signal Path</h2>
+    <p>
+      The path is analog. Preamplification, harmonics, dynamics, EQ, transient shaping&mdash;it&rsquo;s
+      all there in hardware, in a fixed and intentional order. What makes it different is that you can
+      dial in the character you want: the transparency of a high-headroom clean stage, the color of a
+      Neve-style transformer, the grit of an API-inspired topology, or push it through tubes for
+      saturation and warmth.
+    </p>
+    <p>
+      It&rsquo;s designed to take the place of all those outboard rack units you&rsquo;d otherwise
+      collect&mdash;preamps, compressors, EQs, harmonic exciters&mdash;in one coherent signal chain.
+      Of course, people will still buy outboard gear (and they should), but the system can get you
+      anywhere you want to go on its own.
+    </p>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ CUBES ════════════════ -->
+  <div class="section" id="cubes">
+    <p class="section-label">03 &mdash; Modular I/O</p>
+    <h2>Cubes</h2>
+    <p>
+      The cubes are small, modular I/O nodes&mdash;floor, desktop, or rack-edge. For people who are
+      less concerned about squeezing out the absolute finest analog quality and prefer simplicity,
+      a cube is all they need. USB in, balanced analog out, headphone jack, done.
+    </p>
+    <p>
+      They talk to the central system and to each other. You can use one standalone or group them
+      together. They&rsquo;re the entry point into the ecosystem for anyone who just wants to plug
+      in and play without thinking about the full rack.
+    </p>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ CONTROLLER + SOFTWARE ════════════════ -->
+  <div class="section" id="controller">
+    <p class="section-label">04 &mdash; Command</p>
+    <h2>Controller &amp; Software</h2>
+    <p>
+      The central controller and its companion software facilitate every possible function in the
+      system. Faders, encoders, touch strips, transport, automation&mdash;one surface that addresses
+      every stage in every channel across both racks.
+    </p>
+    <p>
+      The software presents the same processing model the hardware implements, so what you see on
+      the screen matches what&rsquo;s happening in the signal path. Routing, metering, presets,
+      session management&mdash;one mental model from input to output, whether you&rsquo;re at the
+      desk or on a networked client.
+    </p>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ MUSICIAN WORKSTATION ════════════════ -->
+  <div class="section" id="musician">
+    <p class="section-label">05 &mdash; The Musician</p>
+    <h2>Musician Workstation</h2>
+    <p>
+      The musician&rsquo;s laptop is their pedalboard. It&rsquo;s on the network&mdash;wired or
+      wireless&mdash;and it carries their sounds, instruments, cues, and effects. Plug into the
+      house network and you&rsquo;re part of the session.
+    </p>
+    <p>
+      Wireless mic modules attach directly and give you two inputs each. Everything talks to
+      everything&mdash;including the mix bus&mdash;so every musician can get their own headphone
+      mix and dial it exactly how they want. No amps. No separate monitor rig. Just the device,
+      the network, and your ears.
+    </p>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ MIXING & PLAYBACK ════════════════ -->
+  <div class="section" id="mixing">
+    <p class="section-label">06 &mdash; Mixing</p>
+    <h2>Mixing &amp; Playback</h2>
+    <p>
+      Once you&rsquo;re done tracking, you mix. Record your mixes, play them back, automate them
+      the way you want them to sound. The mixing module handles the final pass&mdash;relative
+      volumes, frequency balance, the full picture&mdash;so your songs come back sounding the way
+      you intended, with nobody&rsquo;s vision getting lost in the process.
+    </p>
+  </div>
+
+  <!-- ════════════════ SUMMARY CARDS ════════════════ -->
+  <div class="card-grid">
+    <div class="card">
+      <h3>Analog-First</h3>
+      <p>Hardware signal path from preamp to conversion. Dial in <span class="highlight">any character</span>&mdash;clean, colored, or tube-saturated.</p>
+    </div>
+    <div class="card">
+      <h3>Session-Ready</h3>
+      <p>Show up, plug in, track. The system handles routing, clocking, and monitoring so you <span class="highlight">start making music immediately</span>.</p>
+    </div>
+    <div class="card">
+      <h3>Personal Mixes</h3>
+      <p>Every musician controls their own headphone mix. No amps, no extra rig&mdash;just the <span class="highlight">network and your ears</span>.</p>
+    </div>
+    <div class="card">
+      <h3>One Mental Model</h3>
+      <p>Surface, software, and hardware present <span class="highlight">the same signal flow</span>. What you touch is what you hear.</p>
+    </div>
+  </div>
+
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer>
+    <div>Rodriquez Recording Environment &middot; System Q</div>
+    <div class="footer-links">
+      <a href="studio/index.html">Studio overview</a>
+      <a href="html/VISUAL_CENTRAL_CONTROLLER.html">Controller spec</a>
+      <a href="html/VISUAL_LEFT_RACK.html">Left rack spec</a>
+      <a href="https://github.com/racinc19/System-Q" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://rodriquez-recording.pages.dev/" target="_blank" rel="noopener">Live site</a>
+    </div>
+  </footer>
+
 </body>
 </html>
