@@ -36,6 +36,18 @@
       position: relative;
       overflow: hidden;
     }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: var(--hero-img);
+      background-size: cover;
+      background-position: center;
+      opacity: 0.32;
+      filter: saturate(1.1) contrast(1.05);
+      transform: scale(1.02);
+      pointer-events: none;
+    }
     .hero::after {
       content: '';
       position: absolute;
@@ -167,6 +179,49 @@
       font-weight: 500;
     }
 
+    .media-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    @media (min-width: 720px) {
+      .media-grid { grid-template-columns: 1.4fr 1fr; }
+      .media-grid .wide { grid-column: 1 / -1; }
+    }
+    .media {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+    .media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.12), transparent 60%);
+      pointer-events: none;
+      opacity: 0.45;
+    }
+    .media img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transform: translateZ(0);
+    }
+    .media .cap {
+      position: relative;
+      z-index: 1;
+      padding: 0.85rem 1rem 0.95rem;
+      border-top: 1px solid rgba(0,212,255,0.12);
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
     /* ── FOOTER ── */
     footer {
       max-width: 860px;
@@ -185,7 +240,7 @@
 <body>
 
   <!-- ════════════════ HERO ════════════════ -->
-  <div class="hero">
+  <div class="hero" style="--hero-img:url('visuals/system_q_front_canvas_gate.png')">
     <div class="hero-inner">
       <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;">
         <a href="https://aip2075.com/" style="color:var(--accent);text-decoration:none;">AIP / Project 2075</a>
@@ -207,6 +262,28 @@
         <a href="#musician">Musician</a>
         <a href="#mixing">Mixing</a>
       </nav>
+    </div>
+  </div>
+
+  <div class="section" id="visuals">
+    <p class="section-label">00 &mdash; Visuals</p>
+    <h2>What it looks like</h2>
+    <p>
+      A quick visual skim of the console language: control surface geometry, strip logic, and tactile UI.
+    </p>
+  </div>
+  <div class="media-grid">
+    <div class="media wide">
+      <img src="visuals/system_q_front_canvas_gate.png" alt="System Q front canvas" loading="eager">
+      <div class="cap">System Q front canvas &mdash; console presence and primary interaction zones.</div>
+    </div>
+    <div class="media">
+      <img src="visuals/TRANSPORT_AUTOMATION_TOUCH.png" alt="Transport and automation touch layout" loading="lazy">
+      <div class="cap">Transport + automation &mdash; one-touch session control without menu hunting.</div>
+    </div>
+    <div class="media">
+      <img src="visuals/scribble_strip_preview.png" alt="Scribble strip preview" loading="lazy">
+      <div class="cap">Scribble + parameter strip &mdash; immediate feedback, fast navigation, zero ambiguity.</div>
     </div>
   </div>
 

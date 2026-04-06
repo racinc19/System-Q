@@ -35,6 +35,18 @@
       position: relative;
       overflow: hidden;
     }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: var(--hero-img);
+      background-size: cover;
+      background-position: center;
+      opacity: 0.30;
+      filter: saturate(1.1) contrast(1.05);
+      transform: scale(1.02);
+      pointer-events: none;
+    }
     .hero::after {
       content: '';
       position: absolute;
@@ -176,6 +188,47 @@
     }
     .links a:hover { text-decoration: underline; }
 
+    .media-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 1.25rem;
+    }
+    @media (min-width: 720px) {
+      .media-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .media {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+    .media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.12), transparent 60%);
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    .media img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .media .cap {
+      position: relative;
+      z-index: 1;
+      padding: 0.75rem 0.9rem 0.85rem;
+      border-top: 1px solid rgba(0,212,255,0.12);
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
     footer {
       max-width: 860px;
       margin: 0 auto;
@@ -192,7 +245,7 @@
 </head>
 <body>
 
-  <div class="hero">
+  <div class="hero" style="--hero-img:url('visuals/system_q_front_canvas_gate.png')">
     <div class="hero-inner">
       <h1>Owner Review</h1>
       <p class="sub">Prepared for Uli (Yuli) Behringer &middot; Music Tribe</p>
@@ -203,9 +256,30 @@
       <nav class="hero-nav">
         <a href="#what">What it is</a>
         <a href="#why">Why it matters</a>
+        <a href="#visuals">Visuals</a>
         <a href="#links">Evidence</a>
         <a href="#asks">Placeholders</a>
       </nav>
+    </div>
+  </div>
+
+  <div class="section" id="visuals">
+    <p class="section-label">00 &mdash; Visuals</p>
+    <h2>Fast visual read</h2>
+    <p>A quick scan of surface language and operator flow.</p>
+  </div>
+  <div class="media-grid">
+    <div class="media">
+      <img src="visuals/TRANSPORT_AUTOMATION_TOUCH.png" alt="Transport and automation touch layout" loading="lazy">
+      <div class="cap">Transport + automation cluster.</div>
+    </div>
+    <div class="media">
+      <img src="visuals/scribble_strip_preview.png" alt="Scribble strip preview" loading="lazy">
+      <div class="cap">Scribble + strip preview.</div>
+    </div>
+    <div class="media">
+      <img src="visuals/system_q_mic_pre_visual.png" alt="Mic pre visual" loading="lazy">
+      <div class="cap">Preamp &mdash; character and control.</div>
     </div>
   </div>
 
