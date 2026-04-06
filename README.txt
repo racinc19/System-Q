@@ -4,6 +4,9 @@ Personal recording / studio project workspace.
 
 Started: 2026-03-27
 
+Public site (static HTML): index.html (landing), investors.html (acquisition / diligence framing),
+studio/index.html (overview). Deploy: see CLOUDFLARE_STUDIO.txt.
+
 (Add session notes, gear list, or folder layout here as you go.)
 
 CAD — System Q LEFT RACK (prototype shell)

@@ -1,4 +1,4 @@
-RODRIQUEZ RECORDING SYSTEM — PRODUCT DESCRIPTION (DRAFT FOR GRACE DESIGN)
+SYSTEM Q RECORDING ENVIRONMENT — PRODUCT DESCRIPTION (DRAFT FOR GRACE DESIGN)
 Lyons, CO pitch — initial narrative; refine with BOM, pricing, and legal review.
 
 ================================================================================
@@ -108,5 +108,5 @@ NEXT STEPS (PLACEHOLDERS)
   • Bill of materials (BOM) by assembly: central surface, left cage, right
     zone, cubes, network, notebook client assumptions.
   • Initial pricing bands (hardware, software, support).
-  • IP and branding: Rodriquez / product name TBD.
+  • IP and branding: product name TBD.
   • Compliance and safety for production intent (beyond prototype).

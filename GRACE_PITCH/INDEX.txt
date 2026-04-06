@@ -25,7 +25,7 @@ ELSEWHERE IN recording-environment (not duplicated here — use repo paths)
   visuals/STRIP_LABELS_REC_PRE_HARM_COMP_EQ_SHAPE.png,
   PARAMETER_SELECT_COVER.png, PARAMETER_SELECT_STRETCH.png, etc.
 
-HOUSE REPO (Rodriquez) — optional cross-reference
+HOUSE REPO — optional cross-reference
 -------------------------------------------------
   CARD_LAYOUT and PCB_card_layout_plan.txt may also live under the construction project
   copy; GRACE_PITCH\CARD_LAYOUT.txt is the recording-console reference.

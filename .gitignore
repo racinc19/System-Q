@@ -17,3 +17,6 @@ desktop.ini
 # Env / secrets
 .env
 .env.*
+
+# Cloudflare Wrangler local state
+.wrangler/

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Owner review landing: System Q recording environment — prepared for Uli (Yuli) Behringer / Music Tribe.">
+  <title>Owner review — System Q recording environment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #1a0a2e;
+      --bg2: #0a1929;
+      --bg3: #050810;
+      --accent: #00d4ff;
+      --gold: #ffd700;
+      --text: #f0f4f8;
+      --muted: #94a3b8;
+      --card-bg: rgba(255,255,255,0.035);
+      --card-border: rgba(0,212,255,0.18);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg3);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .hero {
+      background: linear-gradient(165deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.6rem, 5vw, 2.6rem);
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.7rem;
+      letter-spacing: 0.02em;
+    }
+    .hero .sub {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .hero p {
+      font-size: 1.06rem;
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto 1.75rem;
+    }
+    .hero-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+    .hero-nav a {
+      padding: 0.5rem 1.1rem;
+      border: 1.5px solid var(--card-border);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .hero-nav a:hover {
+      background: rgba(0,212,255,0.12);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3.25rem 1.5rem;
+    }
+    .section + .section { padding-top: 1rem; }
+    .section-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.55rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .section p {
+      font-size: 1.02rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      max-width: 720px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    .divider {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .divider hr {
+      border: none;
+      border-top: 1px solid rgba(0,212,255,0.1);
+    }
+
+    .card-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 3rem;
+    }
+    @media (min-width: 720px) {
+      .card-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.4rem 1.5rem;
+    }
+    .card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .card p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .card .highlight {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .links {
+      list-style: none;
+      margin-top: 0.8rem;
+    }
+    .links li { margin: 0.55rem 0; }
+    .links a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .links a:hover { text-decoration: underline; }
+
+    footer {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { margin-top: 0.5rem; }
+    .footer-links a { margin-right: 1.25rem; }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <h1>Owner Review</h1>
+      <p class="sub">Prepared for Uli (Yuli) Behringer &middot; Music Tribe</p>
+      <p>
+        This page is a concise, executive-level review of the <strong style="color:var(--text);">System Q recording environment</strong>:
+        a unified, analog-first studio ecosystem (control surface + racks + modular I/O) designed to be session-ready and scalable.
+      </p>
+      <nav class="hero-nav">
+        <a href="#what">What it is</a>
+        <a href="#why">Why it matters</a>
+        <a href="#links">Evidence</a>
+        <a href="#asks">Placeholders</a>
+      </nav>
+    </div>
+  </div>
+
+  <div class="section" id="what">
+    <p class="section-label">01 &mdash; Summary</p>
+    <h2>What this is</h2>
+    <p>
+      A coherent recording system with a single mental model end-to-end: input, processing, routing, monitoring, and session control.
+      The goal is to remove friction in sessions while preserving analog character and professional ergonomics.
+    </p>
+    <p>
+      The repository is a working diligence package: static HTML specs, visuals, BOM-style pages, and CAD prototypes.
+    </p>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="why">
+    <p class="section-label">02 &mdash; Positioning</p>
+    <h2>Why it matters (product + manufacturing lens)</h2>
+    <p>
+      The core bet is that a modular ecosystem can hit multiple tiers: an entry path (cubes) for simplicity and a flagship path
+      (surface + racks) for power users, while keeping the system consistent across SKUs.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Analog-first experience</h3>
+        <p>Make the signal path and its character <span class="highlight">intentional and repeatable</span>, not a pile of mismatched outboard.</p>
+      </div>
+      <div class="card">
+        <h3>Session-ready workflow</h3>
+        <p>Reduce setup time and routing confusion so <span class="highlight">the session starts immediately</span>.</p>
+      </div>
+      <div class="card">
+        <h3>Modular entry (cubes)</h3>
+        <p>A smaller node that still speaks the same system language; <span class="highlight">low-friction adoption</span>.</p>
+      </div>
+      <div class="card">
+        <h3>Evidence-driven package</h3>
+        <p>Specs, visuals, and BOM artifacts reduce ambiguity and support <span class="highlight">manufacturing realism</span>.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="links">
+    <p class="section-label">03 &mdash; Evidence (repo pages)</p>
+    <h2>Key artifacts to review</h2>
+    <p>These are the most important pages in the repository for a fast technical/product read:</p>
+    <ul class="links">
+      <li><a href="index.html">Product landing (current)</a></li>
+      <li><a href="studio/index.html">Studio overview hub</a></li>
+      <li><a href="html/VISUAL_CENTRAL_CONTROLLER.html">Central controller visual spec</a></li>
+      <li><a href="html/VISUAL_LEFT_RACK.html">Left rack visual spec</a></li>
+      <li><a href="html/VISUAL_CUBE_ENTRY_LEVEL.html">Cube entry line (system story)</a></li>
+      <li><a href="investors.html">Strategic framing (investor lens)</a></li>
+    </ul>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="asks">
+    <p class="section-label">04 &mdash; Placeholders</p>
+    <h2>Placeholders to fill next</h2>
+    <p>
+      These sections are intentionally placeholders so you can decide the tone and level of disclosure before a broader share.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Partnership ask</h3>
+        <p><span class="highlight">Placeholder:</span> what you want from Music Tribe (OEM, co-dev, manufacturing review, distribution, brand lane).</p>
+      </div>
+      <div class="card">
+        <h3>Roadmap</h3>
+        <p><span class="highlight">Placeholder:</span> v0 prototype milestones, v1 manufacturable design targets, and validation steps.</p>
+      </div>
+      <div class="card">
+        <h3>Team</h3>
+        <p><span class="highlight">Placeholder:</span> who is building what (hardware, firmware, software, industrial design).</p>
+      </div>
+      <div class="card">
+        <h3>Traction / proof</h3>
+        <p><span class="highlight">Placeholder:</span> demos, recordings, user feedback, and any costed BOM / COGS snapshots.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>System Q &middot; recording-environment repository</div>
+    <div class="footer-links">
+      <a href="index.html">Landing</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="investors.html">Investor framing</a>
+    </div>
+  </footer>
+
+</body>
+</html>
