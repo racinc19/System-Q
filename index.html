@@ -371,13 +371,16 @@
     <p class="section-label">04 &mdash; Software</p>
     <h2>Software</h2>
     <p>
-      The software is an HTML-based control UI backed by DSP that mirrors the hardware exactly. The goal is one system where what you
-      see on-screen is the same processing model that exists in the racks.
+      The software is the DSP and control layer that mirrors the hardware exactly. The goal is one system where what you see on-screen
+      is the same processing model that exists in the racks.
     </p>
     <p>
-      When you edit a parameter, you edit it on a graph. That graph is what becomes focused&mdash;so the controller can grab it the
-      same way it grabs a rack parameter. Routing, metering, presets, session management, and per-channel processing selection live
-      here too&mdash;so the room can rehearse, record, play back, and refine without breaking flow.
+      The channel strip is ordered and intentional: harmonics first, then a 7-band multiband dynamics stage (compressor with de-ess,
+      gate, and limiter functions), then multiband EQ, then a designer (attack/sustain), then saturator/exciter.
+    </p>
+    <p>
+      Editing is visual: as you dial frequency, the rings/regions expand and contract so you can see and shape the exact band that the
+      compressor/EQ is working on. Presets and macro combinations can emulate classic flavors (Neve/API-style behavior) when you want it.
     </p>
     <p>
       You can dial in the processing you need without buying additional plugins. People will still use plugins (and should), but the
@@ -442,7 +445,7 @@
 
         <ellipse cx="610" cy="478" rx="430" ry="42" fill="#000" opacity="0.28" filter="url(#swSoft)"/>
       </svg>
-      <div class="cap">Software UI placeholder &mdash; hardware-mirroring DSP, graph-focused editing, routing/metering/presets.</div>
+      <div class="cap">Software UI placeholder &mdash; channel strip graphs with focused rings (dial frequency, rings resize) plus presets/macros.</div>
     </div>
   </div>
 
