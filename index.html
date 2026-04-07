@@ -379,15 +379,21 @@
       then multiband EQ, then a transient processor, then saturation/exciter.
     </p>
     <p>
-      Editing is visual: as you dial frequency, the rings/regions expand and contract so you can see and shape the exact band that the
-      compressor/EQ is working on. Presets and macro combinations let you model hardware behaviors when you want it.
+      Editing is POL (polar) based: the mic pre and the compressor visually “close in” on the polar graph.
+      The circle is the control surface. As you move the focus ring, the software targets a specific band and shows you what that band is doing.
+      Larger circles represent lower frequencies; smaller circles represent higher frequencies.
+      It&rsquo;s a new way to edit sound visually, and it stays consistent across the strip so the same gestures apply everywhere.
     </p>
   </div>
 
   <div class="media-grid" style="padding-top: 0;">
-    <div class="media wide">
-      <img src="visuals/STRIP_GRID_12x6_REC_PRE_HARM_COMP_EQ_SHAPE.png" alt="Channel strip processing grid" loading="lazy">
-      <div class="cap">Channel strip model &mdash; 7-band harmonics → comp/gate/limiter → multiband EQ → transient → saturation/exciter.</div>
+    <div class="media">
+      <img src="visuals/system_q_mic_pre_visual.png" alt="Mic pre polar editing visual" loading="lazy">
+      <div class="cap">Mic pre POL editing &mdash; move the ring to select frequency; the radius maps frequency (big = low, small = high).</div>
+    </div>
+    <div class="media">
+      <img src="visuals/system_q_front_canvas_gate.png" alt="12-channel console strip visual" loading="lazy">
+      <div class="cap">12-channel strip view &mdash; one model repeated across channels, with polar-focused dynamics/EQ shaping.</div>
     </div>
   </div>
 
