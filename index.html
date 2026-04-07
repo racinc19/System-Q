@@ -197,7 +197,8 @@
     @media (min-width: 720px) {
       .media-grid { grid-template-columns: repeat(3, 1fr); }
       .media-grid .wide { grid-column: 1 / -1; }
-      .media-grid.split { grid-template-columns: 1.35fr 1fr; }
+      .media-grid.split { grid-template-columns: 0.55fr 1fr; }
+      .media-grid.split .media img { max-height: 560px; width: auto; margin: 0 auto; }
       .media-grid.split .wide { grid-column: auto; }
     }
     .media {
