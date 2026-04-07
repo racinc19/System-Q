@@ -186,18 +186,24 @@
       display: grid;
       gap: 1rem;
       grid-template-columns: 1fr;
+      align-items: start;
       max-width: 860px;
       margin: 0 auto;
       padding: 0 1.5rem 3rem;
     }
+    .media-grid.split {
+      grid-template-columns: 1fr;
+    }
     @media (min-width: 720px) {
       .media-grid { grid-template-columns: repeat(3, 1fr); }
       .media-grid .wide { grid-column: 1 / -1; }
+      .media-grid.split { grid-template-columns: 1.35fr 1fr; }
+      .media-grid.split .wide { grid-column: auto; }
     }
     .media {
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
       overflow: hidden;
       position: relative;
     }
@@ -386,18 +392,22 @@
     </p>
   </div>
 
-  <div class="media-grid" style="padding-top: 0;">
+  <div class="media-grid split" style="padding-top: 0;">
     <div class="media">
-      <img src="visuals/system_q_mic_pre_visual.png" alt="Mic pre POL editing visual" loading="lazy">
-      <div class="cap">Mic pre POL editing &mdash; the ring focuses a band; larger circles = lower frequency, smaller circles = higher frequency.</div>
+      <img src="visuals/STRIP_GRID_12x6_REC_PRE_HARM_COMP_EQ_SHAPE.png" alt="Channel strip sections: mic pre, harmonics, compressor, EQ, effects" loading="lazy">
+      <div class="cap">One strip model across 12 channels &mdash; each section is a dedicated stage.</div>
     </div>
     <div class="media">
-      <img src="visuals/system_q_front_canvas_gate.png" alt="12-channel strip POL editing" loading="lazy">
-      <div class="cap">12-channel strip &mdash; the same POL-driven model repeated across all channels.</div>
-    </div>
-    <div class="media">
-      <img src="visuals/FX/fx_strip_cell_ch05.png" alt="FX cell: transient, color, exciter" loading="lazy">
-      <div class="cap">FX processor &mdash; transient designer (TRN), color (CLR), and exciter (XCT) on the same POL control surface.</div>
+      <h3 style="margin: 0 0 .65rem;">Sections</h3>
+      <p style="margin: 0 0 .75rem;">
+        Each stage uses POL (polar) editing: the mic pre and dynamics close in on the polar graph. Ring radius maps frequency
+        (bigger = low, smaller = high).
+      </p>
+      <p style="margin: 0 0 .55rem;"><strong>Mic pre</strong> &mdash; input gain, HPF, phantom, phase and the polar focus view.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Harmonics</strong> &mdash; a unique 5-band harmonic processor (H1&ndash;H5) for controlled character.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Compressor</strong> &mdash; frequency-focused dynamics (with gate/limiter behavior in the same model).</p>
+      <p style="margin: 0 0 .55rem;"><strong>EQ</strong> &mdash; band shaping that follows the same ring-driven frequency targeting.</p>
+      <p style="margin: 0;"><strong>Effects processor</strong> &mdash; transient designer + saturation/exciter as a single stage.</p>
     </div>
   </div>
 
