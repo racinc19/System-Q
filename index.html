@@ -182,6 +182,63 @@
       font-weight: 500;
     }
 
+    .flow-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    @media (min-width: 720px) {
+      .flow-grid { grid-template-columns: repeat(5, 1fr); }
+    }
+    .flow-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1rem;
+      position: relative;
+      min-height: 150px;
+    }
+    .flow-card::after {
+      content: '';
+      position: absolute;
+      right: -0.55rem;
+      top: 50%;
+      width: 1.1rem;
+      height: 1.1rem;
+      transform: translateY(-50%) rotate(45deg);
+      border-top: 1px solid rgba(0,212,255,0.22);
+      border-right: 1px solid rgba(0,212,255,0.22);
+      background: rgba(5,8,16,0.9);
+      display: none;
+    }
+    @media (min-width: 720px) {
+      .flow-card::after { display: block; }
+      .flow-card:last-child::after { display: none; }
+    }
+    .flow-step {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.55rem;
+    }
+    .flow-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 0.55rem;
+    }
+    .flow-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+
     .media-grid {
       display: grid;
       gap: 1rem;
@@ -197,7 +254,8 @@
     @media (min-width: 720px) {
       .media-grid { grid-template-columns: repeat(3, 1fr); }
       .media-grid .wide { grid-column: 1 / -1; }
-      .media-grid.split { grid-template-columns: 1.35fr 1fr; }
+      .media-grid.split { grid-template-columns: 0.55fr 1fr; }
+      .media-grid.split .media img { max-height: 560px; width: auto; margin: 0 auto; }
       .media-grid.split .wide { grid-column: auto; }
     }
     .media {
@@ -251,25 +309,22 @@
   <!-- ════════════════ HERO ════════════════ -->
   <div class="hero">
     <div class="hero-inner">
-      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;">
-        <a href="https://aip2075.com/" style="color:var(--accent);text-decoration:none;">AIP / Project 2075</a>
-        &middot; <a href="https://5states.aip2075.com/" style="color:var(--accent);text-decoration:none;">Six-State Alliance</a>
-        &middot; <a href="https://gaii.pages.dev/" style="color:var(--accent);text-decoration:none;">Guardian</a>
-      </p>
       <h1>Recording Environment</h1>
       <p class="sub">System Q</p>
       <p>
-        A unified, analog-first studio ecosystem. Plug in, track, mix&mdash;everyone in
-        the room knows what&rsquo;s happening, everyone controls their own world, and
-        the system stays as clean or as colored as you want it.
+        A unified musician ecosystem for rehearsal, recording, mixing, and venue playback.
+        Each player plugs into the same system, controls their own world, and moves from
+        session to output without rebuilding the workflow.
       </p>
       <nav class="hero-nav">
+        <a href="#flow">How it works</a>
         <a href="#ease">Ease of use</a>
         <a href="#racks">Racks</a>
         <a href="#cubes">Cubes</a>
         <a href="#software">Software</a>
+        <a href="jimmy.html">Jimmy</a>
         <a href="#controller">Controller</a>
-        <a href="#pedal">Pedal</a>
+        <a href="#personal">Personal station</a>
         <a href="#venue">Venue</a>
       </nav>
     </div>
@@ -282,9 +337,53 @@
     </div>
   </div>
 
+  <div class="section" id="flow">
+    <p class="section-label">01 &mdash; Ecosystem</p>
+    <h2>One Musician Workflow</h2>
+    <p>
+      This is one connected system for musicians, not a pile of unrelated products. Each player sits down at a
+      personal station, plugs into the network, rehearses in the same environment they record in, and keeps the same
+      logic all the way through playback and venue deployment.
+    </p>
+    <p>
+      The recording path branches when needed: use <a href="#cubes" style="color:var(--accent);text-decoration:none;">Cubes</a>
+      for a simpler, minimal-interface path, or move into the <a href="#racks" style="color:var(--accent);text-decoration:none;">analog racks</a>
+      for the highest-end capture path. Once the mix is right, the same ecosystem carries forward into
+      <a href="#venue" style="color:var(--accent);text-decoration:none;">Venue</a>.
+    </p>
+  </div>
+
+  <div class="flow-grid">
+    <div class="flow-card">
+      <div class="flow-step">Step 01</div>
+      <h3>Personal Station</h3>
+      <p>Each musician plugs into a personal station for monitoring, playback, processing, and session control.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-step">Step 02</div>
+      <h3>Rehearse</h3>
+      <p>The band rehearses inside the same connected environment they will use to capture and refine the session.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-step">Step 03</div>
+      <h3>Record</h3>
+      <p>Choose the simpler Cube path or move into the analog racks for the highest-end capture and processing path.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-step">Step 04</div>
+      <h3>Mix</h3>
+      <p>Software, controller, and hardware share one operating model so the session can be adjusted without breaking flow.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-step">Step 05</div>
+      <h3>Venue</h3>
+      <p>Take the same ecosystem into playback and room translation so the result carries forward into live output.</p>
+    </div>
+  </div>
+
   <!-- ════════════════ EASE OF USE & COHERENCE ════════════════ -->
   <div class="section" id="ease">
-    <p class="section-label">01 &mdash; Philosophy</p>
+    <p class="section-label">02 &mdash; Philosophy</p>
     <h2>Ease of Use &amp; Coherence</h2>
     <p>
       Real-life flow: you text your musician friends, they show up, and everyone plugs in a network cable.
@@ -305,7 +404,7 @@
 
   <!-- ════════════════ RACKS ════════════════ -->
   <div class="section" id="racks">
-    <p class="section-label">02 &mdash; Hardware</p>
+    <p class="section-label">03 &mdash; Hardware</p>
     <h2>Racks</h2>
     <p>
       The racks are the studio-grade analog core: preamplification, dynamics, EQ, harmonic stages, conversion,
@@ -349,7 +448,7 @@
 
   <!-- ════════════════ CUBES ════════════════ -->
   <div class="section" id="cubes">
-    <p class="section-label">03 &mdash; Modular I/O</p>
+    <p class="section-label">04 &mdash; Modular I/O</p>
     <h2>Cubes</h2>
     <p>
       The cubes are small, modular I/O nodes&mdash;floor, desktop, or rack-edge. For people who are
@@ -374,7 +473,7 @@
 
   <!-- ════════════════ SOFTWARE ════════════════ -->
   <div class="section" id="software">
-    <p class="section-label">04 &mdash; Software</p>
+    <p class="section-label">05 &mdash; Software</p>
     <h2>Software</h2>
     <p>
       The software is the DSP and control layer that mirrors the hardware exactly. The goal is one system where what you see on-screen
@@ -389,6 +488,11 @@
       The circle is the control surface. As you move the focus ring, the software targets a specific band and shows you what that band is doing.
       Larger circles represent lower frequencies; smaller circles represent higher frequencies.
       It&rsquo;s a new way to edit sound visually, and it stays consistent across the strip so the same gestures apply everywhere.
+    </p>
+    <p>
+      There is now a live browser prototype called <a href="jimmy.html" style="color:var(--gold);text-decoration:none;">Jimmy</a>
+      that sketches the software direction directly: armed channel strips, parameter focus, POL-style stage behavior, and a 6-DOF inspired
+      edit control that keeps your hand in one place while you select and turn.
     </p>
   </div>
 
@@ -415,7 +519,7 @@
 
   <!-- ════════════════ CONTROLLER ════════════════ -->
   <div class="section" id="controller">
-    <p class="section-label">05 &mdash; Command</p>
+    <p class="section-label">06 &mdash; Command</p>
     <h2>Controller</h2>
     <p>
       The controller is built so your hand never has to leave the surface. Touch any rack screen to bring a parameter
@@ -442,26 +546,30 @@
   <div class="divider"><hr></div>
 
   <!-- ════════════════ PEDAL ════════════════ -->
-  <div class="section" id="pedal">
-    <p class="section-label">06 &mdash; Control</p>
-    <h2>Pedal</h2>
+  <div class="section" id="personal">
+    <p class="section-label">07 &mdash; Personal Control</p>
+    <h2>Personal Station</h2>
     <p>
-      Pedal is what each musician carries. Your instrument plugs into it, and a network cable plugs into it.
+      The personal station is what each musician carries. Your instrument plugs into it, and a network cable plugs into it.
       Plug in with your friends and you&rsquo;re instantly part of the session.
     </p>
     <p>
-      Each pedal is your personal endpoint: IEM module (bring your own buds), talkback, playback, and recording.
+      Each personal station is your endpoint: IEM module (bring your own buds), talkback, playback, recording, and musician control.
       Anyone can play back a reference and everyone hears it. If you want to go wireless, it supports wireless mic
       and wireless guitar inputs. It can also feed a local speaker out (and future Bluetooth speaker support).
     </p>
     <p>
-      It also acts as your processor/amp. You assign “pedals” (effects/patches) to it, the display becomes your
-      pedalboard, and the knobs are interactable&mdash;so you can build a full performance rig without a separate pile
+      It also acts as your processor and amp path. You assign effects and patches to it, the display becomes your
+      personal rig, and the knobs are interactable&mdash;so you can build a full performance setup without a separate pile
       of hardware.
     </p>
     <p>
       Same idea for vocals and microphones, and the same idea for keys: think MainStage-style rigs where you bring a
       controller, not a huge stack, and you recall sounds instantly.
+    </p>
+    <p>
+      It can also carry the practical session layer around the musician: playback, monitoring, sheet music, and the other
+      tools needed to stay inside one coherent rehearsal-to-recording environment.
     </p>
     <p>
       Acoustic/baffle systems are for drums and triggers when you want isolation and control. On a digital stage,
@@ -472,14 +580,14 @@
   <div class="media-grid" style="padding-top: 0;">
     <div class="media wide">
       <img src="Image/Pedal.png" alt="Pedal render" loading="lazy">
-      <div class="cap">Pedal &mdash; musician endpoint (IEM, talkback, playback, record).</div>
+      <div class="cap">Personal station &mdash; musician endpoint for IEM, talkback, playback, recording, and performance control.</div>
     </div>
   </div>
 
   <div class="divider"><hr></div>
 
   <div class="section" id="venue">
-    <p class="section-label">07 &mdash; Output</p>
+    <p class="section-label">08 &mdash; Output</p>
     <h2>Venue</h2>
     <p>
       Venue is the live output and room translation layer. Everyone plugs their pedals (or laptops) into Venue,
@@ -523,13 +631,11 @@
   <footer>
     <div>Recording Environment &middot; System Q</div>
     <div class="footer-links">
-      <a href="investors.html">Strategic &amp; acquisition review</a>
       <a href="studio/index.html">Studio overview</a>
       <a href="html/VISUAL_CENTRAL_CONTROLLER.html">Controller spec</a>
       <a href="html/VISUAL_LEFT_RACK.html">Left rack spec</a>
       <a href="html/SPEC_BOM_RIGHT.html">Right rack spec</a>
       <a href="#venue">Venue</a>
-      <a href="uli-review.html">Owner review (Uli Behringer)</a>
       <a href="https://github.com/racinc19/System-Q" target="_blank" rel="noopener">GitHub</a>
       <a href="/" target="_blank" rel="noopener">Live site</a>
     </div>
