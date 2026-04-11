@@ -20,3 +20,6 @@ desktop.ini
 
 # Cloudflare Wrangler local state
 .wrangler/
+
+# Local Codex worktrees
+.claude/worktrees/
