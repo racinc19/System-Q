@@ -23,3 +23,14 @@ desktop.ini
 
 # Local Codex worktrees
 .claude/worktrees/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local app logs (regenerated at runtime)
+console_debug.log
+
+# Generated stem WAVs (see software/generate_band_stems.py)
+software/band_stems/*.wav
