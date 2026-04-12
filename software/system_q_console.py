@@ -1086,7 +1086,6 @@ class ConsoleApp:
                 top_items.append((f"B{i + 1}", f"{int(float(band['freq']))}", bool(band["enabled"])))
             eq_top_selected = self.eq_selected_band if self.editor_nav_scope == "eq-top" else -1
             self._draw_icon_row(c, w, top_y, top_items, eq_top_selected, "eq-top", preview_only)
-            band = self._eq_band(ch)
             items = [
                 ("NEW", "", True),
                 ("TYPE", str(band["type"]), bool(band["enabled"])),
@@ -1922,9 +1921,11 @@ class ConsoleApp:
                                 self.comp_editor_mode = label
                                 self._toggle_comp_mode_enabled(ch, label)
                         elif self.selected_stage_key == "eq":
-                            band = self._eq_band(ch, idx)
-                            band["enabled"] = axis_value > 0
-                            ch.eq_enabled = any(b["enabled"] and abs(float(b["gain_db"])) > 0.05 for b in ch.eq_bands[: max(1, ch.eq_band_count)])
+                            max_bands = max(1, ch.eq_band_count)
+                            if axis_value > 0:
+                                self.eq_selected_band = (self.eq_selected_band + 1) % max_bands
+                            else:
+                                self.eq_selected_band = (self.eq_selected_band - 1) % max_bands
                         elif self.selected_stage_key == "tone":
                             label = top_items[idx][0]
                             if label == "TRN":
@@ -2601,8 +2602,21 @@ class ConsoleApp:
             return 5
         return 2
 
+    _key_state = {}
+
+    def _poll_keys(self) -> None:
+        import ctypes
+        key_map = {0x25: "left", 0x26: "up", 0x27: "right", 0x28: "down", 0x20: "press", 0x08: "back"}
+        for vk, target in key_map.items():
+            down = bool(ctypes.windll.user32.GetAsyncKeyState(vk) & 0x8000)
+            was_down = self._key_state.get(vk, False)
+            if down and not was_down:
+                self._handle_nav(target)
+            self._key_state[vk] = down
+
     def _poll_spacemouse(self) -> None:
         axis_value, pressed, directional = self.spacemouse.poll()
+        self._poll_keys()
         if self.nav_scope == "editor":
             if directional:
                 self._handle_nav(directional[0])

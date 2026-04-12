@@ -22,6 +22,13 @@ LOG_LOW = math.log10(POL_LOW_HZ)
 LOG_HIGH = math.log10(POL_HIGH_HZ)
 
 
+def invert_ring_frequency(freq: float) -> float:
+    freq = float(np.clip(freq, POL_LOW_HZ, POL_HIGH_HZ))
+    pos = (math.log10(freq) - LOG_LOW) / (LOG_HIGH - LOG_LOW)
+    inv_pos = 1.0 - pos
+    return 10 ** (LOG_LOW + inv_pos * (LOG_HIGH - LOG_LOW))
+
+
 def hsv_to_hex(h: float, s: float, v: float) -> str:
     h = max(0.0, min(1.0, h))
     s = max(0.0, min(1.0, s))
@@ -47,6 +54,26 @@ def hsv_to_hex(h: float, s: float, v: float) -> str:
     return f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}"
 
 
+def rgb_to_hex(r: int, g: int, b: int) -> str:
+    return f"#{max(0, min(255, r)):02x}{max(0, min(255, g)):02x}{max(0, min(255, b)):02x}"
+
+
+def lerp_color(c1: tuple[int, int, int], c2: tuple[int, int, int], t: float) -> str:
+    t = max(0.0, min(1.0, t))
+    return rgb_to_hex(
+        int(c1[0] + (c2[0] - c1[0]) * t),
+        int(c1[1] + (c2[1] - c1[1]) * t),
+        int(c1[2] + (c2[2] - c1[2]) * t),
+    )
+
+
+def eq_gain_color(gain_db: float) -> str:
+    gain_db = max(-18.0, min(18.0, gain_db))
+    if gain_db < 0.0:
+        return lerp_color((255, 60, 46), (255, 208, 138), (gain_db + 18.0) / 18.0)
+    return lerp_color((255, 208, 138), (105, 223, 242), gain_db / 18.0)
+
+
 class SpaceMouseController:
     def __init__(self):
         self.available = False
@@ -61,6 +88,7 @@ class SpaceMouseController:
         self.direction_threshold = 0.52
         self.direction_latch = False
         try:
+            os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
             pygame.init()
             pygame.joystick.init()
             preferred = None
@@ -158,6 +186,12 @@ class AudioPlayer:
         self.monitor_input = False
         self.input_gain = 1.6
         self.input_device = None
+        self.mic_pre_phase_enabled = False
+        self.mic_pre_tube_enabled = False
+        self.mic_pre_lpf_enabled = False
+        self.mic_pre_hpf_enabled = False
+        self.mic_pre_lpf_hz = float(POL_LOW_HZ)
+        self.mic_pre_hpf_hz = float(POL_HIGH_HZ)
         self.noise_level = 0.18
         self.white_level = 0.18
         self.brown_level = 0.18
@@ -167,6 +201,12 @@ class AudioPlayer:
         self._brown_state = 0.0
         self.harmonic_values = np.zeros(5, dtype=np.float32)
         self.harmonic_makeup = 1.35
+        self.eq_bands = []
+        self.tone_chain = {
+            "trn": {"enabled": False, "center_hz": 2500.0, "width_octaves": 1.6, "attack": 0.45, "sustain": 0.35},
+            "clr": {"enabled": False, "drive": 0.35, "tone": 0.0, "mix": 0.55, "gain": 1.0},
+            "xct": {"enabled": False, "center_hz": 7000.0, "width_octaves": 1.2, "amount": 0.40, "mix": 0.45},
+        }
         self.comp_chain = {
             "comp": {"enabled": True, "threshold_db": -18.0, "ratio": 4.0, "attack_ms": 8.0, "release_ms": 120.0, "makeup": 1.0, "center_hz": 3000.0, "width_octaves": 6.0, "band_enabled": False},
             "limit": {"enabled": False, "threshold_db": -6.0, "ratio": 20.0, "attack_ms": 0.8, "release_ms": 80.0, "makeup": 1.0, "center_hz": 3000.0, "width_octaves": 6.0, "band_enabled": False},
@@ -396,8 +436,11 @@ class AudioPlayer:
                     self.wave_points *= 0.9
                     return
                 block = self._generate_pink_noise(frames)
+                block = self._apply_mic_pre(block)
                 block = self._apply_harmonics(block)
                 block = self._apply_compressor(block)
+                block = self._apply_eq(block)
+                block = self._apply_tone_stage(block)
                 outdata[:] = block
                 self.position += frames
                 self._analyze(block)
@@ -411,8 +454,11 @@ class AudioPlayer:
                     self.wave_points *= 0.9
                     return
                 block = self._generate_white_noise(frames)
+                block = self._apply_mic_pre(block)
                 block = self._apply_harmonics(block)
                 block = self._apply_compressor(block)
+                block = self._apply_eq(block)
+                block = self._apply_tone_stage(block)
                 outdata[:] = block
                 self.position += frames
                 self._analyze(block)
@@ -426,8 +472,11 @@ class AudioPlayer:
                     self.wave_points *= 0.9
                     return
                 block = self._generate_brown_noise(frames)
+                block = self._apply_mic_pre(block)
                 block = self._apply_harmonics(block)
                 block = self._apply_compressor(block)
+                block = self._apply_eq(block)
+                block = self._apply_tone_stage(block)
                 outdata[:] = block
                 self.position += frames
                 self._analyze(block)
@@ -441,8 +490,11 @@ class AudioPlayer:
                     self.wave_points *= 0.9
                     return
                 block = self._generate_test_tone(frames)
+                block = self._apply_mic_pre(block)
                 block = self._apply_harmonics(block)
                 block = self._apply_compressor(block)
+                block = self._apply_eq(block)
+                block = self._apply_tone_stage(block)
                 outdata[:] = block
                 self.position += frames
                 self._analyze(block)
@@ -472,8 +524,11 @@ class AudioPlayer:
                     self.position = len(self.audio)
                     self.playing = False
 
+            block = self._apply_mic_pre(block)
             block = self._apply_harmonics(block)
             block = self._apply_compressor(block)
+            block = self._apply_eq(block)
+            block = self._apply_tone_stage(block)
             outdata[:] = block
             self._analyze(block)
 
@@ -487,8 +542,11 @@ class AudioPlayer:
 
             mono = np.asarray(indata[:, 0], dtype=np.float32) * self.input_gain
             block = np.column_stack([mono, mono])
+            block = self._apply_mic_pre(block)
             block = self._apply_harmonics(block)
             block = self._apply_compressor(block)
+            block = self._apply_eq(block)
+            block = self._apply_tone_stage(block)
             self.position += frames
             self._analyze(block)
 
@@ -538,6 +596,35 @@ class AudioPlayer:
         self._tone_phase = float((phases[-1] + phase_step) % (2.0 * math.pi))
         return np.column_stack([tone, tone]).astype(np.float32)
 
+    def _apply_mic_pre(self, block: np.ndarray) -> np.ndarray:
+        processed = block.astype(np.float32)
+        if self.mic_pre_phase_enabled:
+            processed[:, 1] *= -1.0
+        if self.mic_pre_tube_enabled:
+            processed = np.tanh(processed * 1.18).astype(np.float32)
+        if self.mic_pre_lpf_enabled:
+            # User-specified behavior: LPF label blocks from outer ring (20 Hz) inward to cutoff.
+            processed = self._apply_simple_filter(processed, self.mic_pre_lpf_hz, mode="highpass")
+        if self.mic_pre_hpf_enabled:
+            # User-specified behavior: HPF label blocks from inner ring (20 kHz) outward to cutoff.
+            processed = self._apply_simple_filter(processed, self.mic_pre_hpf_hz, mode="lowpass")
+        return processed
+
+    def _apply_simple_filter(self, block: np.ndarray, cutoff_hz: float, mode: str) -> np.ndarray:
+        cutoff = float(np.clip(cutoff_hz, 20.0, self.samplerate * 0.45))
+        freqs = np.fft.rfftfreq(len(block), d=1.0 / self.samplerate)
+        spectrum_scale = np.ones_like(freqs, dtype=np.float32)
+        if mode == "lowpass":
+            spectrum_scale = 1.0 / np.sqrt(1.0 + (freqs / max(cutoff, 1.0)) ** 4)
+        elif mode == "highpass":
+            ratio = freqs / max(cutoff, 1.0)
+            spectrum_scale = np.where(freqs <= 0.0, 0.0, (ratio ** 2) / np.sqrt(1.0 + ratio ** 4))
+        filtered = np.zeros_like(block, dtype=np.float32)
+        for ch in range(block.shape[1]):
+            spec = np.fft.rfft(block[:, ch])
+            filtered[:, ch] = np.fft.irfft(spec * spectrum_scale, n=len(block)).astype(np.float32)
+        return filtered
+
     def _apply_harmonics(self, block: np.ndarray) -> np.ndarray:
         weights = self.harmonic_values.copy()
         if not np.any(weights > 0.001):
@@ -575,6 +662,135 @@ class AudioPlayer:
         mixed_rms = float(np.sqrt(np.mean(np.square(mix))) + 1e-7)
         auto_makeup = min(2.2, max(0.85, base_rms / mixed_rms))
         return np.tanh(mix * auto_makeup * self.harmonic_makeup).astype(np.float32)
+
+    def set_eq_bands(self, bands: list[dict]):
+        self.eq_bands = [dict(band) for band in bands]
+
+    def set_tone_chain(self, chain: dict):
+        for key, values in chain.items():
+            if key in self.tone_chain:
+                self.tone_chain[key].update(values)
+
+    def _apply_eq(self, block: np.ndarray) -> np.ndarray:
+        if not self.eq_bands:
+            return block
+        freqs = np.fft.rfftfreq(len(block), d=1.0 / self.samplerate)
+        valid = freqs > 0.0
+        log_freqs = np.zeros_like(freqs, dtype=np.float32)
+        log_freqs[valid] = np.log2(np.maximum(freqs[valid], 1.0))
+        total_scale = np.ones_like(freqs, dtype=np.float32)
+        for band in self.eq_bands:
+            if not band.get("enabled", True):
+                continue
+            kind = band.get("type", "BELL")
+            center = float(np.clip(band.get("freq", 1000.0), POL_LOW_HZ, min(POL_HIGH_HZ, self.samplerate * 0.45)))
+            gain_db = float(np.clip(band.get("gain_db", 0.0), -18.0, 18.0))
+            width = float(np.clip(band.get("width", 1.0), 0.20, 6.0))
+            center_log = math.log2(center)
+            sigma = max(0.08, width / 2.355)
+            band_scale = np.ones_like(freqs, dtype=np.float32)
+            if kind == "BELL":
+                shape = np.zeros_like(freqs, dtype=np.float32)
+                shape[valid] = np.exp(-0.5 * ((log_freqs[valid] - center_log) / sigma) ** 2)
+                band_scale = np.power(10.0, (gain_db * shape) / 20.0).astype(np.float32)
+            elif kind == "LOW SHELF":
+                shelf = np.zeros_like(freqs, dtype=np.float32)
+                shelf[valid] = 1.0 / (1.0 + np.exp((log_freqs[valid] - center_log) / max(0.05, sigma)))
+                band_scale = np.power(10.0, (gain_db * shelf) / 20.0).astype(np.float32)
+            elif kind == "HIGH SHELF":
+                shelf = np.zeros_like(freqs, dtype=np.float32)
+                shelf[valid] = 1.0 / (1.0 + np.exp((center_log - log_freqs[valid]) / max(0.05, sigma)))
+                band_scale = np.power(10.0, (gain_db * shelf) / 20.0).astype(np.float32)
+            elif kind == "LPF":
+                band_scale = (1.0 / np.sqrt(1.0 + (freqs / max(center, 1.0)) ** 6)).astype(np.float32)
+            elif kind == "HPF":
+                ratio = freqs / max(center, 1.0)
+                band_scale = np.where(freqs <= 0.0, 0.0, (ratio ** 3) / np.sqrt(1.0 + ratio ** 6)).astype(np.float32)
+            total_scale *= band_scale
+        filtered = np.zeros_like(block, dtype=np.float32)
+        for ch in range(block.shape[1]):
+            spec = np.fft.rfft(block[:, ch])
+            filtered[:, ch] = np.fft.irfft(spec * total_scale, n=len(block)).astype(np.float32)
+        return np.clip(filtered, -1.0, 1.0).astype(np.float32)
+
+    def _apply_tone_stage(self, block: np.ndarray) -> np.ndarray:
+        processed = block.astype(np.float32)
+        if self.tone_chain["trn"]["enabled"]:
+            processed = self._apply_transient_stage(processed, self.tone_chain["trn"])
+        if self.tone_chain["clr"]["enabled"]:
+            processed = self._apply_color_stage(processed, self.tone_chain["clr"])
+        if self.tone_chain["xct"]["enabled"]:
+            processed = self._apply_exciter_stage(processed, self.tone_chain["xct"])
+        return np.clip(processed, -1.0, 1.0).astype(np.float32)
+
+    def _apply_transient_stage(self, block: np.ndarray, settings: dict) -> np.ndarray:
+        band, dry = self._split_compressor_band(block, settings["center_hz"], settings["width_octaves"])
+        mono = np.mean(band, axis=1).astype(np.float32)
+        detector = np.abs(mono)
+        fast_env = np.zeros_like(detector)
+        slow_env = np.zeros_like(detector)
+        fast = 0.0
+        slow = 0.0
+        fast_alpha = 0.52
+        slow_alpha = 0.012
+        for i, sample in enumerate(detector):
+            fast += (sample - fast) * fast_alpha
+            slow += (sample - slow) * slow_alpha
+            fast_env[i] = fast
+            slow_env[i] = slow
+        transient = np.maximum(0.0, fast_env - slow_env)
+        sustain_env = slow_env.copy()
+        if float(np.max(transient)) > 1e-6:
+            transient /= float(np.max(transient))
+        if float(np.max(sustain_env)) > 1e-6:
+            sustain_env /= float(np.max(sustain_env))
+        attack_amt = float(settings["attack"])
+        sustain_amt = float(settings["sustain"])
+        # Use the selected frequency band as the detector, but make the audible action happen on the full signal.
+        # This version is intentionally exaggerated so a snare loop changes clearly.
+        edge_branch = np.zeros_like(block, dtype=np.float32)
+        body_branch = np.zeros_like(block, dtype=np.float32)
+        for ch in range(block.shape[1]):
+            x = block[:, ch].astype(np.float32)
+            prev = np.concatenate(([0.0], x[:-1])).astype(np.float32)
+            prev2 = np.concatenate(([0.0, 0.0], x[:-2])).astype(np.float32)
+            # Fast edge / crack branch.
+            edge = x - prev * 0.72 + prev2 * 0.18
+            edge_branch[:, ch] = edge * transient * (attack_amt * 14.0)
+            # Slow body / sustain branch.
+            acc = 0.0
+            body = np.zeros(len(x), dtype=np.float32)
+            for i, sample in enumerate(x):
+                acc = acc * 0.994 + sample * 0.055
+                body[i] = acc
+            body_branch[:, ch] = body * sustain_env * (sustain_amt * 7.5)
+
+        mixed = block + edge_branch + body_branch
+        peak = float(np.max(np.abs(mixed)))
+        if peak > 0.98:
+            mixed *= 0.98 / peak
+        return mixed.astype(np.float32)
+
+    def _apply_color_stage(self, block: np.ndarray, settings: dict) -> np.ndarray:
+        drive = 1.0 + float(settings["drive"]) * 5.0
+        tone = float(settings["tone"])
+        mix = float(settings["mix"])
+        gain = float(settings["gain"])
+        colored = np.tanh(block * drive).astype(np.float32)
+        if abs(tone) > 0.01:
+            cutoff = 1800.0 * (2.0 ** (tone * 3.0))
+            filt_mode = "lowpass" if tone < 0.0 else "highpass"
+            filtered = self._apply_simple_filter(colored, cutoff, filt_mode)
+            colored = colored * 0.55 + filtered * 0.45
+        return np.clip((block * (1.0 - mix) + colored * mix) * gain, -1.0, 1.0).astype(np.float32)
+
+    def _apply_exciter_stage(self, block: np.ndarray, settings: dict) -> np.ndarray:
+        band, dry = self._split_compressor_band(block, settings["center_hz"], settings["width_octaves"])
+        amount = float(settings["amount"])
+        mix = float(settings["mix"])
+        excited = np.tanh(band * (1.0 + amount * 7.0)).astype(np.float32)
+        emphasis = excited - np.tanh(band * 0.9).astype(np.float32)
+        return np.clip(dry + band * (1.0 - mix) + (band + emphasis * (0.9 + amount)) * mix, -1.0, 1.0).astype(np.float32)
 
     def _apply_compressor(self, block: np.ndarray) -> np.ndarray:
         processed = block.astype(np.float32)
@@ -809,6 +1025,32 @@ class PolVisualizerApp:
         self.phantom_var = tk.BooleanVar(value=False)
         self.phase_var = tk.BooleanVar(value=False)
         self.tube_var = tk.BooleanVar(value=False)
+        self.lpf_var = tk.BooleanVar(value=False)
+        self.hpf_var = tk.BooleanVar(value=False)
+        self.mic_pre_selected = tk.StringVar(value="")
+        self.eq_band_selected = tk.IntVar(value=0)
+        self.eq_param_selected = tk.IntVar(value=0)
+        self.eq_nav_row = tk.StringVar(value="bottom")
+        self.tone_mode_var = tk.StringVar(value="TRN")
+        self.tone_nav_row = tk.StringVar(value="bottom")
+        self.tone_selected = tk.IntVar(value=0)
+        self.tone_state_by_mode = {
+            "TRN": {"enabled": False, "freq": 2500.0, "width": 1.6, "attack": 0.45, "sustain": 0.35},
+            "CLR": {"enabled": False, "drive": 0.35, "tone": 0.0, "mix": 0.55, "gain": 1.0},
+            "XCT": {"enabled": False, "freq": 7000.0, "width": 1.2, "amount": 0.40, "mix": 0.45},
+        }
+        self.tone_freq_position_var = tk.DoubleVar(value=self._freq_to_slider(2500.0))
+        self.tone_width_var = tk.DoubleVar(value=1.6)
+        self.trn_attack_var = tk.DoubleVar(value=0.45)
+        self.trn_sustain_var = tk.DoubleVar(value=0.35)
+        self.clr_drive_var = tk.DoubleVar(value=0.35)
+        self.clr_tone_var = tk.DoubleVar(value=0.0)
+        self.clr_mix_var = tk.DoubleVar(value=0.55)
+        self.clr_gain_var = tk.DoubleVar(value=1.0)
+        self.xct_freq_position_var = tk.DoubleVar(value=self._freq_to_slider(7000.0))
+        self.xct_width_var = tk.DoubleVar(value=1.2)
+        self.xct_amount_var = tk.DoubleVar(value=0.40)
+        self.xct_mix_var = tk.DoubleVar(value=0.45)
         self.harmonic_selected = tk.IntVar(value=0)
         self.harmonic_values = [0.0] * 5
         self.harmonic_stored_values = [0.45] * 5
@@ -816,7 +1058,11 @@ class PolVisualizerApp:
         self.spacemouse_var = tk.StringVar(value=self._space_mouse_status())
         self.canvas = None
         self.position_var = tk.StringVar(value="00:00 / 00:00")
+        self.eq_bands = [self._default_eq_band()]
         self._build_ui()
+        self._sync_mic_pre()
+        self._sync_eq()
+        self.sync_tone_stage()
         self._tick()
 
     def _stage_defs(self):
@@ -950,6 +1196,93 @@ class PolVisualizerApp:
         if hasattr(self, "gain_text_var"):
             self.gain_text_var.set(f"Gain {self.input_gain_var.get():.2f}x")
 
+    def _sync_mic_pre(self):
+        self.player.mic_pre_phase_enabled = self.phase_var.get()
+        self.player.mic_pre_tube_enabled = self.tube_var.get()
+        self.player.mic_pre_lpf_enabled = self.lpf_var.get()
+        self.player.mic_pre_hpf_enabled = self.hpf_var.get()
+        self.player.mic_pre_lpf_hz = float(self.player.mic_pre_lpf_hz)
+        self.player.mic_pre_hpf_hz = float(self.player.mic_pre_hpf_hz)
+
+    def _default_eq_band(self):
+        return {"enabled": True, "type": "BELL", "freq": 1000.0, "gain_db": 0.0, "width": 1.20}
+
+    def _sync_eq(self):
+        self.player.set_eq_bands(self.eq_bands)
+
+    def sync_tone_stage(self):
+        self._save_current_tone_mode_state()
+        chain = {
+            "trn": {
+                "enabled": self.tone_state_by_mode["TRN"]["enabled"],
+                "center_hz": self.tone_state_by_mode["TRN"]["freq"],
+                "width_octaves": self.tone_state_by_mode["TRN"]["width"],
+                "attack": self.tone_state_by_mode["TRN"]["attack"],
+                "sustain": self.tone_state_by_mode["TRN"]["sustain"],
+            },
+            "clr": {
+                "enabled": self.tone_state_by_mode["CLR"]["enabled"],
+                "drive": self.tone_state_by_mode["CLR"]["drive"],
+                "tone": self.tone_state_by_mode["CLR"]["tone"],
+                "mix": self.tone_state_by_mode["CLR"]["mix"],
+                "gain": self.tone_state_by_mode["CLR"]["gain"],
+            },
+            "xct": {
+                "enabled": self.tone_state_by_mode["XCT"]["enabled"],
+                "center_hz": self.tone_state_by_mode["XCT"]["freq"],
+                "width_octaves": self.tone_state_by_mode["XCT"]["width"],
+                "amount": self.tone_state_by_mode["XCT"]["amount"],
+                "mix": self.tone_state_by_mode["XCT"]["mix"],
+            },
+        }
+        self.player.set_tone_chain(chain)
+
+    def _save_current_tone_mode_state(self):
+        mode = self.tone_mode_var.get()
+        if mode == "TRN":
+            self.tone_state_by_mode["TRN"].update(
+                freq=self._slider_to_freq(self.tone_freq_position_var.get()),
+                width=self.tone_width_var.get(),
+                attack=self.trn_attack_var.get(),
+                sustain=self.trn_sustain_var.get(),
+            )
+        elif mode == "CLR":
+            self.tone_state_by_mode["CLR"].update(
+                drive=self.clr_drive_var.get(),
+                tone=self.clr_tone_var.get(),
+                mix=self.clr_mix_var.get(),
+                gain=self.clr_gain_var.get(),
+            )
+        elif mode == "XCT":
+            self.tone_state_by_mode["XCT"].update(
+                freq=self._slider_to_freq(self.xct_freq_position_var.get()),
+                width=self.xct_width_var.get(),
+                amount=self.xct_amount_var.get(),
+                mix=self.xct_mix_var.get(),
+            )
+
+    def _load_tone_mode_state(self, mode: str):
+        self._save_current_tone_mode_state()
+        state = self.tone_state_by_mode[mode]
+        if mode == "TRN":
+            self.tone_freq_position_var.set(self._freq_to_slider(state["freq"]))
+            self.tone_width_var.set(state["width"])
+            self.trn_attack_var.set(state["attack"])
+            self.trn_sustain_var.set(state["sustain"])
+        elif mode == "CLR":
+            self.clr_drive_var.set(state["drive"])
+            self.clr_tone_var.set(state["tone"])
+            self.clr_mix_var.set(state["mix"])
+            self.clr_gain_var.set(state["gain"])
+        elif mode == "XCT":
+            self.xct_freq_position_var.set(self._freq_to_slider(state["freq"]))
+            self.xct_width_var.set(state["width"])
+            self.xct_amount_var.set(state["amount"])
+            self.xct_mix_var.set(state["mix"])
+        self.tone_mode_var.set(mode)
+        self.tone_nav_row.set("bottom")
+        self.sync_tone_stage()
+
     def set_noise_level(self, _value=None):
         self.player.noise_level = float(self.noise_level_var.get())
 
@@ -1082,11 +1415,22 @@ class PolVisualizerApp:
         stage = self.stage_var.get()
         if stage == "mic_pre":
             if axis_value != 0.0:
-                current = float(self.input_gain_var.get())
-                updated = max(0.25, min(8.0, current + axis_value * 0.08))
-                if abs(updated - current) > 1e-6:
-                    self.input_gain_var.set(updated)
-                    self.set_input_gain()
+                if self.mic_pre_selected.get() == "lpf" and self.lpf_var.get():
+                    current = self.player.mic_pre_lpf_hz
+                    updated = float(np.clip(current * (1.0 + axis_value * 0.06), 20.0, 20000.0))
+                    if abs(updated - current) > 1e-6:
+                        self.player.mic_pre_lpf_hz = updated
+                elif self.mic_pre_selected.get() == "hpf" and self.hpf_var.get():
+                    current = self.player.mic_pre_hpf_hz
+                    updated = float(np.clip(current * (1.0 - axis_value * 0.06), 20.0, 20000.0))
+                    if abs(updated - current) > 1e-6:
+                        self.player.mic_pre_hpf_hz = updated
+                elif self.mic_pre_selected.get() == "":
+                    current = float(self.input_gain_var.get())
+                    updated = max(0.25, min(8.0, current + axis_value * 0.08))
+                    if abs(updated - current) > 1e-6:
+                        self.input_gain_var.set(updated)
+                        self.set_input_gain()
         elif stage == "harmonics":
             if axis_value != 0.0:
                 selected = self.harmonic_selected.get()
@@ -1121,39 +1465,103 @@ class PolVisualizerApp:
                 elif selected == 6:
                     self.comp_width_var.set(max(0.20, min(6.0, self.comp_width_var.get() + axis_value * 0.06)))
                 self.sync_compressor()
+        elif stage == "eq":
+            if axis_value != 0.0 and self.eq_bands:
+                band = self.eq_bands[self.eq_band_selected.get()]
+                selected = self.eq_param_selected.get()
+                if self.eq_nav_row.get() == "bottom" and selected == 2:
+                    band["freq"] = float(np.clip(band["freq"] * (1.0 + axis_value * 0.06), POL_LOW_HZ, POL_HIGH_HZ))
+                elif self.eq_nav_row.get() == "bottom" and selected == 3:
+                    band["gain_db"] = float(np.clip(band["gain_db"] + axis_value * 0.9, -18.0, 18.0))
+                elif self.eq_nav_row.get() == "bottom" and selected == 4:
+                    band["width"] = float(np.clip(band["width"] + axis_value * 0.08, 0.20, 6.0))
+                self._sync_eq()
+        elif stage == "tone_stage":
+            if axis_value != 0.0 and self.tone_nav_row.get() == "bottom":
+                mode_name = self.tone_mode_var.get()
+                selected = self.tone_selected.get()
+                if mode_name == "TRN":
+                    if selected == 0:
+                        pos = max(0.0, min(1.0, self.tone_freq_position_var.get() + axis_value * 0.012))
+                        self.tone_freq_position_var.set(pos)
+                    elif selected == 1:
+                        self.tone_width_var.set(max(0.20, min(6.0, self.tone_width_var.get() + axis_value * 0.06)))
+                    elif selected == 2:
+                        self.trn_attack_var.set(max(0.0, min(1.0, self.trn_attack_var.get() + axis_value * 0.03)))
+                    elif selected == 3:
+                        self.trn_sustain_var.set(max(0.0, min(1.0, self.trn_sustain_var.get() + axis_value * 0.03)))
+                elif mode_name == "CLR":
+                    if selected == 0:
+                        self.clr_drive_var.set(max(0.0, min(1.0, self.clr_drive_var.get() + axis_value * 0.03)))
+                    elif selected == 1:
+                        self.clr_tone_var.set(max(-1.0, min(1.0, self.clr_tone_var.get() + axis_value * 0.04)))
+                    elif selected == 2:
+                        self.clr_mix_var.set(max(0.0, min(1.0, self.clr_mix_var.get() + axis_value * 0.03)))
+                    elif selected == 3:
+                        self.clr_gain_var.set(max(0.5, min(2.5, self.clr_gain_var.get() + axis_value * 0.04)))
+                elif mode_name == "XCT":
+                    if selected == 0:
+                        pos = max(0.0, min(1.0, self.xct_freq_position_var.get() + axis_value * 0.012))
+                        self.xct_freq_position_var.set(pos)
+                    elif selected == 1:
+                        self.xct_width_var.set(max(0.20, min(6.0, self.xct_width_var.get() + axis_value * 0.06)))
+                    elif selected == 2:
+                        self.xct_amount_var.set(max(0.0, min(1.0, self.xct_amount_var.get() + axis_value * 0.03)))
+                    elif selected == 3:
+                        self.xct_mix_var.set(max(0.0, min(1.0, self.xct_mix_var.get() + axis_value * 0.03)))
+                self.sync_tone_stage()
 
         for button_idx in pressed:
             if stage == "mic_pre":
+                if button_idx == 0 and self.mic_pre_selected.get():
+                    self._toggle_mic_pre(self.mic_pre_selected.get())
+            elif stage == "eq":
                 if button_idx == 0:
-                    self._toggle_mic_pre("phantom")
-                elif button_idx == 1:
-                    self._toggle_mic_pre("phase")
-                elif button_idx == 2:
-                    self._toggle_mic_pre("tube")
+                    self._handle_eq_direction("press")
             elif stage == "compressor":
                 if button_idx == 0:
                     if self.comp_nav_row.get() == "top":
                         self._toggle_selected_compressor_processor()
                     elif self.comp_nav_row.get() == "bottom" and self.comp_selected.get() in (5, 6):
                         self._toggle_selected_compressor_band_target()
+            elif stage == "tone_stage":
+                if button_idx == 0 and self.tone_nav_row.get() == "top":
+                    self._toggle_selected_tone_processor()
 
         for target in directional:
             if stage == "mic_pre":
                 self._handle_mic_pre_direction(target)
             elif stage == "harmonics":
                 self._handle_harmonics_direction(target)
+            elif stage == "eq":
+                self._handle_eq_direction(target)
             elif stage == "compressor":
                 self._handle_compressor_direction(target)
+            elif stage == "tone_stage":
+                self._handle_tone_direction(target)
 
     def _handle_mic_pre_direction(self, target: str):
+        buttons = ["lpf", "phantom", "phase", "tube", "hpf"]
+        current = self.mic_pre_selected.get()
+        idx = buttons.index(current) if current in buttons else -1
         if target == "left":
-            self._toggle_mic_pre("phantom")
-        elif target == "up":
-            self._toggle_mic_pre("phase")
+            if idx == -1:
+                self.mic_pre_selected.set(buttons[-1])
+            else:
+                self.mic_pre_selected.set(buttons[(idx - 1) % len(buttons)])
         elif target == "right":
-            self._toggle_mic_pre("tube")
+            if idx == -1:
+                self.mic_pre_selected.set(buttons[0])
+            else:
+                self.mic_pre_selected.set(buttons[(idx + 1) % len(buttons)])
         elif target == "down":
-            self.ring_var.set((self.ring_var.get() + 1) % 4)
+            if idx != -1:
+                self._toggle_mic_pre(self.mic_pre_selected.get())
+        elif target == "press":
+            if idx != -1:
+                self._toggle_mic_pre(self.mic_pre_selected.get())
+        elif target == "up":
+            self.mic_pre_selected.set("")
         elif target == "back":
             self.ring_var.set(0)
 
@@ -1176,6 +1584,44 @@ class PolVisualizerApp:
     def _set_harmonic(self, index: int):
         self.harmonic_selected.set(index)
         self.player.set_harmonic_values(self.harmonic_values)
+
+    def _handle_eq_direction(self, target: str):
+        if target == "left":
+            if self.eq_nav_row.get() == "top" and self.eq_bands:
+                self.eq_band_selected.set((self.eq_band_selected.get() - 1) % len(self.eq_bands))
+            else:
+                self.eq_param_selected.set((self.eq_param_selected.get() - 1) % 5)
+        elif target == "right":
+            if self.eq_nav_row.get() == "top" and self.eq_bands:
+                self.eq_band_selected.set((self.eq_band_selected.get() + 1) % len(self.eq_bands))
+            else:
+                self.eq_param_selected.set((self.eq_param_selected.get() + 1) % 5)
+        elif target == "up":
+            self.eq_nav_row.set("top")
+        elif target == "down":
+            if self.eq_nav_row.get() == "top":
+                self.eq_nav_row.set("bottom")
+            elif self.eq_param_selected.get() == 0:
+                self.eq_bands.append(self._default_eq_band())
+                self.eq_band_selected.set(len(self.eq_bands) - 1)
+                self._sync_eq()
+            elif self.eq_param_selected.get() == 1 and self.eq_bands:
+                types = ["BELL", "LOW SHELF", "HIGH SHELF", "LPF", "HPF"]
+                band = self.eq_bands[self.eq_band_selected.get()]
+                idx = types.index(band["type"]) if band["type"] in types else 0
+                band["type"] = types[(idx + 1) % len(types)]
+                self._sync_eq()
+        elif target == "press":
+            if self.eq_nav_row.get() == "bottom" and self.eq_param_selected.get() == 0:
+                self.eq_bands.append(self._default_eq_band())
+                self.eq_band_selected.set(len(self.eq_bands) - 1)
+                self._sync_eq()
+            elif self.eq_nav_row.get() == "bottom" and self.eq_param_selected.get() == 1 and self.eq_bands:
+                types = ["BELL", "LOW SHELF", "HIGH SHELF", "LPF", "HPF"]
+                band = self.eq_bands[self.eq_band_selected.get()]
+                idx = types.index(band["type"]) if band["type"] in types else 0
+                band["type"] = types[(idx + 1) % len(types)]
+                self._sync_eq()
 
     def _handle_compressor_direction(self, target: str):
         modes = ["COMP", "LIMIT", "GATE"]
@@ -1209,6 +1655,39 @@ class PolVisualizerApp:
             else:
                 self.comp_selected.set((self.comp_selected.get() + 1) % 7)
 
+    def _handle_tone_direction(self, target: str):
+        modes = ["TRN", "CLR", "XCT"]
+        if target == "press":
+            if self.tone_nav_row.get() == "top":
+                self._toggle_selected_tone_processor()
+        elif target == "up":
+            self.tone_nav_row.set("top")
+        elif target == "down":
+            if self.tone_nav_row.get() == "top":
+                self.tone_nav_row.set("bottom")
+            else:
+                self._toggle_selected_tone_processor()
+        elif target == "left":
+            if self.tone_nav_row.get() == "top":
+                idx = modes.index(self.tone_mode_var.get())
+                self._load_tone_mode_state(modes[(idx - 1) % len(modes)])
+                self.tone_nav_row.set("top")
+            else:
+                self.tone_selected.set((self.tone_selected.get() - 1) % 4)
+        elif target == "right":
+            if self.tone_nav_row.get() == "top":
+                idx = modes.index(self.tone_mode_var.get())
+                self._load_tone_mode_state(modes[(idx + 1) % len(modes)])
+                self.tone_nav_row.set("top")
+            else:
+                self.tone_selected.set((self.tone_selected.get() + 1) % 4)
+
+    def _toggle_selected_tone_processor(self):
+        mode = self.tone_mode_var.get()
+        current = bool(self.tone_state_by_mode[mode]["enabled"])
+        self.tone_state_by_mode[mode]["enabled"] = not current
+        self.sync_tone_stage()
+
     def _toggle_selected_compressor_processor(self):
         mode = self.comp_mode_var.get()
         self.comp_enabled_vars[mode].set(not self.comp_enabled_vars[mode].get())
@@ -1228,12 +1707,19 @@ class PolVisualizerApp:
         self.sync_compressor()
 
     def _toggle_mic_pre(self, target: str):
-        if target == "phantom":
+        if not target:
+            return
+        if target == "lpf":
+            self.lpf_var.set(not self.lpf_var.get())
+        elif target == "phantom":
             self.phantom_var.set(not self.phantom_var.get())
         elif target == "phase":
             self.phase_var.set(not self.phase_var.get())
         elif target == "tube":
             self.tube_var.set(not self.tube_var.get())
+        elif target == "hpf":
+            self.hpf_var.set(not self.hpf_var.get())
+        self._sync_mic_pre()
 
     def _on_canvas_click(self, event):
         width = int(self.canvas["width"])
@@ -1256,18 +1742,27 @@ class PolVisualizerApp:
                     self._load_compressor_mode_state(mode_name)
                     self.comp_nav_row.set("top")
                     return
+        if stage == "tone_stage" and abs(event.y - 142) <= 22:
+            for mode_name, x in zip(["TRN", "CLR", "XCT"], [width / 2 - 120, width / 2, width / 2 + 120]):
+                if abs(event.x - x) <= 54:
+                    self._load_tone_mode_state(mode_name)
+                    self.tone_nav_row.set("top")
+                    return
 
         button_y = height - 64
         if abs(event.y - button_y) > 28:
             return
         if stage == "mic_pre":
             slots = [
-                ("phantom", width * 0.28),
+                ("lpf", width * 0.16),
+                ("phantom", width * 0.33),
                 ("phase", width * 0.50),
-                ("tube", width * 0.72),
+                ("tube", width * 0.67),
+                ("hpf", width * 0.84),
             ]
             for name, x in slots:
-                if abs(event.x - x) <= 56:
+                if abs(event.x - x) <= 48:
+                    self.mic_pre_selected.set(name if name in ("lpf", "hpf") else "")
                     self._toggle_mic_pre(name)
                     return
         elif stage == "harmonics":
@@ -1282,6 +1777,13 @@ class PolVisualizerApp:
                 if abs(event.x - x) <= 46:
                     self.comp_selected.set(idx)
                     self.comp_nav_row.set("bottom")
+                    return
+        elif stage == "tone_stage":
+            positions = self._bottom_slot_positions(width, 4)
+            for idx, x in enumerate(positions):
+                if abs(event.x - x) <= 52:
+                    self.tone_selected.set(idx)
+                    self.tone_nav_row.set("bottom")
                     return
 
     def _fmt_time(self, samples: int, samplerate: int) -> str:
@@ -1414,10 +1916,14 @@ class PolVisualizerApp:
 
         stage = self.stage_var.get()
         self._draw_stage_tabs(c, w)
-        if stage == "harmonics":
+        if stage == "mic_pre":
+            self._draw_mic_pre_overlay(c, cx, cy, outer_rx, outer_ry, inner_rx, inner_ry)
+        elif stage == "harmonics":
             self._draw_harmonic_overlay(c, cx, cy, outer_rx, outer_ry, inner_rx, inner_ry, mode)
         elif stage == "compressor":
             self._draw_compressor_overlay(c, cx, cy, outer_rx, outer_ry, inner_rx, inner_ry, levels, comp_gr_db)
+        elif stage == "tone_stage":
+            self._draw_tone_overlay(c, cx, cy, outer_rx, outer_ry, inner_rx, inner_ry)
         if stage == "mic_pre":
             self._draw_mic_pre_buttons(c, w, h)
         elif stage == "harmonics":
@@ -1426,9 +1932,10 @@ class PolVisualizerApp:
             selected_gr = float(comp_gr_db.get(self.comp_mode_var.get().lower(), 0.0))
             self._draw_compressor_stage(c, w, h, selected_gr)
         elif stage == "eq":
-            self._draw_placeholder_stage(c, w, h, "EQ", "LPF / HPF / TBE with band targeting")
+            self._draw_eq_overlay(c, cx, cy, outer_rx, outer_ry, inner_rx, inner_ry)
+            self._draw_eq_stage(c, w, h)
         elif stage == "tone_stage":
-            self._draw_placeholder_stage(c, w, h, "TRN / CLR / XCT", "Transient / Color / Exciter")
+            self._draw_tone_stage(c, w, h)
 
     def _draw_stage_tabs(self, c: tk.Canvas, w: int):
         stage_defs = self._stage_defs()
@@ -1444,6 +1951,37 @@ class PolVisualizerApp:
             c.create_rectangle(x - half_w, y - 16, x + half_w, y + 16, fill=fill, outline=outline, width=2)
             c.create_text(x, y, text=label, fill=text_color, font=("Orbitron", 10, "bold"))
 
+    def _draw_mic_pre_overlay(self, c: tk.Canvas, cx: int, cy: int, outer_rx: float, outer_ry: float, inner_rx: float, inner_ry: float):
+        if self.lpf_var.get():
+            band_pos = self._freq_to_slider(self.player.mic_pre_lpf_hz)
+            cutoff_rx = outer_rx - (outer_rx - inner_rx) * band_pos
+            cutoff_ry = outer_ry - (outer_ry - inner_ry) * band_pos
+            overlay_layers = 14
+            for layer in range(overlay_layers):
+                mix = layer / max(1, overlay_layers - 1)
+                layer_rx = cutoff_rx + (outer_rx - cutoff_rx) * mix
+                layer_ry = cutoff_ry + (outer_ry - cutoff_ry) * mix
+                layer_color = hsv_to_hex(0.0, 0.94, 0.34 + mix * 0.28)
+                c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=layer_color, width=3)
+            c.create_oval(cx - outer_rx, cy - outer_ry, cx + outer_rx, cy + outer_ry, outline="#ff3c2e", width=4)
+            c.create_oval(cx - cutoff_rx, cy - cutoff_ry, cx + cutoff_rx, cy + cutoff_ry, outline="#ffd08a", width=3)
+            c.create_text(cx, cy - outer_ry - 18, text=f"LPF {self.player.mic_pre_lpf_hz:.0f} Hz", fill="#f6a864", font=("Orbitron", 10, "bold"))
+
+        if self.hpf_var.get():
+            band_pos = self._freq_to_slider(self.player.mic_pre_hpf_hz)
+            cutoff_rx = outer_rx - (outer_rx - inner_rx) * band_pos
+            cutoff_ry = outer_ry - (outer_ry - inner_ry) * band_pos
+            overlay_layers = 14
+            for layer in range(overlay_layers):
+                mix = layer / max(1, overlay_layers - 1)
+                layer_rx = inner_rx + (cutoff_rx - inner_rx) * mix
+                layer_ry = inner_ry + (cutoff_ry - inner_ry) * mix
+                layer_color = hsv_to_hex(0.0, 0.94, 0.34 + mix * 0.28)
+                c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=layer_color, width=3)
+            c.create_oval(cx - inner_rx, cy - inner_ry, cx + inner_rx, cy + inner_ry, outline="#ff3c2e", width=4)
+            c.create_oval(cx - cutoff_rx, cy - cutoff_ry, cx + cutoff_rx, cy + cutoff_ry, outline="#ffd08a", width=3)
+            c.create_text(cx, cy + outer_ry + 18, text=f"HPF {self.player.mic_pre_hpf_hz:.0f} Hz", fill="#f6a864", font=("Orbitron", 10, "bold"))
+
     def _bottom_slot_positions(self, width: int, count: int):
         gap = width / (count + 1)
         return [gap * idx for idx in range(1, count + 1)]
@@ -1451,15 +1989,20 @@ class PolVisualizerApp:
     def _draw_mic_pre_buttons(self, c: tk.Canvas, w: int, h: int):
         button_y = h - 64
         buttons = [
-            ("48V", self.phantom_var.get(), w * 0.28),
-            ("PHS", self.phase_var.get(), w * 0.50),
-            ("TBE", self.tube_var.get(), w * 0.72),
+            ("lpf", "LPF", self.lpf_var.get(), w * 0.16),
+            ("phantom", "48V", self.phantom_var.get(), w * 0.33),
+            ("phase", "PHS", self.phase_var.get(), w * 0.50),
+            ("tube", "TBE", self.tube_var.get(), w * 0.67),
+            ("hpf", "HPF", self.hpf_var.get(), w * 0.84),
         ]
-        for label, active, x in buttons:
+        for key, label, active, x in buttons:
+            selected = self.mic_pre_selected.get() == key
             fill = "#f6a864" if active else "#24303a"
             outline = "#ffd490" if active else "#4f667b"
+            if selected:
+                outline = "#ff8456"
             text_color = "#12161a" if active else "#c9d8e6"
-            c.create_rectangle(x - 52, button_y - 18, x + 52, button_y + 18, fill=fill, outline=outline, width=2)
+            c.create_rectangle(x - 44, button_y - 18, x + 44, button_y + 18, fill=fill, outline=outline, width=2)
             c.create_text(x, button_y, text=label, fill=text_color, font=("Orbitron", 11, "bold"))
 
     def _draw_harmonics_stage(self, c: tk.Canvas, w: int, h: int):
@@ -1508,6 +2051,130 @@ class PolVisualizerApp:
             label_y = cy - ry - 18
             c.create_text(cx, label_y, text=f"H{harmonic_order} {freq:.0f} Hz", fill=color, font=("Orbitron", 9, "bold"))
 
+    def _draw_eq_overlay(self, c: tk.Canvas, cx: int, cy: int, outer_rx: float, outer_ry: float, inner_rx: float, inner_ry: float):
+        if not self.eq_bands:
+            return
+        freq_selected = self.eq_nav_row.get() == "bottom" and self.eq_param_selected.get() == 2
+        width_selected = self.eq_nav_row.get() == "bottom" and self.eq_param_selected.get() == 4
+        for idx, band in enumerate(self.eq_bands):
+            if not band.get("enabled", True):
+                continue
+            center = float(np.clip(band["freq"], POL_LOW_HZ, POL_HIGH_HZ))
+            band_pos = self._freq_to_slider(center)
+            rx = outer_rx - (outer_rx - inner_rx) * band_pos
+            ry = outer_ry - (outer_ry - inner_ry) * band_pos
+            selected = idx == self.eq_band_selected.get()
+            kind = band["type"]
+            gain_db = float(band["gain_db"])
+            width = float(np.clip(band["width"], 0.20, 6.0))
+            if kind == "BELL":
+                start_hz = max(POL_LOW_HZ, center / (2 ** (width / 2)))
+                end_hz = min(POL_HIGH_HZ, center * (2 ** (width / 2)))
+                start_pos = self._freq_to_slider(start_hz)
+                end_pos = self._freq_to_slider(end_hz)
+                start_rx = outer_rx - (outer_rx - inner_rx) * start_pos
+                start_ry = outer_ry - (outer_ry - inner_ry) * start_pos
+                end_rx = outer_rx - (outer_rx - inner_rx) * end_pos
+                end_ry = outer_ry - (outer_ry - inner_ry) * end_pos
+                color = eq_gain_color(gain_db)
+                edge = "#fff2d8" if selected and (freq_selected or width_selected) else color
+                band_layers = 9 if selected else 6
+                for layer in range(band_layers):
+                    mix = layer / max(1, band_layers - 1)
+                    layer_rx = start_rx + (end_rx - start_rx) * mix
+                    layer_ry = start_ry + (end_ry - start_ry) * mix
+                    layer_color = "#fff2d8" if selected and freq_selected and abs(mix - 0.5) < 0.18 else color
+                    layer_width = 3 if selected else 2
+                    c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=layer_color, width=layer_width)
+                if selected and width_selected:
+                    c.create_oval(cx - start_rx, cy - start_ry, cx + start_rx, cy + start_ry, outline=edge, width=2)
+                    c.create_oval(cx - end_rx, cy - end_ry, cx + end_rx, cy + end_ry, outline=edge, width=2)
+            elif kind in ("LOW SHELF", "HIGH SHELF"):
+                color = eq_gain_color(gain_db)
+                edge = "#fff2d8" if selected and (freq_selected or width_selected) else color
+                transition_oct = max(0.20, min(3.0, width))
+                if kind == "LOW SHELF":
+                    trans_end_hz = min(POL_HIGH_HZ, center * (2 ** transition_oct))
+                    trans_end_pos = self._freq_to_slider(trans_end_hz)
+                    trans_end_rx = outer_rx - (outer_rx - inner_rx) * trans_end_pos
+                    trans_end_ry = outer_ry - (outer_ry - inner_ry) * trans_end_pos
+                    band_layers = 10 if selected else 7
+                    for layer in range(band_layers):
+                        mix = layer / max(1, band_layers - 1)
+                        layer_rx = rx + (trans_end_rx - rx) * mix
+                        layer_ry = ry + (trans_end_ry - ry) * mix
+                        layer_color = "#fff2d8" if selected and freq_selected and layer == 0 else color
+                        c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=layer_color, width=3 if selected else 2)
+                    c.create_oval(cx - outer_rx, cy - outer_ry, cx + outer_rx, cy + outer_ry, outline=color, width=3 if selected else 2)
+                    if selected and width_selected:
+                        c.create_oval(cx - trans_end_rx, cy - trans_end_ry, cx + trans_end_rx, cy + trans_end_ry, outline=edge, width=2)
+                else:
+                    trans_start_hz = max(POL_LOW_HZ, center / (2 ** transition_oct))
+                    trans_start_pos = self._freq_to_slider(trans_start_hz)
+                    trans_start_rx = outer_rx - (outer_rx - inner_rx) * trans_start_pos
+                    trans_start_ry = outer_ry - (outer_ry - inner_ry) * trans_start_pos
+                    band_layers = 10 if selected else 7
+                    for layer in range(band_layers):
+                        mix = layer / max(1, band_layers - 1)
+                        layer_rx = trans_start_rx + (rx - trans_start_rx) * mix
+                        layer_ry = trans_start_ry + (ry - trans_start_ry) * mix
+                        layer_color = "#fff2d8" if selected and freq_selected and layer == band_layers - 1 else color
+                        c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=layer_color, width=3 if selected else 2)
+                    c.create_oval(cx - inner_rx, cy - inner_ry, cx + inner_rx, cy + inner_ry, outline=color, width=3 if selected else 2)
+                    if selected and width_selected:
+                        c.create_oval(cx - trans_start_rx, cy - trans_start_ry, cx + trans_start_rx, cy + trans_start_ry, outline=edge, width=2)
+            elif kind == "LPF":
+                for layer in range(10):
+                    mix = layer / 9.0
+                    layer_rx = rx + (outer_rx - rx) * mix
+                    layer_ry = ry + (outer_ry - ry) * mix
+                    c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline="#d22a1c", width=2)
+            elif kind == "HPF":
+                for layer in range(10):
+                    mix = layer / 9.0
+                    layer_rx = inner_rx + (rx - inner_rx) * mix
+                    layer_ry = inner_ry + (ry - inner_ry) * mix
+                    c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline="#d22a1c", width=2)
+            if selected:
+                c.create_text(cx, cy - ry - 18, text=f"{kind} {center:.0f} Hz", fill="#f6a864", font=("Orbitron", 10, "bold"))
+
+    def _draw_eq_stage(self, c: tk.Canvas, w: int, h: int):
+        cx = w // 2
+        c.create_text(cx, 88, text="EQ", fill="#f1dea4", font=("Orbitron", 20, "bold"))
+        c.create_text(cx, 110, text="Up goes to band row. Left/right selects a band. Down returns to edit row.", fill="#7da0be", font=("Segoe UI", 10))
+        if self.eq_bands:
+            active = self.eq_bands[self.eq_band_selected.get()]
+            c.create_text(cx, 132, text=f"Band {self.eq_band_selected.get() + 1}/{len(self.eq_bands)}  {active['type']}  {active['freq']:.0f} Hz  {active['gain_db']:+.1f} dB", fill="#f6a864", font=("Segoe UI", 10, "bold"))
+        top_y = 156
+        band_positions = self._bottom_slot_positions(w, max(1, len(self.eq_bands)))
+        for idx, x in enumerate(band_positions):
+            band = self.eq_bands[idx]
+            selected = idx == self.eq_band_selected.get()
+            focused = selected and self.eq_nav_row.get() == "top"
+            fill = "#f6a864" if selected else "#24303a"
+            outline = "#ffd490" if focused else ("#f6a864" if selected else "#4f667b")
+            text_color = "#11151a" if selected else "#c9d8e6"
+            c.create_rectangle(x - 40, top_y - 18, x + 40, top_y + 18, fill=fill, outline=outline, width=3 if focused else 2)
+            c.create_text(x, top_y - 6, text=f"B{idx + 1}", fill=text_color, font=("Orbitron", 9, "bold"))
+            c.create_text(x, top_y + 9, text=f"{band['freq']:.0f}", fill=text_color, font=("Segoe UI", 9, "bold"))
+        params = [
+            ("NEW", "", ""),
+            ("TYPE", self.eq_bands[self.eq_band_selected.get()]["type"] if self.eq_bands else "", ""),
+            ("FREQ", f"{self.eq_bands[self.eq_band_selected.get()]['freq']:.0f}" if self.eq_bands else "", "Hz"),
+            ("GAIN", f"{self.eq_bands[self.eq_band_selected.get()]['gain_db']:+.1f}" if self.eq_bands else "", "dB"),
+            ("WIDTH", f"{self.eq_bands[self.eq_band_selected.get()]['width']:.2f}" if self.eq_bands else "", "oct"),
+        ]
+        positions = self._bottom_slot_positions(w, 5)
+        y = h - 64
+        for idx, ((label, value, suffix), x) in enumerate(zip(params, positions)):
+            selected = self.eq_param_selected.get() == idx and self.eq_nav_row.get() == "bottom"
+            fill = "#f6a864" if selected else "#24303a"
+            outline = "#ffd490" if selected else "#4f667b"
+            text_color = "#11151a" if selected else "#c9d8e6"
+            c.create_rectangle(x - 42, y - 24, x + 42, y + 24, fill=fill, outline=outline, width=2)
+            c.create_text(x, y - 7, text=label, fill=text_color, font=("Orbitron", 9, "bold"))
+            c.create_text(x, y + 10, text=f"{value}{suffix}", fill=text_color, font=("Segoe UI", 10, "bold"))
+
     def _draw_placeholder_stage(self, c: tk.Canvas, w: int, h: int, title: str, subtitle: str):
         cx = w // 2
         cy = h // 2
@@ -1515,6 +2182,192 @@ class PolVisualizerApp:
         c.create_text(cx, cy - 34, text=title, fill="#f1dea4", font=("Orbitron", 22, "bold"))
         c.create_text(cx, cy + 4, text=subtitle, fill="#9fb6cb", font=("Segoe UI", 13))
         c.create_text(cx, cy + 44, text="Stage view scaffolded. Behavior comes next.", fill="#7da0be", font=("Segoe UI", 11))
+
+    def _draw_tone_overlay(self, c: tk.Canvas, cx: int, cy: int, outer_rx: float, outer_ry: float, inner_rx: float, inner_ry: float):
+        mode = self.tone_mode_var.get()
+        state = self.tone_state_by_mode[mode]
+        preview_only = False
+        if not state["enabled"]:
+            if self.tone_nav_row.get() == "bottom":
+                if mode == "TRN" and self.tone_selected.get() in (0, 1, 2, 3):
+                    preview_only = True
+                elif mode == "XCT" and self.tone_selected.get() in (0, 1, 2, 3):
+                    preview_only = True
+                elif mode == "CLR" and self.tone_selected.get() in (0, 1, 2, 3):
+                    preview_only = True
+            if not preview_only:
+                return
+        if mode == "TRN":
+            center = float(state["freq"])
+            width = float(state["width"])
+            if preview_only:
+                center = float(self._slider_to_freq(self.tone_freq_position_var.get()))
+                width = float(self.tone_width_var.get())
+            start_hz = max(POL_LOW_HZ, center / (2 ** (width / 2)))
+            end_hz = min(POL_HIGH_HZ, center * (2 ** (width / 2)))
+            start_pos = self._freq_to_slider(start_hz)
+            end_pos = self._freq_to_slider(end_hz)
+            start_rx = outer_rx - (outer_rx - inner_rx) * start_pos
+            start_ry = outer_ry - (outer_ry - inner_ry) * start_pos
+            end_rx = outer_rx - (outer_rx - inner_rx) * end_pos
+            end_ry = outer_ry - (outer_ry - inner_ry) * end_pos
+            layers = 10
+            for layer in range(layers):
+                mix = layer / max(1, layers - 1)
+                layer_rx = start_rx + (end_rx - start_rx) * mix
+                layer_ry = start_ry + (end_ry - start_ry) * mix
+                if self.tone_nav_row.get() == "bottom" and self.tone_selected.get() == 2:
+                    attack_heat = float(self.trn_attack_var.get())
+                    color = lerp_color((105, 223, 242), (255, 92, 58), attack_heat)
+                elif self.tone_nav_row.get() == "bottom" and self.tone_selected.get() == 3:
+                    sustain_heat = float(self.trn_sustain_var.get())
+                    color = lerp_color((105, 223, 242), (255, 92, 58), sustain_heat)
+                else:
+                    color = "#fff2d8" if preview_only else lerp_color((255, 216, 150), (255, 92, 58), mix)
+                c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=color, width=2 if preview_only else 2)
+            label = f"TRN {center:.0f} Hz / {width:.2f} oct"
+            label_fill = "#fff2d8" if preview_only else "#f6a864"
+            if self.tone_nav_row.get() == "bottom" and self.tone_selected.get() == 2:
+                label_fill = lerp_color((105, 223, 242), (255, 92, 58), float(self.trn_attack_var.get()))
+                label = f"TRN ATTACK {self.trn_attack_var.get():.2f}"
+            elif self.tone_nav_row.get() == "bottom" and self.tone_selected.get() == 3:
+                label_fill = lerp_color((105, 223, 242), (255, 92, 58), float(self.trn_sustain_var.get()))
+                label = f"TRN SUSTAIN {self.trn_sustain_var.get():.2f}"
+            c.create_text(cx, cy - end_ry - 18, text=label, fill=label_fill, font=("Orbitron", 10, "bold"))
+        elif mode == "CLR":
+            drive = float(self.clr_drive_var.get()) if preview_only else float(state["drive"])
+            tone = float(self.clr_tone_var.get()) if preview_only else float(state["tone"])
+            mix = float(self.clr_mix_var.get()) if preview_only else float(state["mix"])
+            gain = float(self.clr_gain_var.get()) if preview_only else float(state["gain"])
+            outer_glow = 18 + drive * 30
+            core_glow = 8 + mix * 22
+            brightness = max(0.35, min(1.0, (gain - 0.5) / 2.0))
+            warm = (255, int(170 + drive * 50), 92)
+            cool = (110, 214, 255)
+            tone_t = (tone + 1.0) / 2.0
+            tone_color = lerp_color(cool, warm, tone_t)
+            edge_color = "#fff2d8" if preview_only else tone_color
+            for layer in range(6):
+                layer_mix = layer / 5.0
+                layer_rx = inner_rx + outer_glow * (0.35 + layer_mix * 0.75)
+                layer_ry = inner_ry + outer_glow * 0.72 * (0.35 + layer_mix * 0.75)
+                layer_color = edge_color if layer == 0 else lerp_color((40, 62, 86), (255, 110, 66), max(0.0, min(1.0, drive * brightness * (0.3 + layer_mix * 0.7))))
+                c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=layer_color, width=3 if layer == 0 else 2)
+            inner_color = lerp_color((120, 210, 255), (255, 170, 95), tone_t)
+            c.create_oval(cx - inner_rx - core_glow, cy - inner_ry - core_glow * 0.72, cx + inner_rx + core_glow, cy + inner_ry + core_glow * 0.72, outline=inner_color, width=3)
+            label = f"CLR DRIVE {drive:.2f}"
+            label_fill = edge_color
+            if self.tone_nav_row.get() == "bottom":
+                if self.tone_selected.get() == 1:
+                    label = f"CLR TONE {tone:+.2f}"
+                elif self.tone_selected.get() == 2:
+                    label = f"CLR MIX {mix:.2f}"
+                elif self.tone_selected.get() == 3:
+                    label = f"CLR GAIN {gain:.2f}x"
+            c.create_text(cx, cy - inner_ry - outer_glow - 16, text=label, fill=label_fill, font=("Orbitron", 10, "bold"))
+        elif mode == "XCT":
+            center = float(state["freq"])
+            width = float(state["width"])
+            amount = float(state["amount"])
+            mix_amt = float(state["mix"])
+            if preview_only:
+                center = float(self._slider_to_freq(self.xct_freq_position_var.get()))
+                width = float(self.xct_width_var.get())
+                amount = float(self.xct_amount_var.get())
+                mix_amt = float(self.xct_mix_var.get())
+            start_hz = max(POL_LOW_HZ, center / (2 ** (width / 2)))
+            end_hz = min(POL_HIGH_HZ, center * (2 ** (width / 2)))
+            start_pos = self._freq_to_slider(start_hz)
+            end_pos = self._freq_to_slider(end_hz)
+            start_rx = outer_rx - (outer_rx - inner_rx) * start_pos
+            start_ry = outer_ry - (outer_ry - inner_ry) * start_pos
+            end_rx = outer_rx - (outer_rx - inner_rx) * end_pos
+            end_ry = outer_ry - (outer_ry - inner_ry) * end_pos
+            layers = 7
+            for layer in range(layers):
+                mix = layer / max(1, layers - 1)
+                layer_rx = start_rx + (end_rx - start_rx) * mix
+                layer_ry = start_ry + (end_ry - start_ry) * mix
+                if preview_only and self.tone_selected.get() in (0, 1):
+                    color = "#fff2d8"
+                else:
+                    base_color = lerp_color((96, 201, 255), (98, 255, 198), mix)
+                    if self.tone_nav_row.get() == "bottom" and self.tone_selected.get() == 2:
+                        base_color = lerp_color((86, 148, 255), (170, 255, 244), amount)
+                    elif self.tone_nav_row.get() == "bottom" and self.tone_selected.get() == 3:
+                        base_color = lerp_color((72, 110, 196), (130, 255, 220), mix_amt)
+                    color = base_color
+                c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=color, width=2 + int(amount * 2))
+            flare = 8 + amount * 18
+            c.create_oval(
+                cx - end_rx - flare,
+                cy - end_ry - flare * 0.72,
+                cx + end_rx + flare,
+                cy + end_ry + flare * 0.72,
+                outline=lerp_color((88, 188, 255), (194, 255, 238), mix_amt),
+                width=2,
+            )
+            label = f"XCT {center:.0f} Hz / {width:.2f} oct"
+            label_fill = "#fff2d8" if preview_only and self.tone_selected.get() in (0, 1) else "#9af2ff"
+            if self.tone_nav_row.get() == "bottom":
+                if self.tone_selected.get() == 2:
+                    label = f"XCT AMOUNT {amount:.2f}"
+                    label_fill = lerp_color((86, 148, 255), (170, 255, 244), amount)
+                elif self.tone_selected.get() == 3:
+                    label = f"XCT MIX {mix_amt:.2f}"
+                    label_fill = lerp_color((72, 110, 196), (130, 255, 220), mix_amt)
+            c.create_text(cx, cy - end_ry - 18, text=label, fill=label_fill, font=("Orbitron", 10, "bold"))
+
+    def _draw_tone_stage(self, c: tk.Canvas, w: int, h: int):
+        cx = w // 2
+        mode = self.tone_mode_var.get()
+        state = self.tone_state_by_mode[mode]
+        c.create_text(cx, 88, text="TRN / CLR / XCT", fill="#f1dea4", font=("Orbitron", 20, "bold"))
+        c.create_text(cx, 110, text="Use up/down to move between processor and parameter rows. Left/right navigates within the active row. On the top row, SpaceMouse button 1 toggles the selected processor.", fill="#7da0be", font=("Segoe UI", 10))
+        c.create_text(cx, 128, text=f"{mode} {'ON' if state['enabled'] else 'OFF'}", fill="#f6a864" if state["enabled"] else "#7da0be", font=("Segoe UI", 10, "bold"))
+        top_y = 142
+        processor_positions = [cx - 120, cx, cx + 120]
+        c.create_text(cx, 166, text="Processor row active" if self.tone_nav_row.get() == "top" else "Parameter row active", fill="#f6a864" if self.tone_nav_row.get() == "top" else "#7da0be", font=("Segoe UI", 10, "bold"))
+        for name, x in zip(["TRN", "CLR", "XCT"], processor_positions):
+            enabled = self.tone_state_by_mode[name]["enabled"]
+            selected = self.tone_mode_var.get() == name
+            focused = self.tone_nav_row.get() == "top" and selected
+            fill = "#f6a864" if enabled else "#24303a"
+            outline = "#ffd490" if focused else ("#f6a864" if selected else "#4f667b")
+            text_color = "#11151a" if enabled else "#c9d8e6"
+            c.create_rectangle(x - 50, top_y - 18, x + 50, top_y + 18, fill=fill, outline=outline, width=3 if focused else 2)
+            c.create_text(x, top_y, text=name, fill=text_color, font=("Orbitron", 10, "bold"))
+        if mode == "TRN":
+            params = [
+                ("FREQ", f"{self._slider_to_freq(self.tone_freq_position_var.get()):.0f}", "Hz"),
+                ("WIDTH", f"{self.tone_width_var.get():.2f}", "oct"),
+                ("ATTACK", f"{self.trn_attack_var.get():.2f}", ""),
+                ("SUSTAIN", f"{self.trn_sustain_var.get():.2f}", ""),
+            ]
+        elif mode == "CLR":
+            params = [
+                ("DRIVE", f"{self.clr_drive_var.get():.2f}", ""),
+                ("TONE", f"{self.clr_tone_var.get():+.2f}", ""),
+                ("MIX", f"{self.clr_mix_var.get():.2f}", ""),
+                ("GAIN", f"{self.clr_gain_var.get():.2f}", "x"),
+            ]
+        else:
+            params = [
+                ("FREQ", f"{self._slider_to_freq(self.xct_freq_position_var.get()):.0f}", "Hz"),
+                ("WIDTH", f"{self.xct_width_var.get():.2f}", "oct"),
+                ("AMOUNT", f"{self.xct_amount_var.get():.2f}", ""),
+                ("MIX", f"{self.xct_mix_var.get():.2f}", ""),
+            ]
+        positions = self._bottom_slot_positions(w, 4)
+        y = h - 64
+        for idx, ((label, value, suffix), x) in enumerate(zip(params, positions)):
+            selected = self.tone_selected.get() == idx and self.tone_nav_row.get() == "bottom"
+            fill = "#f6a864" if selected else "#24303a"
+            outline = "#ffd490" if selected else "#4f667b"
+            text_color = "#11151a" if selected else "#c9d8e6"
+            c.create_rectangle(x - 48, y - 24, x + 48, y + 24, fill=fill, outline=outline, width=2)
+            c.create_text(x, y - 7, text=label, fill=text_color, font=("Orbitron", 9, "bold"))
+            c.create_text(x, y + 10, text=f"{value}{suffix}", fill=text_color, font=("Segoe UI", 10, "bold"))
 
     def _draw_compressor_stage(self, c: tk.Canvas, w: int, h: int, comp_gr_db: float):
         cx = w // 2
