@@ -79,7 +79,8 @@ class SpaceMouseController:
         self.available = False
         self.name = "No SpaceMouse"
         self.joystick = None
-        self.last_buttons = []
+        self._sticks: list = []
+        self.last_buttons = [0, 0, 0]
         self.deadzone = 0.12
         self.gain_axis = 5
         self.x_axis = 0
@@ -91,55 +92,64 @@ class SpaceMouseController:
             os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
             pygame.init()
             pygame.joystick.init()
-            preferred = None
-            fallback = None
+            sticks: list[tuple[str, object]] = []
             for index in range(pygame.joystick.get_count()):
                 stick = pygame.joystick.Joystick(index)
                 stick.init()
-                name = stick.get_name()
-                if "SpaceMouse" in name:
-                    preferred = stick
-                    break
-                if "3Dconnexion" in name or "Universal Receiver" in name:
-                    fallback = stick
-            self.joystick = preferred or fallback
-            if self.joystick is not None:
+                sticks.append((stick.get_name(), stick))
+            force_idx = os.environ.get("SYSTEM_Q_SPACEMOUSE_INDEX")
+            if force_idx is not None and force_idx.strip().isdigit():
+                i = int(force_idx.strip())
+                if 0 <= i < len(sticks):
+                    self._sticks = [sticks[i][1]]
+            if not self._sticks:
+                for name, stick in sticks:
+                    if "SpaceMouse" in name:
+                        self._sticks.append(stick)
+                for name, stick in sticks:
+                    if ("3Dconnexion" in name or "Universal Receiver" in name) and stick not in self._sticks:
+                        self._sticks.append(stick)
+            if self._sticks:
                 self.available = True
-                self.name = self.joystick.get_name()
-                self.last_buttons = [0] * self.joystick.get_numbuttons()
-                if self.joystick.get_numaxes() <= self.gain_axis:
-                    self.gain_axis = min(2, max(0, self.joystick.get_numaxes() - 1))
+                self.joystick = self._sticks[0]
+                self.name = " | ".join(j.get_name() for j in self._sticks)
+                max_axes = max(j.get_numaxes() for j in self._sticks)
+                if max_axes <= self.gain_axis:
+                    self.gain_axis = min(2, max(0, max_axes - 1))
         except Exception:
             self.available = False
 
+    def _merged_axis(self, axis_idx: int) -> float:
+        best = 0.0
+        for j in self._sticks:
+            if j.get_numaxes() > axis_idx:
+                v = float(j.get_axis(axis_idx))
+                if abs(v) > abs(best):
+                    best = v
+        return best
+
     def poll(self):
-        if not self.available or self.joystick is None:
+        if not self.available or not self._sticks:
             return 0.0, [], []
         pygame.event.pump()
-        axis_value = 0.0
-        if self.joystick.get_numaxes() > 0:
-            raw = float(self.joystick.get_axis(self.gain_axis))
-            if abs(raw) >= self.deadzone:
-                axis_value = raw
+        raw = self._merged_axis(self.gain_axis)
+        axis_value = raw if abs(raw) >= self.deadzone else 0.0
 
+        merged = [0, 0, 0]
+        for j in self._sticks:
+            for idx in range(min(3, j.get_numbuttons())):
+                if j.get_button(idx):
+                    merged[idx] = 1
         pressed = []
-        button_count = self.joystick.get_numbuttons()
-        for idx in range(min(3, button_count)):
-            state = self.joystick.get_button(idx)
-            if state and not self.last_buttons[idx]:
+        for idx in range(3):
+            if merged[idx] and not self.last_buttons[idx]:
                 pressed.append(idx)
-            self.last_buttons[idx] = state
+        self.last_buttons = merged
 
         directional = []
-        x_val = 0.0
-        y_val = 0.0
-        z_val = 0.0
-        if self.joystick.get_numaxes() > self.x_axis:
-            x_val = float(self.joystick.get_axis(self.x_axis))
-        if self.joystick.get_numaxes() > self.y_axis:
-            y_val = float(self.joystick.get_axis(self.y_axis))
-        if self.joystick.get_numaxes() > self.z_axis:
-            z_val = float(self.joystick.get_axis(self.z_axis))
+        x_val = self._merged_axis(self.x_axis)
+        y_val = self._merged_axis(self.y_axis)
+        z_val = self._merged_axis(self.z_axis)
 
         left = x_val <= -self.direction_threshold
         right = x_val >= self.direction_threshold

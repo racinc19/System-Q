@@ -224,31 +224,48 @@ class ConsoleEngine:
             self.stream = None
 
     def _callback(self, outdata, frames, time_info, status) -> None:
-        with self._lock:
-            if not self.playing:
-                outdata[:] = 0.0
-                for ch in self.channels:
-                    ch.level *= 0.92
-                    ch.comp_gr_db *= 0.75
-                    ch.band_levels *= 0.90
-                self.master_channel.level *= 0.92
-                self.master_channel.comp_gr_db *= 0.75
-                self.master_channel.band_levels *= 0.90
-                self.master_level *= 0.9
-                return
+        try:
+            # Copy all needed state locally to minimize lock time
+            with self._lock:
+                playing = self.playing
+                if not playing:
+                    outdata[:] = 0.0
+                    for ch in self.channels:
+                        ch.level *= 0.92
+                        ch.comp_gr_db *= 0.75
+                        ch.band_levels *= 0.90
+                    self.master_channel.level *= 0.92
+                    self.master_channel.comp_gr_db *= 0.75
+                    self.master_channel.band_levels *= 0.90
+                    self.master_level *= 0.9
+                    return
 
-            any_solo = any(ch.solo for ch in self.channels)
+                any_solo = any(ch.solo for ch in self.channels)
+                master_gain = self.master_gain
+                # Copy channel state locally to avoid holding lock during DSP
+                channel_states = []
+                for ch in self.channels:
+                    channel_states.append({
+                        'ch': ch,
+                        'gain': ch.gain,
+                        'pan': ch.pan,
+                        'mute': ch.mute,
+                        'solo': ch.solo,
+                        'position': ch.position,
+                    })
+
             mix = np.zeros((frames, 2), dtype=np.float32)
-            for ch in self.channels:
+            for state in channel_states:
+                ch = state['ch']
                 block = self._next_block(ch, frames)
                 processed = self._process_channel(ch, block)
                 self._analyze_channel(ch, processed)
-                if ch.mute or (any_solo and not ch.solo):
+                if state['mute'] or (any_solo and not state['solo']):
                     processed *= 0.0
-                mix += self._apply_pan(processed, ch.pan)
+                mix += self._apply_pan(processed, state['pan']) * state['gain']
                 ch.level = float(np.sqrt(np.mean(np.square(processed))) * 3.4)
 
-            mix *= self.master_gain
+            mix *= master_gain
             master_processed = self._process_channel(self.master_channel, mix)
             self._analyze_channel(self.master_channel, master_processed)
             self.master_channel.level = float(np.sqrt(np.mean(np.square(master_processed))) * 2.8)
@@ -258,24 +275,40 @@ class ConsoleEngine:
             self.master_level = float(np.sqrt(np.mean(np.square(master_processed))) * 2.8)
             outdata[:] = master_processed.astype(np.float32)
 
-    def _next_block(self, ch: ChannelState, frames: int) -> np.ndarray:
-        end = ch.position + frames
+            if status:
+                _log.debug(f"Audio status: {status}")
+        except Exception as e:
+            _log.error(f"Audio callback error: {e}")
+            import traceback
+            _log.error(traceback.format_exc())
+            outdata[:] = 0.0  # Output silence on error
+
+    def _next_block(self, ch: ChannelState, frames: int, position_override: int = None) -> np.ndarray:
+        """Get next audio block. Thread-safe if position_override is provided."""
+        pos = position_override if position_override is not None else ch.position
+        end = pos + frames
+
         if end <= len(ch.audio):
-            block = ch.audio[ch.position:end]
-            ch.position = end
+            block = ch.audio[pos:end]
+            if position_override is None:
+                ch.position = end
             return block.copy()
 
-        head = ch.audio[ch.position:] if ch.position < len(ch.audio) else np.zeros((0, 2), dtype=np.float32)
+        head = ch.audio[pos:] if pos < len(ch.audio) else np.zeros((0, 2), dtype=np.float32)
         if not self.loop:
-            ch.position = len(ch.audio)
+            if position_override is None:
+                ch.position = len(ch.audio)
             return np.vstack([head, np.zeros((frames - len(head), 2), dtype=np.float32)])
+
         tail_frames = frames - len(head)
         wraps = []
         while tail_frames > 0:
             take = min(len(ch.audio), tail_frames)
             wraps.append(ch.audio[:take])
             tail_frames -= take
-        ch.position = sum(len(x) for x in wraps) % len(ch.audio)
+
+        if position_override is None:
+            ch.position = sum(len(x) for x in wraps) % len(ch.audio)
         return np.vstack([head, *wraps]).astype(np.float32)
 
     def _process_channel(self, ch: ChannelState, block: np.ndarray) -> np.ndarray:
@@ -304,21 +337,43 @@ class ConsoleEngine:
         return np.clip(x, -1.0, 1.0).astype(np.float32)
 
     def _analyze_channel(self, ch: ChannelState, block: np.ndarray) -> None:
+        # Decimate analysis to save CPU - only analyze every 2nd block
+        if not hasattr(ch, '_analyze_counter'):
+            ch._analyze_counter = 0
+        ch._analyze_counter += 1
+        if ch._analyze_counter % 2 != 0:
+            # Still decay levels slightly
+            ch.band_levels *= 0.95
+            return
+
         mono = np.mean(block, axis=1).astype(np.float32)
         if len(mono) < 32:
             ch.band_levels *= 0.92
             return
-        windowed = mono * np.hanning(len(mono)).astype(np.float32)
+
+        # Use cached hanning window for common block sizes
+        cache_key = len(mono)
+        if not hasattr(self, '_hanning_cache'):
+            self._hanning_cache = {}
+        if cache_key not in self._hanning_cache:
+            self._hanning_cache[cache_key] = np.hanning(cache_key).astype(np.float32)
+        windowed = mono * self._hanning_cache[cache_key]
+
         spec = np.abs(np.fft.rfft(windowed))
         freqs = np.fft.rfftfreq(len(mono), d=1.0 / SAMPLE_RATE)
-        edges = np.logspace(LOG_LOW, LOG_HIGH, POL_BANDS + 1)
+
+        # Cache logspace edges
+        if not hasattr(self, '_pol_edges'):
+            self._pol_edges = np.logspace(LOG_LOW, LOG_HIGH, POL_BANDS + 1)
+        edges = self._pol_edges
+
         band_values = np.zeros(POL_BANDS, dtype=np.float32)
         for i in range(POL_BANDS):
             mask = (freqs >= edges[i]) & (freqs < edges[i + 1])
             if np.any(mask):
                 band_values[i] = float(np.sqrt(np.mean(np.square(spec[mask]))))
+
         # Absolute-ish mapping instead of frame-relative normalization.
-        # This keeps each ring tied to its own band intensity rather than the loudest band in the frame.
         ch.band_noise_floor = ch.band_noise_floor * 0.995 + np.minimum(ch.band_noise_floor, band_values + 1e-8) * 0.005
         relative = np.maximum(0.0, band_values - ch.band_noise_floor * 1.25)
         mapped = np.clip(relative / 8.0, 0.0, 1.0)
@@ -363,26 +418,45 @@ class ConsoleEngine:
         return out
 
     def _apply_compressor(self, ch: ChannelState, block: np.ndarray) -> np.ndarray:
+        # Early bypass if disabled or no compression needed
+        if not ch.comp_enabled or ch.comp_makeup <= 0.001:
+            return block
+
         mono = np.mean(block, axis=1).astype(np.float32)
         env = float(ch.comp_env)
         attack_coeff = math.exp(-1.0 / max(1.0, (ch.comp_attack_ms / 1000.0) * SAMPLE_RATE))
         release_coeff = math.exp(-1.0 / max(1.0, (ch.comp_release_ms / 1000.0) * SAMPLE_RATE))
         ratio = max(1.0, float(ch.comp_ratio))
         threshold = float(ch.comp_threshold_db)
+
+        # Fast path: if threshold is at maximum, no compression needed
+        if threshold >= 0.0:
+            return block * ch.comp_makeup
+
         gains = np.empty(len(mono), dtype=np.float32)
         last_gr = 0.0
+
+        # Use local variables for speed
+        local_env = env
+        atk = attack_coeff
+        rel = release_coeff
+        thr = threshold
+        rat = ratio
+        mkup = ch.comp_makeup
+
         for i, sample in enumerate(mono):
             detector = abs(float(sample))
-            if detector > env:
-                env = attack_coeff * env + (1.0 - attack_coeff) * detector
+            if detector > local_env:
+                local_env = atk * local_env + (1.0 - atk) * detector
             else:
-                env = release_coeff * env + (1.0 - release_coeff) * detector
-            env_db = 20.0 * math.log10(max(env, 1e-7))
-            over_db = max(0.0, env_db - threshold)
-            gr_db = over_db - (over_db / ratio if over_db > 0 else 0.0)
-            gains[i] = 10 ** (-gr_db / 20.0) * ch.comp_makeup
+                local_env = rel * local_env + (1.0 - rel) * detector
+            env_db = 20.0 * math.log10(max(local_env, 1e-7))
+            over_db = max(0.0, env_db - thr)
+            gr_db = over_db - (over_db / rat if over_db > 0 else 0.0)
+            gains[i] = 10 ** (-gr_db / 20.0) * mkup
             last_gr = gr_db
-        ch.comp_env = env
+
+        ch.comp_env = local_env
         ch.comp_gr_db = last_gr
         return block * gains[:, None]
 
@@ -416,35 +490,58 @@ class ConsoleEngine:
         return x
 
     def _apply_transient(self, block: np.ndarray, attack_amt: float, sustain_amt: float) -> np.ndarray:
+        # Early return if no processing needed
+        if abs(attack_amt) <= 0.01 and abs(sustain_amt) <= 0.01:
+            return block
+
         mono = np.mean(block, axis=1).astype(np.float32)
         detector = np.abs(mono)
+
+        # Vectorized envelope followers using exponential smoothing
+        fast_coef = 0.52
+        slow_coef = 0.012
+
+        # Fast envelope using vectorized approach
         fast_env = np.zeros_like(detector)
         slow_env = np.zeros_like(detector)
+
         fast = 0.0
         slow = 0.0
-        for i, sample in enumerate(detector):
-            fast += (sample - fast) * 0.52
-            slow += (sample - slow) * 0.012
+        for i in range(len(detector)):
+            fast += (detector[i] - fast) * fast_coef
+            slow += (detector[i] - slow) * slow_coef
             fast_env[i] = fast
             slow_env[i] = slow
+
         transient = np.maximum(0.0, fast_env - slow_env)
         sustain = slow_env.copy()
-        if float(np.max(transient)) > 1e-6:
-            transient /= float(np.max(transient))
-        if float(np.max(sustain)) > 1e-6:
-            sustain /= float(np.max(sustain))
+
+        max_transient = float(np.max(transient))
+        max_sustain = float(np.max(sustain))
+        if max_transient > 1e-6:
+            transient /= max_transient
+        if max_sustain > 1e-6:
+            sustain /= max_sustain
+
         out = block.copy()
         for idx in range(block.shape[1]):
             x = block[:, idx].astype(np.float32)
+            # Edge detection
             prev = np.concatenate(([0.0], x[:-1])).astype(np.float32)
             edge = (x - prev * 0.72) * transient * (attack_amt * 12.0)
-            acc = 0.0
+
+            # Sustain body using vectorized exponential smoothing
+            sustain_coef = 0.994
+            input_coef = 0.055
             body = np.zeros(len(x), dtype=np.float32)
-            for i, sample in enumerate(x):
-                acc = acc * 0.994 + sample * 0.055
+            acc = 0.0
+            for i in range(len(x)):
+                acc = acc * sustain_coef + x[i] * input_coef
                 body[i] = acc
+
             tail = body * sustain * (sustain_amt * 6.0)
             out[:, idx] = x + edge + tail
+
         peak = float(np.max(np.abs(out)))
         if peak > 0.98:
             out *= 0.98 / peak
@@ -494,9 +591,13 @@ class ConsoleApp:
         self.eq_band_count = 1
         self.eq_selected_band = 0
         self._pending_strip_click = None
+        self._pending_stage_action = None
         self._console_hold_target = None
         self._console_hold_repeat_at = 0.0
         self._editor_last_press_at = 0.0
+        self.editor_transport_selected = 0
+        self._nav_keys_held: set[str] = set()
+        self._axis_discrete_at = 0.0
         self.stage_color = {
             "pre": "#77f0c6",
             "harm": "#ffb757",
@@ -509,22 +610,62 @@ class ConsoleApp:
         self._sync_from_engine()
         self._schedule_refresh()
 
-    def _bind_nav_keys(self):
-        self.root.bind("<Left>", lambda e: self._handle_nav("left"))
-        self.root.bind("<Right>", lambda e: self._handle_nav("right"))
-        self.root.bind("<Up>", lambda e: self._handle_nav("up"))
-        self.root.bind("<Down>", lambda e: self._handle_nav("down"))
-        self.root.bind("<space>", lambda e: self._handle_nav("press"))
-        self.root.bind("<BackSpace>", lambda e: self._handle_nav("back"))
-        self.root.bind("<Key>", lambda e: _log.debug("RAW KEY sym=%s widget=%s focus=%s", e.keysym, e.widget, self.root.focus_get()))
+    def _axis_discrete_tick(self, interval: float = 0.18) -> bool:
+        """Rate-limit discrete SpaceMouse steps (channel / slot) while keeping analog tweaks smooth."""
+        now = time.monotonic()
+        if now - self._axis_discrete_at < interval:
+            return False
+        self._axis_discrete_at = now
+        return True
+
+    def _bind_nav_keys(self) -> None:
+        """bind_all + KeyPress/KeyRelease: one nav step per physical key (OS autorepeat is ignored)."""
+
+        def on_press(target: str):
+            def handler(_event) -> str:
+                if target in self._nav_keys_held:
+                    return "break"
+                self._nav_keys_held.add(target)
+                self._handle_nav(target)
+                return "break"
+
+            return handler
+
+        def on_release(target: str):
+            def handler(_event) -> str:
+                self._nav_keys_held.discard(target)
+                return "break"
+
+            return handler
+
+        for press_seq, release_seq, target in (
+            ("<KeyPress-Left>", "<KeyRelease-Left>", "left"),
+            ("<KeyPress-Right>", "<KeyRelease-Right>", "right"),
+            ("<KeyPress-Up>", "<KeyRelease-Up>", "up"),
+            ("<KeyPress-Down>", "<KeyRelease-Down>", "down"),
+            ("<KeyPress-space>", "<KeyRelease-space>", "press"),
+            ("<KeyPress-BackSpace>", "<KeyRelease-BackSpace>", "back"),
+        ):
+            self.root.bind_all(press_seq, on_press(target))
+            self.root.bind_all(release_seq, on_release(target))
+
+        def clear_held(_event=None) -> str:
+            self._nav_keys_held.clear()
+            return "break"
+
+        self.root.bind_all("<Escape>", clear_held)
 
     def _build_ui(self) -> None:
         top = tk.Frame(self.root, bg="#222831")
         top.pack(fill="x", padx=14, pady=(12, 8))
         tk.Label(top, text="System Q Inter", bg="#222831", fg="#f3f4f7", font=("Segoe UI", 24, "bold")).pack(side="left")
         tk.Label(top, text="12-channel rehearsal / recording console", bg="#222831", fg="#9fb0c2", font=("Segoe UI", 12)).pack(side="left", padx=14, pady=(10, 0))
-        tk.Button(top, text="Play / Pause", command=self.engine.toggle_play, width=12).pack(side="right", padx=6)
-        tk.Button(top, text="Stop", command=self.engine.stop, width=10).pack(side="right", padx=6)
+        tk.Button(
+            top, text="Play / Pause", command=self.engine.toggle_play, width=12, takefocus=False
+        ).pack(side="right", padx=6)
+        tk.Button(top, text="Stop", command=self.engine.stop, width=10, takefocus=False).pack(
+            side="right", padx=6
+        )
 
         body = tk.Frame(self.root, bg="#222831")
         body.pack(fill="both", expand=True, padx=14, pady=(0, 14))
@@ -539,6 +680,7 @@ class ConsoleApp:
         self.strip_canvas.pack(fill="both", expand=True, padx=12, pady=12)
         self.strip_canvas.bind("<Button-1>", self._on_strip_click)
         self.strip_canvas.bind("<Double-Button-1>", self._on_strip_double_click)
+        self.strip_canvas.bind("<MouseWheel>", self._on_strip_mousewheel)
 
         self.editor_frame = right
         self._build_editor(right)
@@ -730,12 +872,46 @@ class ConsoleApp:
             return ["harm", "comp", "eq", "tone"]
         return ["pre", "harm", "comp", "eq", "tone"]
 
+    def _channel_nav_span(self) -> int:
+        """Strip indices for left/right / CH paging: inputs + Master, except PRE (mic pre is inputs only)."""
+        n = len(self.engine.channels)
+        if self.selected_stage_key == "pre":
+            return max(1, n)
+        return n + 1
+
+    def _clamp_pre_to_inputs(self) -> None:
+        """PRE is only meaningful on input strips; never pair it with Master index."""
+        n = len(self.engine.channels)
+        if n <= 0 or self.selected_stage_key != "pre":
+            return
+        if self.nav_scope == "editor":
+            if self.editor_channel >= n:
+                self.editor_channel = n - 1
+        else:
+            if self.selected_channel >= n:
+                self.selected_channel = n - 1
+
     def _normalize_stage_selection(self, channel_index: int) -> None:
         if self.nav_scope == "console" and self.console_row in ("footer", "record"):
             return
         stage_keys = self._console_stage_keys(channel_index)
+        prev_stage = self.selected_stage_key
+        # Mic-pre layout is only for input strips. If we were on PRE and switch to a bus
+        # with no PRE (e.g. Master), stage remaps to HAR — but module_editor_column
+        # often stays 0 (CH / CH VOL), which looks like focus "rolled to the fader".
+        # That happens especially when paging channels from the CH knob (pre_editor_column 0),
+        # not only when the stage column had keyboard focus (pre_editor_column 1).
         if self.selected_stage_key not in stage_keys:
             self.selected_stage_key = stage_keys[0]
+        if (
+            self.nav_scope == "editor"
+            and prev_stage == "pre"
+            and self.selected_stage_key != "pre"
+        ):
+            self.module_editor_column = 1
+            if self.selected_stage_key in stage_keys:
+                self.module_editor_positions["stage"] = stage_keys.index(self.selected_stage_key)
+            self.editor_nav_scope = "module-stage"
         if self.selected_stage_key == "eq":
             ch = self.engine.master_channel if channel_index >= len(self.engine.channels) else self.engine.channels[channel_index]
             self.eq_selected_band = min(self.eq_selected_band, max(0, ch.eq_band_count - 1))
@@ -751,6 +927,7 @@ class ConsoleApp:
         self._normalize_stage_selection(self.selected_channel)
 
     def _sync_from_engine(self) -> None:
+        self._clamp_pre_to_inputs()
         self._normalize_stage_selection(self._active_channel_index())
         self._normalize_module_editor_positions()
         ch = self._current_channel()
@@ -1036,7 +1213,7 @@ class ConsoleApp:
                 )
                 if is_active:
                     c.create_rectangle(16, y0 + 2, 20, y1 - 2, outline="", fill="#6a7886")
-        self._draw_editor_channel_nav(c, w, channel_nav_y, preview_only)
+        self._draw_editor_transport_row(c, w, float(channel_nav_y))
         self._draw_badge_row(c, w, util_y, utility_items, utility_selected, preview_only)
         stage_items = [(stage_label_map[key], "", True) for key in stage_keys]
         self._draw_icon_row(
@@ -1103,7 +1280,7 @@ class ConsoleApp:
 
     def _draw_pre_editor_layout(self, c: tk.Canvas, w: int, h: int, ch: ChannelState, stage_keys: list[str]) -> None:
         self.editor_hitboxes = []
-        self._draw_editor_channel_nav(c, w, 20, preview_only=False)
+        self._draw_editor_transport_row(c, w, 20.0)
         margin = 16
         gap = 10
         available_w = w - margin * 2 - gap * 3
@@ -1299,7 +1476,7 @@ class ConsoleApp:
     def _draw_module_editor_layout(self, c: tk.Canvas, w: int, h: int, ch: ChannelState, stage_keys: list[str]) -> None:
         self.editor_hitboxes = []
         self._normalize_module_editor_positions()
-        self._draw_editor_channel_nav(c, w, 20, preview_only=False)
+        self._draw_editor_transport_row(c, w, 20.0)
         margin = 16
         gap = 10
         available_w = w - margin * 2 - gap * 3
@@ -1658,23 +1835,66 @@ class ConsoleApp:
                     c.create_text(x, value_y, text=value, fill="#89a0b6", font=("Segoe UI", 8 if large else 8, "bold"))
                 self.editor_hitboxes.append((x - 30, y - 20, x + 30, y + (58 if large else 42), idx - 1, label, tag))
 
-    def _draw_editor_channel_nav(self, c: tk.Canvas, w: int, y: float, preview_only: bool) -> None:
-        names = [ch.name for ch in self.engine.channels] + ["Master"]
-        idx = self._active_channel_index() % len(names)
-        left = names[(idx - 1) % len(names)]
-        current = names[idx]
-        right = names[(idx + 1) % len(names)]
-        c.create_text(w * 0.28, y, text=left.upper(), fill="#607182", font=("Segoe UI", 8 if not preview_only else 7, "bold"))
-        c.create_text(w * 0.50, y, text=current.upper(), fill="#d7e2ec", font=("Segoe UI", 9 if not preview_only else 8, "bold"))
-        c.create_text(w * 0.72, y, text=right.upper(), fill="#607182", font=("Segoe UI", 8 if not preview_only else 7, "bold"))
-        c.create_line(w * 0.36, y, w * 0.42, y, fill="#31404e", width=1)
-        c.create_line(w * 0.58, y, w * 0.64, y, fill="#31404e", width=1)
+    def _draw_editor_transport_row(self, c: tk.Canvas, w: float, y: float) -> None:
+        """Solo / Mute / Rec for the active strip (inputs only; Master shows inactive)."""
+        idx = self._active_channel_index()
+        n_in = len(self.engine.channels)
+        is_input = idx < n_in
+        ch = self.engine.channels[idx] if is_input else None
+        solo_on = bool(ch.solo) if is_input else False
+        mute_on = bool(ch.mute) if is_input else False
+        rec_on = bool(ch.record_armed) if is_input else False
+        pad = 14.0
+        gap = 8.0
+        bw = (w - 2 * pad - 2 * gap) / 3.0
+        y0 = y - 14.0
+        y1 = y + 14.0
+        specs = [
+            ("SOLO", solo_on, "#e6c84a", "editor-solo"),
+            ("MUTE", mute_on, "#ff6a53", "editor-mute"),
+            ("REC", rec_on, "#ff3b30", "editor-rec"),
+        ]
+        nav_here = self.editor_nav_scope == "transport"
+        for i, (text, on, accent, etag) in enumerate(specs):
+            x0 = pad + i * (bw + gap)
+            x1 = x0 + bw
+            fill = "#1a222b" if is_input else "#14191f"
+            outline = accent if on else "#2f3a46"
+            if nav_here and i == self.editor_transport_selected:
+                outline = "#e8f0f8"
+            c.create_rectangle(x0, y0, x1, y1, fill=fill, outline=outline, width=2 if nav_here and i == self.editor_transport_selected else 1)
+            if nav_here and i == self.editor_transport_selected:
+                c.create_rectangle(x0 + 2, y0 + 2, x0 + 5, y1 - 2, outline="", fill="#6a7886")
+            fg = "#5a6575" if not is_input else ("#f5e9a8" if on and text == "SOLO" else "#ffc9c4" if on and text == "MUTE" else "#ffb4ae" if on and text == "REC" else "#c8d4e0")
+            if nav_here and i == self.editor_transport_selected:
+                fg = "#f2f6fb"
+            c.create_text((x0 + x1) / 2, y, text=text, fill=fg, font=("Segoe UI", 8, "bold"))
+            if is_input:
+                self.editor_hitboxes.append((x0, y0, x1, y1, idx, text, etag))
 
     def _on_editor_canvas_click(self, event) -> None:
         for x0, y0, x1, y1, idx, label, tag in getattr(self, "editor_hitboxes", []):
             if x0 <= event.x <= x1 and y0 <= event.y <= y1:
                 self.nav_scope = "editor"
                 _log.debug("EDITOR CLICK tag=%s idx=%d label=%s", tag, idx, label)
+                if tag == "editor-solo":
+                    self.editor_nav_scope = "transport"
+                    self.editor_transport_selected = 0
+                    self._toggle_solo(idx)
+                    self.root.focus_set()
+                    return
+                if tag == "editor-mute":
+                    self.editor_nav_scope = "transport"
+                    self.editor_transport_selected = 1
+                    self._toggle_mute(idx)
+                    self.root.focus_set()
+                    return
+                if tag == "editor-rec":
+                    self.editor_nav_scope = "transport"
+                    self.editor_transport_selected = 2
+                    self._toggle_record_arm(idx)
+                    self.root.focus_set()
+                    return
                 if tag == "pre-left":
                     self.pre_editor_column = 0
                     self.pre_editor_positions["left"] = idx
@@ -1870,18 +2090,40 @@ class ConsoleApp:
             return
         if self.nav_scope != "editor":
             return
+        if self.editor_nav_scope == "transport":
+            if not self._axis_discrete_tick():
+                return
+            span = self._channel_nav_span()
+            self.editor_channel = (
+                self.editor_channel + (1 if axis_value > 0 else -1)
+            ) % span
+            self._normalize_stage_selection(self.editor_channel)
+            if self.selected_stage_key != "pre":
+                self._normalize_module_editor_positions()
+            self._sync_from_engine()
+            return
         if self.selected_stage_key == "pre":
             ch = self._current_channel()
             with self.engine._lock:
                 if self.pre_editor_column == 0:
                     if self.pre_editor_positions["left"] == 0:
-                        if axis_value > 0:
-                            self.editor_channel = (self.editor_channel + 1) % (len(self.engine.channels) + 1)
-                        else:
-                            self.editor_channel = (self.editor_channel - 1) % (len(self.engine.channels) + 1)
+                        if not self._axis_discrete_tick():
+                            return
+                        span = self._channel_nav_span()
+                        self.editor_channel = (
+                            self.editor_channel + (1 if axis_value > 0 else -1)
+                        ) % span
                         self._normalize_stage_selection(self.editor_channel)
                     else:
                         ch.gain = float(np.clip(ch.gain + axis_value * 0.04, 0.3, 2.2))
+                elif self.pre_editor_column == 1:
+                    if not self._axis_discrete_tick():
+                        return
+                    span = self._channel_nav_span()
+                    self.editor_channel = (
+                        self.editor_channel + (1 if axis_value > 0 else -1)
+                    ) % span
+                    self._normalize_stage_selection(self.editor_channel)
                 elif self.pre_editor_column == 2:
                     idx = self.pre_editor_positions["body"]
                     self.editor_selected["pre"] = idx
@@ -1891,6 +2133,8 @@ class ConsoleApp:
                         ch.hpf_hz = float(np.clip(ch.hpf_hz + axis_value * 260.0, 4000.0, POL_HIGH_HZ))
                 elif self.pre_editor_column == 3:
                     if self.pre_editor_positions["right"] == 0:
+                        if not self._axis_discrete_tick():
+                            return
                         ch.send_slot = int(np.clip(ch.send_slot + (1 if axis_value > 0 else -1), 1, 8))
                     else:
                         ch.send_level = float(np.clip(ch.send_level + axis_value * 0.04, 0.0, 1.0))
@@ -1901,14 +2145,25 @@ class ConsoleApp:
             with self.engine._lock:
                 if self.module_editor_column == 0:
                     if self.module_editor_positions["left"] == 0:
-                        if axis_value > 0:
-                            self.editor_channel = (self.editor_channel + 1) % (len(self.engine.channels) + 1)
-                        else:
-                            self.editor_channel = (self.editor_channel - 1) % (len(self.engine.channels) + 1)
+                        if not self._axis_discrete_tick():
+                            return
+                        span = self._channel_nav_span()
+                        self.editor_channel = (
+                            self.editor_channel + (1 if axis_value > 0 else -1)
+                        ) % span
                         self._normalize_stage_selection(self.editor_channel)
                         self._normalize_module_editor_positions()
                     else:
                         ch.gain = float(np.clip(ch.gain + axis_value * 0.04, 0.3, 2.2))
+                elif self.module_editor_column == 1:
+                    if not self._axis_discrete_tick():
+                        return
+                    span = self._channel_nav_span()
+                    self.editor_channel = (
+                        self.editor_channel + (1 if axis_value > 0 else -1)
+                    ) % span
+                    self._normalize_stage_selection(self.editor_channel)
+                    self._normalize_module_editor_positions()
                 elif self.module_editor_column == 2:
                     top_items, body_items = self._module_stage_items(ch)
                     idx = self.module_editor_positions["body"]
@@ -1921,6 +2176,8 @@ class ConsoleApp:
                                 self.comp_editor_mode = label
                                 self._toggle_comp_mode_enabled(ch, label)
                         elif self.selected_stage_key == "eq":
+                            if not self._axis_discrete_tick():
+                                return
                             max_bands = max(1, ch.eq_band_count)
                             if axis_value > 0:
                                 self.eq_selected_band = (self.eq_selected_band + 1) % max_bands
@@ -2003,6 +2260,8 @@ class ConsoleApp:
                             ch.tone_enabled = any(v > 0.02 for v in (ch.trn_attack, ch.trn_sustain, ch.clr_drive, ch.xct_amount))
                 elif self.module_editor_column == 3:
                     if self.module_editor_positions["right"] == 0:
+                        if not self._axis_discrete_tick():
+                            return
                         ch.send_slot = int(np.clip(ch.send_slot + (1 if axis_value > 0 else -1), 1, 8))
                     else:
                         ch.send_level = float(np.clip(ch.send_level + axis_value * 0.04, 0.0, 1.0))
@@ -2097,15 +2356,16 @@ class ConsoleApp:
         else:
             stage_idx = 0
         is_input_channel = self.selected_channel < len(self.engine.channels)
+        nav_span = self._channel_nav_span()
         if target == "left":
-            self.selected_channel = (self.selected_channel - 1) % (len(self.engine.channels) + 1)
+            self.selected_channel = (self.selected_channel - 1) % nav_span
             if self.console_row == "record" and not (self.selected_channel < len(self.engine.channels)):
                 self.console_row = "stages"
                 self.selected_stage_key = self._console_stage_keys()[0]
             elif self.console_row == "stages":
                 self._normalize_console_selection()
         elif target == "right":
-            self.selected_channel = (self.selected_channel + 1) % (len(self.engine.channels) + 1)
+            self.selected_channel = (self.selected_channel + 1) % nav_span
             if self.console_row == "record" and not (self.selected_channel < len(self.engine.channels)):
                 self.console_row = "stages"
                 self.selected_stage_key = self._console_stage_keys()[0]
@@ -2250,9 +2510,49 @@ class ConsoleApp:
             self.editor_selected[self.selected_stage_key] = body_idx
             self._activate_editor_item(body_idx, label)
 
+    def _handle_editor_transport_nav(self, target: str) -> bool:
+        """Solo / Mute / Rec row: left/right = move between buttons; twist/axis = channel (see _adjust_selected_editor_item)."""
+        if self.editor_nav_scope != "transport":
+            return False
+        idx = self._active_channel_index()
+        n_in = len(self.engine.channels)
+        if target == "left":
+            self.editor_transport_selected = (self.editor_transport_selected - 1) % 3
+        elif target == "right":
+            self.editor_transport_selected = (self.editor_transport_selected + 1) % 3
+        elif target == "down":
+            if self.selected_stage_key == "pre":
+                self.pre_editor_column = 0
+                self.pre_editor_positions["left"] = 0
+                self.editor_nav_scope = "pre-left"
+            else:
+                self.module_editor_column = 0
+                self.module_editor_positions["left"] = 0
+                self.editor_nav_scope = "module-left"
+        elif target == "press":
+            if idx < n_in:
+                if self.editor_transport_selected == 0:
+                    self._toggle_solo(idx)
+                elif self.editor_transport_selected == 1:
+                    self._toggle_mute(idx)
+                else:
+                    self._toggle_record_arm(idx)
+        elif target == "back":
+            self.nav_scope = "console"
+            self.editor_nav_scope = "body"
+        self._sync_from_engine()
+        return True
+
     def _handle_module_editor_nav(self, target: str) -> None:
+        if self._handle_editor_transport_nav(target):
+            return
         columns = ["left", "stage", "body", "right"]
         current_key = columns[self.module_editor_column]
+        if current_key in ("left", "stage", "right") and target == "up" and self.module_editor_positions[current_key] == 0:
+            self.editor_nav_scope = "transport"
+            self.editor_transport_selected = 0
+            self._sync_from_engine()
+            return
         if current_key == "stage" and target == "right":
             self.module_editor_column = 2
             self._reset_module_body_selection()
@@ -2527,8 +2827,15 @@ class ConsoleApp:
         self._sync_from_engine()
 
     def _handle_pre_editor_nav(self, target: str) -> None:
+        if self._handle_editor_transport_nav(target):
+            return
         columns = ["left", "stage", "body", "right"]
         current_key = columns[self.pre_editor_column]
+        if target == "up" and self.pre_editor_positions[current_key] == 0:
+            self.editor_nav_scope = "transport"
+            self.editor_transport_selected = 0
+            self._sync_from_engine()
+            return
         if target == "left":
             self.pre_editor_column = (self.pre_editor_column - 1) % len(columns)
         elif target == "right":
@@ -2602,29 +2909,22 @@ class ConsoleApp:
             return 5
         return 2
 
-    _key_state = {}
-
-    def _poll_keys(self) -> None:
-        import ctypes
-        key_map = {0x25: "left", 0x26: "up", 0x27: "right", 0x28: "down", 0x20: "press", 0x08: "back"}
-        for vk, target in key_map.items():
-            down = bool(ctypes.windll.user32.GetAsyncKeyState(vk) & 0x8000)
-            was_down = self._key_state.get(vk, False)
-            if down and not was_down:
-                self._handle_nav(target)
-            self._key_state[vk] = down
-
     def _poll_spacemouse(self) -> None:
         axis_value, pressed, directional = self.spacemouse.poll()
-        self._poll_keys()
         if self.nav_scope == "editor":
             if directional:
-                self._handle_nav(directional[0])
+                for d in directional:
+                    self._handle_nav(d)
             if pressed and 0 in pressed:
                 self._handle_nav("press")
             self._adjust_selected_editor_item(axis_value)
         else:
             self._console_hold_target = None
+            if self.nav_scope == "console":
+                if directional:
+                    for d in directional:
+                        self._handle_console_nav(d)
+                self._adjust_console_channel_axis(axis_value)
 
     def _poll_console_hold_repeat(self) -> None:
         self._console_hold_target = None
@@ -2915,7 +3215,10 @@ class ConsoleApp:
         strip_sources = list(self.engine.channels) + [self.engine.master_channel]
         total_w = len(strip_sources) * strip_w + (len(strip_sources) - 1) * strip_gap
         start_x = max(margin_x, (width - total_w) / 2)
-        active_strip_index = self.editor_channel if self.nav_scope == "editor" else -1
+        if self.nav_scope == "editor":
+            active_strip_index = self.editor_channel
+        else:
+            active_strip_index = self.selected_channel
         console_row_active = self.console_row if self.nav_scope == "console" else None
         for idx, ch in enumerate(strip_sources):
             x0 = start_x + idx * (strip_w + strip_gap)
@@ -3135,12 +3438,85 @@ class ConsoleApp:
             c.create_polygon(*pts2, fill="#ff8f70" if enabled else "#3c434c", outline="#d44a36", smooth=True)
             c.create_oval(center_x - 4, center_y - 4, center_x + 4, center_y + 4, fill="#ffd068" if enabled else "#3c4652", outline="")
 
+    def _adjust_console_channel_axis(self, axis_value: float) -> None:
+        """SpaceMouse twist: cycle selected strip while focused on stage row (same idea as CH knob in editor)."""
+        if abs(axis_value) < 0.06:
+            return
+        if not self._axis_discrete_tick():
+            return
+        span = self._channel_nav_span()
+        self.selected_channel = (self.selected_channel + (1 if axis_value > 0 else -1)) % span
+        self._normalize_console_selection()
+        self._sync_from_engine()
+
+    def _cancel_pending_stage_click(self) -> None:
+        if self._pending_stage_action is not None:
+            self.root.after_cancel(self._pending_stage_action)
+            self._pending_stage_action = None
+
+    def _stage_delayed_toggle(self, idx: int, key: str) -> None:
+        self._pending_stage_action = None
+        self._toggle_stage_module(idx, key)
+
+    def _toggle_stage_module(self, idx: int, key: str) -> None:
+        """Engage / disengage a strip module (single click)."""
+        if idx >= len(self.engine.channels) and key == "pre":
+            return
+        ch = self.engine.channels[idx] if idx < len(self.engine.channels) else self.engine.master_channel
+        with self.engine._lock:
+            if key == "pre":
+                ch.pre_enabled = not ch.pre_enabled
+            elif key == "harm":
+                ch.harmonics_enabled = not ch.harmonics_enabled
+            elif key == "comp":
+                ch.comp_enabled = not ch.comp_enabled
+            elif key == "eq":
+                ch.eq_enabled = not ch.eq_enabled
+            elif key == "tone":
+                ch.tone_enabled = not ch.tone_enabled
+        self.selected_channel = idx
+        self.selected_stage_key = key
+        self.nav_scope = "console"
+        self.console_row = "stages"
+        self._sync_from_engine()
+
+    def _open_stage_editor(self, idx: int, key: str) -> None:
+        self.selected_channel = idx
+        self.editor_channel = idx
+        self.selected_stage_key = key
+        self.console_row = "stages"
+        self.nav_scope = "editor"
+        if key == "pre":
+            self.pre_editor_column = 1
+            self.editor_nav_scope = "pre-stage"
+        else:
+            self.module_editor_column = 1
+            self._reset_module_body_selection()
+            self._normalize_module_editor_positions()
+            self.editor_nav_scope = "module-stage"
+        self._sync_from_engine()
+        self.root.focus_set()
+
+    def _on_strip_mousewheel(self, event) -> None:
+        if self.nav_scope != "console":
+            return
+        for x0, y0, x1, y1, idx, key in getattr(self, "stage_hitboxes", []):
+            if x0 <= event.x <= x1 and y0 <= event.y <= y1:
+                delta = int(getattr(event, "delta", 0))
+                step = 1 if delta > 0 else -1
+                span = self._channel_nav_span()
+                self.selected_channel = (self.selected_channel + step) % span
+                self._normalize_console_selection()
+                self._sync_from_engine()
+                return
+
     def _on_strip_click(self, event) -> None:
         _log.debug("STRIP CLICK x=%d y=%d", event.x, event.y)
         self.root.after_idle(self.root.focus_set)
 
         for x0, y0, x1, y1, idx in getattr(self, "record_hitboxes", []):
             if x0 <= event.x <= x1 and y0 <= event.y <= y1:
+                self._cancel_pending_stage_click()
                 self.selected_channel = idx
                 self.console_row = "record"
                 self.nav_scope = "console"
@@ -3149,6 +3525,7 @@ class ConsoleApp:
                 return
         for x0, y0, x1, y1, idx in getattr(self, "scribble_hitboxes", []):
             if x0 <= event.x <= x1 and y0 <= event.y <= y1:
+                self._cancel_pending_stage_click()
                 self.selected_channel = idx
                 self.console_row = "footer"
                 self.nav_scope = "console"
@@ -3160,25 +3537,21 @@ class ConsoleApp:
                 return
         for x0, y0, x1, y1, idx, key in getattr(self, "stage_hitboxes", []):
             if x0 <= event.x <= x1 and y0 <= event.y <= y1:
-                _log.debug("STAGE HIT ch=%d key=%s", idx, key)
-                self.selected_channel = idx
-                self.editor_channel = idx
-                self.selected_stage_key = key
-                self.console_row = "stages"
-                self.nav_scope = "editor"
-                if key == "pre":
-                    self.pre_editor_column = 1
-                    self.editor_nav_scope = "pre-stage"
-                else:
-                    self.module_editor_column = 1
-                    self._reset_module_body_selection()
-                    self._normalize_module_editor_positions()
-                    self.editor_nav_scope = "module-stage"
-                self._sync_from_engine()
-                self.root.focus_set()
+                _log.debug("STAGE HIT ch=%d key=%s (delayed toggle)", idx, key)
+                self._cancel_pending_stage_click()
+                self._pending_stage_action = self.root.after(
+                    280,
+                    lambda i=idx, k=key: self._stage_delayed_toggle(i, k),
+                )
                 return
 
     def _on_strip_double_click(self, event) -> None:
+        for x0, y0, x1, y1, idx, key in getattr(self, "stage_hitboxes", []):
+            if x0 <= event.x <= x1 and y0 <= event.y <= y1:
+                self._cancel_pending_stage_click()
+                _log.debug("STAGE DOUBLE ch=%d key=%s -> editor", idx, key)
+                self._open_stage_editor(idx, key)
+                return
         if self._pending_strip_click is not None:
             self.root.after_cancel(self._pending_strip_click)
             self._pending_strip_click = None
