@@ -224,6 +224,38 @@
       font-weight: 500;
     }
 
+    .breakthrough-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 2.25rem;
+    }
+    @media (min-width: 760px) {
+      .breakthrough-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .breakthrough {
+      background: linear-gradient(180deg, rgba(0,212,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.16);
+    }
+    .breakthrough h3 {
+      color: var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+    .breakthrough p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
     .flow-system {
       max-width: 1040px;
       margin: 0 auto;
@@ -434,10 +466,9 @@
             Music Tribe as a product platform, partnership, or acquisition candidate.
           </p>
           <nav class="hero-nav">
+            <a href="#breakthroughs">Why pay attention</a>
             <a href="#flow">How GIG works</a>
-            <a href="#sound">Sound shaping</a>
             <a href="#what">What it is</a>
-            <a href="#why">Why it matters</a>
             <a href="#fit">Why Music Tribe</a>
             <a href="#links">Evidence</a>
             <a href="#asks">Strategic ask</a>
@@ -447,13 +478,35 @@
     </div>
   </div>
 
+  <div class="section" id="breakthroughs" style="padding-bottom: 0;">
+    <p class="section-label">00 &mdash; Why pay attention</p>
+    <h2>Four product hooks</h2>
+    <p>These are the ideas that make GIG more than another interface, controller, or recording app.</p>
+  </div>
+  <div class="breakthrough-grid">
+    <div class="breakthrough">
+      <h3>Sound without dependency</h3>
+      <p>Analog and software paths can be dialed toward familiar hardware and plugin-style character inside one system.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>6-DOF Control</h3>
+      <p>A SpaceMouse-style command surface keeps the hand in one place while focus and values change.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Swappable rack cards</h3>
+      <p>Touchscreen analog frames can accept different PCB card families for preamp, compressor, EQ, and tone modules.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Venue mix translation</h3>
+      <p>The recorded mix can play back at its intended level relationships, then adapt that balance to the room.</p>
+    </div>
+  </div>
+
   <div class="section" id="flow">
-    <p class="section-label">00 &mdash; Product flow</p>
+    <p class="section-label">01 &mdash; Product flow</p>
     <h2>How GIG works</h2>
     <p>
-      Working name: <strong style="color:var(--text);">GIG</strong> is the whole musician ecosystem.
-      The product starts with the musician, not the rack. Each player brings a personal workstation with their
-      sounds, in-ear monitoring, playback, and session tools already there.
+      GIG starts with the musician, then connects the band, capture path, playback path, and command surface into one operating language.
     </p>
   </div>
   <div class="flow-system">
@@ -509,82 +562,40 @@
 
   <div class="divider"><hr></div>
 
-  <div class="section" id="sound">
-    <p class="section-label">01 &mdash; Sound shaping</p>
-    <h2>Sound without dependency</h2>
-    <p>
-      GIG is not only a routing system. The analog path is designed to be dialed toward familiar hardware behaviors:
-      clean, colored, tube, transformer, harmonics, dynamics, EQ, transient shape, saturation, and output character.
-      The software path follows the same model, so the user can shape sound in one language whether the stage is analog,
-      digital, or hybrid.
-    </p>
-    <p>
-      The goal is not to forbid plugins or outside hardware. Musicians can still use them, and many will. The value is
-      that the core system is versatile enough that users are not forced to keep buying extra plugins and outboard gear
-      just to get serious sounds.
-    </p>
-  </div>
-  <div class="card-grid">
-    <div class="card">
-      <h3>Analog behavior</h3>
-      <p>Dial clean, colored, tube, transformer, harmonic, compression, EQ, and saturation-style character inside the rack path.</p>
-    </div>
-    <div class="card">
-      <h3>Software mirror</h3>
-      <p>The software uses the same operating language, so recall and editing stay consistent across analog and digital stages.</p>
-    </div>
-    <div class="card">
-      <h3>Less dependency</h3>
-      <p>The system reduces the need for plugin stacks and extra hardware before the musician can get a finished sound.</p>
-    </div>
-    <div class="card">
-      <h3>Still expandable</h3>
-      <p>External plugins and outboard remain welcome, but they become creative additions instead of mandatory infrastructure.</p>
-    </div>
-  </div>
-
-  <div class="divider"><hr></div>
-
   <div class="section" id="what">
     <p class="section-label">02 &mdash; Summary</p>
     <h2>What this is</h2>
     <p>
-      A coherent recording system with one mental model end-to-end: musician input, processing, routing,
-      monitoring, session control, playback, and venue translation. The goal is to remove session friction
-      while preserving analog character, tactile control, and professional ergonomics.
-    </p>
-    <p>
-      This repository is a working diligence package: public product pages, static HTML specs, visuals,
-      BOM-style pages, CAD prototypes, and software experiments that show the control and audio direction.
+      GIG is a coherent recording, rehearsal, and live playback system with one mental model end-to-end: musician input,
+      processing, routing, monitoring, session control, playback, and venue translation.
     </p>
   </div>
 
   <div class="divider"><hr></div>
 
   <div class="section" id="why">
-    <p class="section-label">03 &mdash; Positioning</p>
-    <h2>Why it matters (product + manufacturing lens)</h2>
+    <p class="section-label">03 &mdash; Product shape</p>
+    <h2>Platform, not one box</h2>
     <p>
-      The core bet is that a modular ecosystem can reach multiple tiers: an entry path through Cubes for simplicity,
-      a musician-facing Personal Station for daily use, and a flagship surface plus racks for serious recording rooms,
-      all sharing one software and control language.
+      The product ladder is clear: Cube for entry, Personal Workstation for daily use, Racks for premium rooms,
+      Venue for live translation, and Control as the tactile surface across all of it.
     </p>
     <div class="card-grid">
       <div class="card">
-        <h3>Platform, not one box</h3>
-        <p>The value is in the <span class="highlight">connected product family</span>: endpoints, I/O, racks, Control, software, and venue output.</p>
+        <h3>Entry</h3>
+        <p>Cube makes the system approachable without forcing the full rack footprint.</p>
       </div>
       <div class="card">
-        <h3>Session-ready workflow</h3>
-        <p>Reduce setup time and routing confusion so <span class="highlight">the session starts immediately</span>.</p>
+        <h3>Daily use</h3>
+        <p>Personal Workstations make each musician's rig, monitor mix, playback, and session tools portable.</p>
       </div>
       <div class="card">
-        <h3>Analog-first experience</h3>
-        <p>Make the signal path and its character <span class="highlight">intentional and repeatable</span>, not a pile of mismatched outboard.</p>
+        <h3>Premium</h3>
+        <p>Racks carry the analog identity and modular card ecosystem.</p>
       </div>
       <div class="card">
-        <h3>Scalable product ladder</h3>
-        <p>Cubes, Personal Stations, racks, and Venue create a <span class="highlight">rollout path</span> rather than an all-at-once launch.</p>
+        <h3>Live</h3>
+        <p>Venue brings the recorded mix balance into the room.</p>
       </div>
     </div>
   </div>
@@ -593,33 +604,33 @@
 
   <div class="section" id="fit">
     <p class="section-label">04 &mdash; Strategic fit</p>
-    <h2>Why Music Tribe may be different</h2>
+    <h2>Why start with Music Tribe</h2>
     <p>
-      Music Tribe is a plausible fit first because of capability: manufacturing scale, category breadth, audio
-      hardware experience, Control surfaces, monitoring, live sound, and distribution. System Q spans those categories,
-      so a narrow buyer would likely see only one piece of the platform.
+      Music Tribe is not just a random audio buyer. The St. George connection makes the first conversation feel
+      reachable, and Behringer/Music Tribe already lives across the categories GIG connects: interfaces, mixers,
+      monitoring, control surfaces, live sound, software, manufacturing, and global distribution.
     </p>
     <p>
-      There may also be founder-level resonance. The concept is not only premium studio gear; it is about giving more
-      musicians access to a coherent creative environment. If Music Tribe's leadership is receptive to broader access,
-      community, and values beyond conventional audio-product positioning, System Q may be more than a SKU discussion.
+      The reason to start there is simple: GIG probably needs a company that can think in ecosystems, not just one box.
+      Music Tribe has the breadth to ask whether this should become a product family instead of a founder trying to
+      manufacture every piece alone.
     </p>
     <div class="card-grid">
       <div class="card">
-        <h3>Capability fit</h3>
-        <p>Interfaces, mixers, monitoring, live sound, software, manufacturing, and global distribution all matter here.</p>
+        <h3>Local first step</h3>
+        <p>St. George makes the outreach feel less abstract: start with the closest plausible strategic door.</p>
       </div>
       <div class="card">
-        <h3>Values fit</h3>
-        <p>The deeper pattern is access: reduce friction so musicians can create, rehearse, record, and perform with less dependency.</p>
+        <h3>Audio breadth</h3>
+        <p>The ecosystem crosses recording, rehearsal, monitoring, control, and live sound.</p>
       </div>
       <div class="card">
-        <h3>Platform fit</h3>
-        <p>The strongest form is a connected family of products, not a single isolated device seeking a catalog slot.</p>
+        <h3>Manufacturing reality</h3>
+        <p>GIG needs hardware, software, sourcing, support, and distribution working together.</p>
       </div>
       <div class="card">
-        <h3>AIP bridge</h3>
-        <p>System Q is one practical example of a larger systems mindset: reduce fragmentation and improve human outcomes.</p>
+        <h3>Founder resonance</h3>
+        <p>The bigger idea is access: reduce friction so more musicians can create, rehearse, record, and perform.</p>
       </div>
     </div>
   </div>
@@ -628,8 +639,8 @@
 
   <div class="section" id="links">
     <p class="section-label">05 &mdash; Evidence</p>
-    <h2>Coherent artifact set</h2>
-    <p>These are the clearest review artifacts: product story, Control, Cube, Racks, and strategic framing. Each page should support the same GIG ecosystem story.</p>
+    <h2>Review artifacts</h2>
+    <p>Open these for the supporting visuals and product pages. They are not meant to replace the conversation.</p>
   </div>
   <div class="artifact-grid">
     <div class="artifact-card">
@@ -688,26 +699,25 @@
     <p class="section-label">06 &mdash; Strategic ask</p>
     <h2>What I am asking for</h2>
     <p>
-      I am seeking a serious strategic review of whether System Q could fit Music Tribe as a product platform,
-      partnership, or acquisition candidate. The immediate ask is not a public commitment. It is a qualified conversation
-      with someone who can judge product fit, manufacturing realism, and strategic value.
+      I am looking for a qualified strategic review with someone who can evaluate whether GIG belongs inside
+      Music Tribe as an acquisition, licensing, partnership, or incubation conversation.
     </p>
     <div class="card-grid">
       <div class="card">
         <h3>Review the architecture</h3>
-        <p>Does the full ecosystem make sense as a Music Tribe platform rather than as a standalone founder-operated build?</p>
+        <p>Does the product family make sense as a platform?</p>
       </div>
       <div class="card">
         <h3>Identify the wedge</h3>
-        <p>Which first product should lead: Cube, Personal Workstation, Control/software, Racks, or Venue?</p>
+        <p>Which first product should lead: Cube, Workstation, Control, Racks, or Venue?</p>
       </div>
       <div class="card">
         <h3>Assess transaction path</h3>
-        <p>Would this be best explored as acquisition, licensing, strategic partnership, advisory review, or incubation?</p>
+        <p>Would acquisition, licensing, partnership, or incubation fit best?</p>
       </div>
       <div class="card">
-        <h3>Connect the larger purpose</h3>
-        <p>If the product thinking resonates, there is a broader AIP systems mission behind it that can be discussed separately.</p>
+        <h3>Start the right conversation</h3>
+        <p>The goal is a serious review, not a public commitment.</p>
       </div>
     </div>
   </div>
