@@ -182,6 +182,37 @@
       font-weight: 500;
     }
 
+    .breakthrough-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 3rem;
+    }
+    @media (min-width: 760px) {
+      .breakthrough-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .breakthrough {
+      background: linear-gradient(180deg, rgba(0,212,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.2rem;
+    }
+    .breakthrough h3 {
+      color: var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+    .breakthrough p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
     .flow-grid {
       display: grid;
       gap: 1rem;
@@ -312,13 +343,12 @@
       <h1>GIG</h1>
       <p class="sub">System Q Recording Environment</p>
       <p>
-        A unified musician ecosystem for rehearsal, recording, sound shaping, mixing, and venue playback.
-        Each player brings their own workstation, plugs into the network, records through Cube or Racks,
-        and controls the whole workflow through one shared language.
+        A unified musician ecosystem for rehearsal, recording, sound shaping, mix review, and venue playback.
+        Workstation, Cube, Racks, Control, Venue, and software all share one operating language.
       </p>
       <nav class="hero-nav">
+        <a href="#breakthroughs">Why it matters</a>
         <a href="#flow">How it works</a>
-        <a href="#sound">Sound shaping</a>
         <a href="#racks">Racks</a>
         <a href="#cubes">Cubes</a>
         <a href="#control">Control</a>
@@ -335,20 +365,39 @@
     </div>
   </div>
 
+  <div class="section" id="breakthroughs" style="padding-bottom: 0;">
+    <p class="section-label">00 &mdash; Why it matters</p>
+    <h2>Four Product Hooks</h2>
+    <p>GIG is not just another interface or controller. These are the ideas that make it a product family.</p>
+  </div>
+
+  <div class="breakthrough-grid">
+    <div class="breakthrough">
+      <h3>Sound Without Dependency</h3>
+      <p>Analog and software paths can create serious tone before piling on extra plugins or outboard.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>6-DOF Control</h3>
+      <p>A SpaceMouse-style command surface keeps focus, selection, and value changes in one hand position.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Swappable Rack Cards</h3>
+      <p>Touchscreen rack frames can accept analog PCB card families for preamp, compression, EQ, and tone.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Venue Translation</h3>
+      <p>The recorded mix plays back at its intended level relationships, then adapts to the room.</p>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
   <div class="section" id="flow">
     <p class="section-label">01 &mdash; Ecosystem</p>
     <h2>One Musician Workflow</h2>
     <p>
-      This is one connected system for musicians, not a pile of unrelated products. Each player sits down at a
-      personal station, plugs into the network, rehearses in the same environment they record in, and keeps the same
-      logic all the way through playback and venue deployment.
-    </p>
-    <p>
-      The recording path branches when needed: use <a href="#cubes" style="color:var(--accent);text-decoration:none;">Cube</a>
-      for the simpler modular path, or move into the <a href="#racks" style="color:var(--accent);text-decoration:none;">Racks</a>
-      for the premium analog path. Once the mix is right, <a href="#venue" style="color:var(--accent);text-decoration:none;">Venue</a>
-      carries the result into live playback, and <a href="#control" style="color:var(--accent);text-decoration:none;">Control</a>
-      keeps rehearsal, studio, and gig operation in one tactile language.
+      Each player brings a workstation, connects to the band, records through Cube or Racks, shapes the sound, and
+      carries the mix into Venue while Control keeps the whole system under one tactile language.
     </p>
   </div>
 
@@ -380,95 +429,18 @@
     </div>
   </div>
 
-  <!-- ════════════════ EASE OF USE & COHERENCE ════════════════ -->
-  <div class="section" id="ease">
-    <p class="section-label">02 &mdash; Philosophy</p>
-    <h2>Ease of Use &amp; Coherence</h2>
-    <p>
-      Real-life flow: you text your musician friends, they show up, and everyone plugs in a network cable.
-      You rehearse the song. When it&rsquo;s right, you hit record. You play it back immediately, make the changes
-      you want, and you repeat until the mix matches the vision.
-    </p>
-    <p>
-      The key is coherence: the same setup you used to rehearse and record is the setup you use to play back
-      and refine. Then you take the exact same endpoints to <a href="#venue" style="color:var(--accent);text-decoration:none;">Venue</a>
-      and it translates to speakers. No re-wiring, no re-learning, no session-breaking handoffs.
-    </p>
-    <p>
-      No bad mixes.
-    </p>
-  </div>
-
-  <div class="divider"><hr></div>
-
-  <div class="section" id="sound">
-    <p class="section-label">03 &mdash; Sound</p>
-    <h2>Sound Without Dependency</h2>
-    <p>
-      GIG is designed so the core system can create serious sound on its own. The analog path can be dialed toward
-      clean, colored, tube, transformer, harmonic, compression, EQ, transient, saturation, and output character.
-      The software path mirrors that same logic, so what you see and what you hear stay connected.
-    </p>
-    <p>
-      You can still use plugins and outboard hardware. The point is that you do not have to depend on a growing pile
-      of extra tools before the system becomes useful. GIG gives the musician a versatile sound-shaping environment first.
-    </p>
-  </div>
-
-  <div class="card-grid">
-    <div class="card">
-      <h3>Analog Models</h3>
-      <p>Dial familiar hardware-style behavior inside the rack path: clean, color, tube, transformer, dynamics, EQ, and saturation.</p>
-    </div>
-    <div class="card">
-      <h3>Software Mirror</h3>
-      <p>The software follows the same signal-stage language, so editing and recall stay consistent across the system.</p>
-    </div>
-    <div class="card">
-      <h3>Less Plugin Pressure</h3>
-      <p>Plugins become creative additions instead of mandatory infrastructure for every serious sound.</p>
-    </div>
-    <div class="card">
-      <h3>Expandable</h3>
-      <p>External hardware and plugins still fit, but GIG provides a complete starting environment.</p>
-    </div>
-  </div>
-
-  <div class="divider"><hr></div>
-
   <!-- ════════════════ RACKS ════════════════ -->
   <div class="section" id="racks">
-    <p class="section-label">04 &mdash; Hardware</p>
+    <p class="section-label">02 &mdash; Hardware</p>
     <h2>Racks</h2>
     <p>
       The racks are the studio-grade analog core: two touchscreen-faced frames for preamplification, dynamics, EQ,
-      harmonic stages, conversion, routing, monitoring, and summing. Visually they&rsquo;re modern&mdash;think high-end LED
-      computer case aesthetics&mdash;with internal lighting and functional touchscreen front panels.
+      harmonic stages, conversion, routing, monitoring, and summing. The front face is functional touchscreen control,
+      not decoration.
     </p>
     <p>
-      Left rack is the channel and processing personality. Right rack is the monitoring/summing/output brain.
-      Clean, colored, transformer, tube, saturation, compression, EQ, and harmonic behavior can be dialed as part
-      of the system rather than assembled from unrelated boxes.
-    </p>
-    <p>
-      The new concept is the card frame: instead of buying another full piece of hardware, you can swap analog PCB
-      cards into internal slots. Preamp, compressor, EQ, and tone modules can become product families inside the
-      same rack architecture.
-    </p>
-    <p>
-      The touchscreen faceplates are functional: they can act like display monitors for DAW views or any visual layer
-      you want in the room, while also serving as the touch surface for parameter focus and control.
-    </p>
-    <p>
-      Audio stays anchored in the racks: analog in, conversion, then a networked digital distribution layer to the rest of the system.
-      Think AA32&times;12 digital I/O into the ecosystem, and a 12&times;2 analog summing bus so what you hear is still analog processing.
-      Cubes are the simpler path (more convenience, less of the full analog rack character).
-    </p>
-    <p>
-      The path is analog, but the system is digitally controlled&mdash;so you get instant recall. Instead of trying to
-      re-dial an 1176 by hand (and hoping it lands the same), you recall the exact session state.
-      The goal isn&rsquo;t to replace every piece of outboard people love, but it can virtually cover the whole stack
-      when you want a complete hardware workflow without needing a separate wall of gear.
+      The card-frame idea is the product leap: swap analog PCB cards for preamp, compressor, EQ, tone, dynamics,
+      and future module families instead of replacing the entire piece of hardware.
     </p>
   </div>
 
@@ -487,17 +459,11 @@
 
   <!-- ════════════════ CUBES ════════════════ -->
   <div class="section" id="cubes">
-    <p class="section-label">05 &mdash; Modular I/O</p>
+    <p class="section-label">03 &mdash; Modular I/O</p>
     <h2>Cubes</h2>
     <p>
-      The cubes are small, modular I/O nodes&mdash;floor, desktop, or rack-edge. For people who are
-      less concerned about squeezing out the absolute finest analog quality and prefer simplicity,
-      a cube is all they need. USB in, balanced analog out, headphone jack, done.
-    </p>
-    <p>
-      They talk to the central system and to each other. You can use one standalone or group them
-      together. They&rsquo;re the entry point into the ecosystem for anyone who just wants to plug
-      in and play without thinking about the full rack.
+      Cubes are the simple modular I/O path into GIG: small nodes for fast setup, smaller sessions, and musicians
+      who want the workflow without starting with the full rack footprint.
     </p>
   </div>
 
@@ -512,26 +478,15 @@
 
   <!-- ════════════════ SOFTWARE ════════════════ -->
   <div class="section" id="software">
-    <p class="section-label">06 &mdash; Software</p>
+    <p class="section-label">04 &mdash; Software</p>
     <h2>Software</h2>
     <p>
-      The software is the DSP and control layer that mirrors the hardware exactly. The goal is one system where what you see on-screen
-      is the same processing model that exists in the racks.
-    </p>
-    <p>
-      The channel strip is ordered and intentional: a 7-band harmonic processor first, then a frequency-controlled compressor/gate/limiter,
-      then multiband EQ, then a transient processor, then saturation/exciter.
-    </p>
-    <p>
-      Editing is POL (polar) based: the mic pre and the compressor visually “close in” on the polar graph.
-      The circle is the control surface. As you move the focus ring, the software targets a specific band and shows you what that band is doing.
-      Larger circles represent lower frequencies; smaller circles represent higher frequencies.
-      It&rsquo;s a new way to edit sound visually, and it stays consistent across the strip so the same gestures apply everywhere.
+      The software mirrors the rack and Control language: channel stages, POL-style visual editing, parameter focus,
+      and recall stay consistent across analog and digital paths.
     </p>
     <p>
       There is now a live browser prototype called <a href="jimmy.html" style="color:var(--gold);text-decoration:none;">Jimmy</a>
-      that sketches the software direction directly: armed channel strips, parameter focus, POL-style stage behavior, and a 6-DOF inspired
-      edit control that keeps your hand in one place while you select and turn.
+      that sketches the direction: armed channel strips, parameter focus, POL-style stage behavior, and 6-DOF inspired editing.
     </p>
   </div>
 
@@ -558,7 +513,7 @@
 
   <!-- ════════════════ CONTROLLER ════════════════ -->
   <div class="section" id="control">
-    <p class="section-label">07 &mdash; Command</p>
+    <p class="section-label">05 &mdash; Command</p>
     <h2>Control</h2>
     <p>
       Control is the command surface for rehearsal, studio, mix, and live operation. Its 6‑DOF SpaceMouse-style
@@ -566,12 +521,8 @@
       plugin windows, and menus.
     </p>
     <p>
-      Monitoring is full-console grade: three inputs with trims, three outputs with trims, three headphone feeds with
-      trims, plus mute (press), dim with trim, talkback with trim, and fine trim on main output. A main touchscreen
-      handles per-channel processing selection, master fader touch, transport, and automation.
-    </p>
-    <p>
-      The lower scribble strip supports voice input (press/hold solo), with tap gestures for mute/solo.
+      It is the shared tactile layer across the whole ecosystem: touch focus, transport, monitoring, faders,
+      and parameter editing in one surface.
     </p>
   </div>
 
@@ -586,33 +537,11 @@
 
   <!-- ════════════════ PEDAL ════════════════ -->
   <div class="section" id="personal">
-    <p class="section-label">08 &mdash; Personal Control</p>
+    <p class="section-label">06 &mdash; Personal Control</p>
     <h2>Personal Workstation</h2>
     <p>
-      The personal station is what each musician carries. Your instrument plugs into it, and a network cable plugs into it.
-      Plug in with your friends and you&rsquo;re instantly part of the session.
-    </p>
-    <p>
-      Each personal station is your endpoint: IEM module (bring your own buds), talkback, playback, recording, and musician control.
-      Anyone can play back a reference and everyone hears it. If you want to go wireless, it supports wireless mic
-      and wireless guitar inputs. It can also feed a local speaker out (and future Bluetooth speaker support).
-    </p>
-    <p>
-      It also acts as your processor and amp path. You assign effects and patches to it, the display becomes your
-      personal rig, and the knobs are interactable&mdash;so you can build a full performance setup without a separate pile
-      of hardware.
-    </p>
-    <p>
-      Same idea for vocals and microphones, and the same idea for keys: think MainStage-style rigs where you bring a
-      control surface, not a huge stack, and you recall sounds instantly.
-    </p>
-    <p>
-      It can also carry the practical session layer around the musician: playback, monitoring, sheet music, and the other
-      tools needed to stay inside one coherent rehearsal-to-recording environment.
-    </p>
-    <p>
-      Acoustic/baffle systems are for drums and triggers when you want isolation and control. On a digital stage,
-      there&rsquo;s no acoustic spill&mdash;so you don&rsquo;t need baffles.
+      Each musician has an endpoint for instrument or microphone input, IEM mix, talkback, playback, recording,
+      patches, sheet music, and session tools. It is the personal doorway into the band network.
     </p>
   </div>
 
@@ -626,20 +555,15 @@
   <div class="divider"><hr></div>
 
   <div class="section" id="venue">
-    <p class="section-label">09 &mdash; Output</p>
+    <p class="section-label">07 &mdash; Output</p>
     <h2>Venue</h2>
     <p>
-      Venue is the live output and room translation layer. Everyone plugs their pedals (or laptops) into Venue,
-      and Venue feeds the speakers with consistent routing and output management.
+      Venue is the live output and room translation layer. It plays the audio file at the recorded mix's level
+      relationships, then helps adapt that intended balance to the room.
     </p>
     <p>
-      The core idea is mix-level reproduction: the audio file can be played at the venue with the same level
-      relationships as the recorded mix. Venue then helps adapt that intended balance to the actual room.
-    </p>
-    <p>
-      A reference microphone in the room (wireless) provides feedback so the system can assist with balancing and
-      translation. Playback and final checks live here too: drop a reference, play back takes, and confirm the mix
-      translates to the space without breaking the session.
+      Reference mic feedback can help with balancing and translation, so playback and final checks stay inside the
+      same ecosystem.
     </p>
   </div>
 
