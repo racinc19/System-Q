@@ -24,6 +24,9 @@ desktop.ini
 # Local Codex worktrees
 .claude/worktrees/
 
+# OVE deploy files — must never be re-added
+oak-valley-estates-inspect/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -34,3 +37,12 @@ console_debug.log
 
 # Generated stem WAVs (see software/generate_band_stems.py)
 software/band_stems/*.wav
+
+# Generated CAD exports
+*.step
+
+# Test audio loops
+software/loops/*.wav
+
+# Spreadsheet exports
+*.xlsx

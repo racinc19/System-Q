@@ -3,36 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Owner review landing: System Q recording environment — prepared for Uli (Yuli) Behringer / Music Tribe.">
-  <title>Owner review — System Q recording environment</title>
+  <meta name="description" content="Strategic review landing: System Q Recording Environment for Music Tribe / Behringer consideration.">
+  <title>Strategic review — System Q Recording Environment</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg1: #1a0a2e;
-      --bg2: #0a1929;
-      --bg3: #050810;
+      --bg1: #24313e;
+      --bg2: #111b27;
+      --bg3: #080c12;
       --accent: #00d4ff;
       --gold: #ffd700;
       --text: #f0f4f8;
       --muted: #94a3b8;
       --card-bg: rgba(255,255,255,0.035);
       --card-border: rgba(0,212,255,0.18);
+      --image-mat: #c8d2dc;
+      --image-mat-dark: #6f7b86;
       --hero-img: none;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--bg3);
+      background:
+        radial-gradient(900px 520px at 18% -8%, rgba(0,212,255,0.13), transparent 62%),
+        radial-gradient(900px 620px at 94% 8%, rgba(255,215,0,0.10), transparent 62%),
+        linear-gradient(180deg, #1b2633 0%, var(--bg3) 46%, #050810 100%);
       color: var(--text);
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
     }
 
     .hero {
-      background: linear-gradient(165deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
-      padding: 4rem 1.5rem 3rem;
-      text-align: center;
+      background:
+        linear-gradient(165deg, rgba(36,49,62,0.96) 0%, rgba(17,27,39,0.98) 55%, rgba(5,8,16,1) 100%);
+      padding: 3rem 1.5rem 2.25rem;
       position: relative;
       overflow: hidden;
     }
@@ -46,7 +51,7 @@
         radial-gradient(620px 420px at 50% 62%, rgba(0,212,255,0.08) 0%, transparent 65%);
       background-size: cover, auto, auto, auto;
       background-position: center, center, center, center;
-      opacity: 1;
+      opacity: 0.22;
       transform: scale(1);
       pointer-events: none;
     }
@@ -54,10 +59,49 @@
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.06) 0%, transparent 70%);
+      background:
+        linear-gradient(180deg, rgba(5,8,16,0.18) 0%, rgba(5,8,16,0.64) 68%, rgba(5,8,16,0.96) 100%),
+        radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.10) 0%, transparent 70%);
       pointer-events: none;
     }
-    .hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding: 1rem;
+      border: 1px solid rgba(0,212,255,0.14);
+      border-radius: 22px;
+      background: rgba(5, 8, 16, 0.54);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.42);
+      backdrop-filter: blur(3px);
+    }
+    .hero-layout {
+      display: grid;
+      gap: 1.35rem;
+      grid-template-columns: 1fr;
+      align-items: center;
+    }
+    @media (min-width: 880px) {
+      .hero-layout { grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr); }
+    }
+    .hero-art {
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(0,212,255,0.18);
+      background:
+        radial-gradient(ellipse at 50% 12%, rgba(255,255,255,0.38), rgba(200,210,220,0.72) 46%, rgba(111,123,134,0.92) 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 18px 44px rgba(0,0,0,0.34);
+    }
+    .hero-art img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .hero-copy {
+      padding: 0.4rem 0.35rem;
+      text-align: left;
+    }
     .hero h1 {
       font-family: 'Orbitron', sans-serif;
       font-size: clamp(1.6rem, 5vw, 2.6rem);
@@ -79,15 +123,16 @@
     }
     .hero p {
       font-size: 1.06rem;
-      color: var(--muted);
+      color: #d7e1ec;
       max-width: 720px;
-      margin: 0 auto 1.75rem;
+      margin: 0 0 1.25rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.65);
     }
     .hero-nav {
       display: flex;
       flex-wrap: wrap;
       gap: 0.6rem;
-      justify-content: center;
+      justify-content: flex-start;
     }
     .hero-nav a {
       padding: 0.5rem 1.1rem;
@@ -179,6 +224,77 @@
       font-weight: 500;
     }
 
+    .flow-system {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 1.5rem 1.25rem;
+      display: grid;
+      gap: 1rem;
+    }
+    .flow-node {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.1rem;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.16);
+    }
+    @media (min-width: 720px) {
+      .flow-node { grid-template-columns: auto minmax(0, 1fr) minmax(290px, 42%); }
+    }
+    .flow-image {
+      grid-column: 1 / -1;
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background:
+        radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.44), rgba(200,210,220,0.78) 45%, rgba(111,123,134,0.96) 100%);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08), 0 14px 32px rgba(0,0,0,0.28);
+      object-fit: cover;
+      min-height: 180px;
+    }
+    @media (min-width: 720px) {
+      .flow-image {
+        grid-column: 3;
+        grid-row: 1;
+        height: 220px;
+      }
+    }
+    .flow-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,215,0,0.35);
+      background: rgba(0,212,255,0.08);
+      color: var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+    .flow-node h3 {
+      margin-bottom: 0.25rem;
+      color: var(--text);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.92rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .flow-node p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.6;
+    }
+    .flow-branch {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
     .links {
       list-style: none;
       margin-top: 0.8rem;
@@ -190,6 +306,58 @@
       font-weight: 600;
     }
     .links a:hover { text-decoration: underline; }
+
+    .artifact-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    @media (min-width: 760px) {
+      .artifact-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .artifact-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.16);
+    }
+    .artifact-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid rgba(0,212,255,0.14);
+      background:
+        radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.42), rgba(200,210,220,0.78) 46%, rgba(111,123,134,0.96) 100%);
+    }
+    .artifact-card div {
+      padding: 1rem;
+    }
+    .artifact-card h3 {
+      margin-bottom: 0.4rem;
+      color: var(--text);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .artifact-card p {
+      margin: 0 0 0.65rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .artifact-card a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+    .artifact-card a:hover { text-decoration: underline; }
 
     .media-grid {
       display: grid;
@@ -208,6 +376,7 @@
       border-radius: 14px;
       overflow: hidden;
       position: relative;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.16);
     }
     .media::after {
       content: '';
@@ -221,6 +390,8 @@
       width: 100%;
       height: auto;
       display: block;
+      background:
+        radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.42), rgba(200,210,220,0.78) 46%, rgba(111,123,134,0.96) 100%);
     }
     .media .cap {
       position: relative;
@@ -248,81 +419,207 @@
 </head>
 <body>
 
-  <div class="hero" style="--hero-img:url('Image/Recording Enviroment.png')">
+  <div class="hero" style="--hero-img:url('Image/Recording Environment.png')">
     <div class="hero-inner">
-      <h1>Owner Review</h1>
-      <p class="sub">Prepared for Uli (Yuli) Behringer &middot; Music Tribe</p>
-      <p>
-        This page is a concise, executive-level review of the <strong style="color:var(--text);">System Q recording environment</strong>:
-        a unified, analog-first studio ecosystem (control surface + racks + modular I/O) designed to be session-ready and scalable.
-      </p>
-      <nav class="hero-nav">
-        <a href="#what">What it is</a>
-        <a href="#why">Why it matters</a>
-        <a href="#visuals">Visuals</a>
-        <a href="#links">Evidence</a>
-        <a href="#asks">Placeholders</a>
-      </nav>
+      <div class="hero-layout">
+        <div class="hero-art">
+          <img src="Image/Recording Environment.png" alt="GIG ecosystem overview">
+        </div>
+        <div class="hero-copy">
+          <h1>GIG / System Q Review</h1>
+          <p class="sub">Strategic fit review &middot; Music Tribe / Behringer</p>
+          <p>
+            GIG is a unified musician ecosystem: personal workstations, networked band sessions, Cube,
+            Racks, Control, and Venue. The question for review is whether this architecture could fit
+            Music Tribe as a product platform, partnership, or acquisition candidate.
+          </p>
+          <nav class="hero-nav">
+            <a href="#flow">How GIG works</a>
+            <a href="#sound">Sound shaping</a>
+            <a href="#what">What it is</a>
+            <a href="#why">Why it matters</a>
+            <a href="#fit">Why Music Tribe</a>
+            <a href="#links">Evidence</a>
+            <a href="#asks">Strategic ask</a>
+          </nav>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="section" id="visuals">
-    <p class="section-label">00 &mdash; Visuals</p>
-    <h2>Fast visual read</h2>
-    <p>A quick scan of surface language and operator flow.</p>
-  </div>
-  <div class="media-grid">
-    <div class="media">
-      <img src="Image/Recording Enviroment.png" alt="Ecosystem render" loading="lazy">
-      <div class="cap">Ecosystem overview.</div>
-    </div>
-    <div class="media">
-      <img src="Image/Controll.png" alt="Controller render" loading="lazy">
-      <div class="cap">Controller close-up.</div>
-    </div>
-    <div class="media">
-      <img src="Image/Right.png" alt="Rack render" loading="lazy">
-      <div class="cap">Rack close-up.</div>
-    </div>
-  </div>
-
-  <div class="section" id="what">
-    <p class="section-label">01 &mdash; Summary</p>
-    <h2>What this is</h2>
+  <div class="section" id="flow">
+    <p class="section-label">00 &mdash; Product flow</p>
+    <h2>How GIG works</h2>
     <p>
-      A coherent recording system with a single mental model end-to-end: input, processing, routing, monitoring, and session control.
-      The goal is to remove friction in sessions while preserving analog character and professional ergonomics.
+      Working name: <strong style="color:var(--text);">GIG</strong> is the whole musician ecosystem.
+      The product starts with the musician, not the rack. Each player brings a personal workstation with their
+      sounds, in-ear monitoring, playback, and session tools already there.
+    </p>
+  </div>
+  <div class="flow-system">
+    <div class="flow-node">
+      <div class="flow-icon">01</div>
+      <div>
+        <h3>Personal Workstation</h3>
+        <p>Each musician has their own endpoint: sounds, effects, patches, in-ear monitor mix, playback, talkback, sheet music, and instrument or microphone input.</p>
+      </div>
+      <img class="flow-image" src="Image/Pedal.png" alt="Personal workstation">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">02</div>
+      <div>
+        <h3>Networked Band Session</h3>
+        <p>The workstations plug together by network cable. Everyone can hear the session, share playback, and build their own personal mix while still staying inside one shared environment.</p>
+      </div>
+      <img class="flow-image" src="Image/Recording Environment.png" alt="Networked band session">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">03</div>
+      <div>
+        <h3>Record Through Cube</h3>
+        <p>Cube is the simple modular path: fast setup, smaller I/O nodes, and the same operating language without the full rack footprint.</p>
+      </div>
+      <img class="flow-image" src="Image/cube.png" alt="Cube modular recording path">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">04</div>
+      <div>
+        <h3>Or Record Through Racks</h3>
+        <p>Racks are the premium path: two touchscreen-faced analog frames with swappable PCB cards for preamp, compressor, EQ, tone, routing, summing, monitoring, and serious studio capture.</p>
+      </div>
+      <img class="flow-image" src="Image/Left.png" alt="Racks premium recording path">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">05</div>
+      <div>
+        <h3>Play Back Through Venue</h3>
+        <p>Once the mix is ready, Venue carries it into the gig: the audio file plays back at the recorded mix's level relationships, then the system helps translate that balance to the room.</p>
+      </div>
+      <img class="flow-image" src="Image/Venue.png" alt="Venue live playback and automix">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">06</div>
+      <div>
+        <h3>Control Everything</h3>
+        <p>Control is the command surface across the whole ecosystem: rehearsal, studio recording, mix decisions, playback, and live gig operation all stay in one tactile language.</p>
+      </div>
+      <img class="flow-image" src="Image/Controll.png" alt="GIG Control surface">
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="sound">
+    <p class="section-label">01 &mdash; Sound shaping</p>
+    <h2>Sound without dependency</h2>
+    <p>
+      GIG is not only a routing system. The analog path is designed to be dialed toward familiar hardware behaviors:
+      clean, colored, tube, transformer, harmonics, dynamics, EQ, transient shape, saturation, and output character.
+      The software path follows the same model, so the user can shape sound in one language whether the stage is analog,
+      digital, or hybrid.
     </p>
     <p>
-      The repository is a working diligence package: static HTML specs, visuals, BOM-style pages, and CAD prototypes.
+      The goal is not to forbid plugins or outside hardware. Musicians can still use them, and many will. The value is
+      that the core system is versatile enough that users are not forced to keep buying extra plugins and outboard gear
+      just to get serious sounds.
+    </p>
+  </div>
+  <div class="card-grid">
+    <div class="card">
+      <h3>Analog behavior</h3>
+      <p>Dial clean, colored, tube, transformer, harmonic, compression, EQ, and saturation-style character inside the rack path.</p>
+    </div>
+    <div class="card">
+      <h3>Software mirror</h3>
+      <p>The software uses the same operating language, so recall and editing stay consistent across analog and digital stages.</p>
+    </div>
+    <div class="card">
+      <h3>Less dependency</h3>
+      <p>The system reduces the need for plugin stacks and extra hardware before the musician can get a finished sound.</p>
+    </div>
+    <div class="card">
+      <h3>Still expandable</h3>
+      <p>External plugins and outboard remain welcome, but they become creative additions instead of mandatory infrastructure.</p>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="what">
+    <p class="section-label">02 &mdash; Summary</p>
+    <h2>What this is</h2>
+    <p>
+      A coherent recording system with one mental model end-to-end: musician input, processing, routing,
+      monitoring, session control, playback, and venue translation. The goal is to remove session friction
+      while preserving analog character, tactile control, and professional ergonomics.
+    </p>
+    <p>
+      This repository is a working diligence package: public product pages, static HTML specs, visuals,
+      BOM-style pages, CAD prototypes, and software experiments that show the control and audio direction.
     </p>
   </div>
 
   <div class="divider"><hr></div>
 
   <div class="section" id="why">
-    <p class="section-label">02 &mdash; Positioning</p>
+    <p class="section-label">03 &mdash; Positioning</p>
     <h2>Why it matters (product + manufacturing lens)</h2>
     <p>
-      The core bet is that a modular ecosystem can hit multiple tiers: an entry path (cubes) for simplicity and a flagship path
-      (surface + racks) for power users, while keeping the system consistent across SKUs.
+      The core bet is that a modular ecosystem can reach multiple tiers: an entry path through Cubes for simplicity,
+      a musician-facing Personal Station for daily use, and a flagship surface plus racks for serious recording rooms,
+      all sharing one software and control language.
     </p>
     <div class="card-grid">
       <div class="card">
-        <h3>Analog-first experience</h3>
-        <p>Make the signal path and its character <span class="highlight">intentional and repeatable</span>, not a pile of mismatched outboard.</p>
+        <h3>Platform, not one box</h3>
+        <p>The value is in the <span class="highlight">connected product family</span>: endpoints, I/O, racks, Control, software, and venue output.</p>
       </div>
       <div class="card">
         <h3>Session-ready workflow</h3>
         <p>Reduce setup time and routing confusion so <span class="highlight">the session starts immediately</span>.</p>
       </div>
       <div class="card">
-        <h3>Modular entry (cubes)</h3>
-        <p>A smaller node that still speaks the same system language; <span class="highlight">low-friction adoption</span>.</p>
+        <h3>Analog-first experience</h3>
+        <p>Make the signal path and its character <span class="highlight">intentional and repeatable</span>, not a pile of mismatched outboard.</p>
       </div>
       <div class="card">
-        <h3>Evidence-driven package</h3>
-        <p>Specs, visuals, and BOM artifacts reduce ambiguity and support <span class="highlight">manufacturing realism</span>.</p>
+        <h3>Scalable product ladder</h3>
+        <p>Cubes, Personal Stations, racks, and Venue create a <span class="highlight">rollout path</span> rather than an all-at-once launch.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="fit">
+    <p class="section-label">04 &mdash; Strategic fit</p>
+    <h2>Why Music Tribe may be different</h2>
+    <p>
+      Music Tribe is a plausible fit first because of capability: manufacturing scale, category breadth, audio
+      hardware experience, Control surfaces, monitoring, live sound, and distribution. System Q spans those categories,
+      so a narrow buyer would likely see only one piece of the platform.
+    </p>
+    <p>
+      There may also be founder-level resonance. The concept is not only premium studio gear; it is about giving more
+      musicians access to a coherent creative environment. If Music Tribe's leadership is receptive to broader access,
+      community, and values beyond conventional audio-product positioning, System Q may be more than a SKU discussion.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Capability fit</h3>
+        <p>Interfaces, mixers, monitoring, live sound, software, manufacturing, and global distribution all matter here.</p>
+      </div>
+      <div class="card">
+        <h3>Values fit</h3>
+        <p>The deeper pattern is access: reduce friction so musicians can create, rehearse, record, and perform with less dependency.</p>
+      </div>
+      <div class="card">
+        <h3>Platform fit</h3>
+        <p>The strongest form is a connected family of products, not a single isolated device seeking a catalog slot.</p>
+      </div>
+      <div class="card">
+        <h3>AIP bridge</h3>
+        <p>System Q is one practical example of a larger systems mindset: reduce fragmentation and improve human outcomes.</p>
       </div>
     </div>
   </div>
@@ -330,43 +627,87 @@
   <div class="divider"><hr></div>
 
   <div class="section" id="links">
-    <p class="section-label">03 &mdash; Evidence (repo pages)</p>
-    <h2>Key artifacts to review</h2>
-    <p>These are the most important pages in the repository for a fast technical/product read:</p>
-    <ul class="links">
-      <li><a href="index.html">Product landing (current)</a></li>
-      <li><a href="studio/index.html">Studio overview hub</a></li>
-      <li><a href="html/VISUAL_CENTRAL_CONTROLLER.html">Central controller visual spec</a></li>
-      <li><a href="html/VISUAL_LEFT_RACK.html">Left rack visual spec</a></li>
-      <li><a href="html/VISUAL_CUBE_ENTRY_LEVEL.html">Cube entry line (system story)</a></li>
-      <li><a href="investors.html">Strategic framing (investor lens)</a></li>
-    </ul>
+    <p class="section-label">05 &mdash; Evidence</p>
+    <h2>Coherent artifact set</h2>
+    <p>These are the clearest review artifacts: product story, Control, Cube, Racks, and strategic framing. Each page should support the same GIG ecosystem story.</p>
+  </div>
+  <div class="artifact-grid">
+    <div class="artifact-card">
+      <img src="Image/Recording Environment.png" alt="Product landing artifact">
+      <div>
+        <h3>Product story</h3>
+        <p>The public-facing overview of GIG as one musician ecosystem.</p>
+        <a href="index.html">Open landing</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/Controll.png" alt="Control artifact">
+      <div>
+        <h3>Control</h3>
+        <p>The command surface that ties rehearsal, recording, mixing, and live playback together.</p>
+        <a href="html/VISUAL_CENTRAL_CONTROLLER.html?v=overview-2">Open Control overview</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/cube.png" alt="Cube artifact">
+      <div>
+        <h3>Cube</h3>
+        <p>The accessible modular I/O path into the broader ecosystem.</p>
+        <a href="html/VISUAL_CUBE_ENTRY_LEVEL.html?v=overview-2">Open Cube overview</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/Left.png" alt="Racks artifact">
+      <div>
+        <h3>Racks</h3>
+        <p>The premium touchscreen rack path with swappable analog card modules.</p>
+        <a href="html/VISUAL_LEFT_RACK.html?v=overview-2">Open Racks overview</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/Venue.png" alt="Venue artifact">
+      <div>
+        <h3>Venue</h3>
+        <p>The live playback, room translation, and assisted output layer for gigs.</p>
+        <a href="html/VISUAL_RIGHT_RACK.html?v=overview-2">Open Venue / output page</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/Right.png" alt="Strategic review artifact">
+      <div>
+        <h3>Strategic fit</h3>
+        <p>The acquisition and Music Tribe fit narrative behind the product package.</p>
+        <a href="investors.html">Open strategic framing</a>
+      </div>
+    </div>
   </div>
 
   <div class="divider"><hr></div>
 
   <div class="section" id="asks">
-    <p class="section-label">04 &mdash; Placeholders</p>
-    <h2>Placeholders to fill next</h2>
+    <p class="section-label">06 &mdash; Strategic ask</p>
+    <h2>What I am asking for</h2>
     <p>
-      These sections are intentionally placeholders so you can decide the tone and level of disclosure before a broader share.
+      I am seeking a serious strategic review of whether System Q could fit Music Tribe as a product platform,
+      partnership, or acquisition candidate. The immediate ask is not a public commitment. It is a qualified conversation
+      with someone who can judge product fit, manufacturing realism, and strategic value.
     </p>
     <div class="card-grid">
       <div class="card">
-        <h3>Partnership ask</h3>
-        <p><span class="highlight">Placeholder:</span> what you want from Music Tribe (OEM, co-dev, manufacturing review, distribution, brand lane).</p>
+        <h3>Review the architecture</h3>
+        <p>Does the full ecosystem make sense as a Music Tribe platform rather than as a standalone founder-operated build?</p>
       </div>
       <div class="card">
-        <h3>Roadmap</h3>
-        <p><span class="highlight">Placeholder:</span> v0 prototype milestones, v1 manufacturable design targets, and validation steps.</p>
+        <h3>Identify the wedge</h3>
+        <p>Which first product should lead: Cube, Personal Workstation, Control/software, Racks, or Venue?</p>
       </div>
       <div class="card">
-        <h3>Team</h3>
-        <p><span class="highlight">Placeholder:</span> who is building what (hardware, firmware, software, industrial design).</p>
+        <h3>Assess transaction path</h3>
+        <p>Would this be best explored as acquisition, licensing, strategic partnership, advisory review, or incubation?</p>
       </div>
       <div class="card">
-        <h3>Traction / proof</h3>
-        <p><span class="highlight">Placeholder:</span> demos, recordings, user feedback, and any costed BOM / COGS snapshots.</p>
+        <h3>Connect the larger purpose</h3>
+        <p>If the product thinking resonates, there is a broader AIP systems mission behind it that can be discussed separately.</p>
       </div>
     </div>
   </div>

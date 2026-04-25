@@ -17,10 +17,10 @@ A Cloudflare Pages static site deployed from the GitHub repo `racinc19/System-Q`
 Images must exist as files inside this repo to appear on the deployed site.
 
 - Landing page renders live in: `Image/`
-  - `Image/Recording Enviroment.png` (hero / ecosystem)
+  - `Image/Recording Environment.png` (hero / ecosystem)
   - `Image/Left.png`, `Image/Right.png`
   - `Image/cube.png`
-  - `Image/Controll.png`
+  - `Image/Controll.png` (Control render; filename kept as existing asset)
   - `Image/Pedal.png`
   - `Image/Venue.png`
   - `Image/download.png` (vertical CH02 strip screenshot used in Software section)
@@ -72,4 +72,5 @@ To verify deployments:
   - It’s a transient lock file used by Git.
 
 ## Optional cleanup
-- Consider renaming `Image/download.png` to something stable like `Image/strip-ch02.png` and updating `index.html` accordingly.
+- Consider renaming `Image/Controll.png` to `Image/Control.png` and updating references.
+- Consider renaming `Image/download.png` to something stable like `Image/strip-ch02.png` and updating references.

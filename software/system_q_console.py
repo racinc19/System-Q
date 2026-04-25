@@ -93,6 +93,29 @@ LOG_LOW = math.log10(POL_LOW_HZ)
 LOG_HIGH = math.log10(POL_HIGH_HZ)
 
 
+def ensure_demo_stems() -> None:
+    missing = [filename for _, filename in CHANNEL_LAYOUT if not (STEMS_DIR / filename).exists()]
+    if not missing:
+        return
+
+    _log.info("Generating missing demo stems: %s", ", ".join(missing))
+    try:
+        from generate_band_stems import main as generate_band_stems
+
+        generate_band_stems()
+    except Exception as exc:
+        raise FileNotFoundError(
+            f"Missing demo stems in {STEMS_DIR}. Run: py -3 software/generate_band_stems.py"
+        ) from exc
+
+    still_missing = [filename for _, filename in CHANNEL_LAYOUT if not (STEMS_DIR / filename).exists()]
+    if still_missing:
+        raise FileNotFoundError(
+            f"Missing demo stems after generation: {', '.join(still_missing)}. "
+            "Run: py -3 software/generate_band_stems.py"
+        )
+
+
 @dataclass
 class ChannelState:
     name: str
@@ -171,6 +194,7 @@ class ChannelState:
 
 class ConsoleEngine:
     def __init__(self) -> None:
+        ensure_demo_stems()
         self.channels = [self._load_channel(name, STEMS_DIR / filename) for name, filename in CHANNEL_LAYOUT]
         self.master_channel = ChannelState(name="Master", path=ROOT_DIR / "master_bus")
         self.master_channel.pre_enabled = False

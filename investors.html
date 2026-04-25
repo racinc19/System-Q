@@ -3,141 +3,158 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Strategic and acquisition-oriented review: Recording Environment (System Q) — technical diligence package from the public repository.">
-  <title>Strategic review — Recording Environment (System Q)</title>
+  <meta name="description" content="Simple strategic framing for GIG / System Q as a Music Tribe acquisition or partnership conversation.">
+  <title>Strategic Framing — GIG / System Q</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg1: #1a0a2e;
-      --bg2: #0a1929;
+      --bg: #050810;
+      --panel: rgba(255,255,255,0.045);
+      --border: rgba(0,212,255,0.2);
       --accent: #00d4ff;
       --gold: #ffd700;
       --text: #f0f4f8;
-      --muted: #94a3b8;
+      --muted: #aab6c3;
+      --mat: #c8d2dc;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 55%, #050810 100%);
+      font-family: 'Inter', system-ui, sans-serif;
+      background:
+        radial-gradient(900px 520px at 16% 0%, rgba(0,212,255,0.15), transparent 62%),
+        linear-gradient(160deg, #1a0a2e 0%, #0a1929 50%, var(--bg) 100%);
       color: var(--text);
       min-height: 100vh;
       line-height: 1.65;
     }
-    .wrap { max-width: 820px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
-    .crumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
-    .crumb a { color: var(--accent); text-decoration: none; }
-    .crumb a:hover { text-decoration: underline; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    .nav { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.25rem; }
+    .nav a { color: var(--accent); text-decoration: none; margin-right: 1rem; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      align-items: center;
+      background: rgba(5,8,16,0.62);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 1.1rem;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.35);
+      margin-bottom: 1.2rem;
+    }
+    @media (min-width: 860px) { .hero { grid-template-columns: minmax(0, 1fr) minmax(360px, 0.9fr); } }
+    .hero img {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      background: radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.48), var(--mat) 48%, #6f7b86 100%);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 16px 42px rgba(0,0,0,0.28);
+    }
+    .tag {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.76rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+    }
     h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: clamp(1.45rem, 4vw, 2rem);
-      font-weight: 700;
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      line-height: 1.05;
+      margin-bottom: 0.85rem;
       background: linear-gradient(90deg, var(--accent), var(--gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 0.5rem;
     }
-    .tag {
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.25rem;
-    }
-    .lead { font-size: 1.05rem; color: var(--muted); margin-bottom: 2rem; }
+    .lead { color: var(--muted); font-size: 1.08rem; max-width: 620px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem; }
+    @media (min-width: 760px) { .grid { grid-template-columns: repeat(2, 1fr); } }
     .card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(0,212,255,0.22);
-      border-radius: 14px;
-      padding: 1.35rem 1.5rem;
-      margin-bottom: 1.25rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.25rem;
     }
     .card h2 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 0.88rem;
-      color: var(--accent);
-      margin-bottom: 0.65rem;
-      letter-spacing: 0.06em;
+      color: var(--gold);
+      font-size: 1rem;
+      margin-bottom: 0.55rem;
     }
-    .card p, .card li { margin-bottom: 0.75rem; font-size: 0.96rem; color: var(--muted); }
-    .card p:last-child, .card ul:last-child { margin-bottom: 0; }
-    .card ul { padding-left: 1.2rem; color: var(--muted); }
-    .card li { margin-bottom: 0.45rem; }
-    .note {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-top: 2rem;
-      padding-top: 1.25rem;
-      border-top: 1px solid rgba(255,255,255,0.08);
+    .card p { color: var(--muted); margin-bottom: 0.65rem; }
+    .card p:last-child { margin-bottom: 0; }
+    .ask {
+      margin-top: 1rem;
+      background: rgba(255,215,0,0.08);
+      border-color: rgba(255,215,0,0.24);
     }
+    .links { margin-top: 1.4rem; color: var(--muted); font-size: 0.92rem; }
+    .links a { color: var(--accent); text-decoration: none; margin-right: 1rem; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <p class="crumb">
-      <a href="index.html">Recording Environment</a>
-      · <a href="studio/index.html">Studio overview</a>
-    </p>
-    <p class="tag">Acquisition &amp; strategic validation — reader brief</p>
-    <h1>Recording Environment</h1>
-    <p class="lead">
-      This page frames the same public Git content as a <strong style="color:var(--text);">diligence and validation</strong> read for parties evaluating
-      product depth, IP posture, and strategic fit—especially where an <strong style="color:var(--text);">acquisition</strong> or structured partnership
-      is being considered.
- It is not an offer to sell securities.
-    </p>
+  <main class="wrap">
+    <nav class="nav">
+      <a href="uli-review.html">GIG review</a>
+      <a href="index.html">Product story</a>
+      <a href="html/VISUAL_CENTRAL_CONTROLLER.html?v=overview-2">Control</a>
+      <a href="html/VISUAL_LEFT_RACK.html?v=overview-2">Racks</a>
+    </nav>
 
-    <div class="card">
-      <h2>RECOMMENDED PRODUCT NAME</h2>
+    <section class="hero">
+      <img src="Image/Recording Environment.png" alt="GIG recording ecosystem">
+      <div>
+        <div class="tag">Strategic framing</div>
+        <h1>A musician ecosystem worth a serious review.</h1>
+        <p class="lead">
+          GIG / System Q is a recording, rehearsal, and live playback ecosystem: personal workstations,
+          Cube, touchscreen Racks, Control, Venue, and software working as one product family.
+        </p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>What It Is</h2>
+        <p>A complete musician environment that moves from practice to recording to live playback without breaking the workflow.</p>
+        <p>The core idea is simple: make serious sound and session control available inside one coherent system.</p>
+      </div>
+
+      <div class="card">
+        <h2>Why It Matters</h2>
+        <p>GIG reduces dependence on scattered plugin stacks and disconnected hardware.</p>
+        <p>Its strongest ideas are sound without dependency, 6-DOF Control, swappable analog rack cards, and Venue mix-level playback.</p>
+      </div>
+
+      <div class="card">
+        <h2>Why Music Tribe</h2>
+        <p>Music Tribe has the manufacturing scale, audio brands, hardware reach, and live-sound footprint to judge whether this should become a platform.</p>
+        <p>The question is not whether one founder should build all of it. The question is whether it belongs inside a company that can.</p>
+      </div>
+
+      <div class="card">
+        <h2>What Exists Today</h2>
+        <p>There are product renders, public HTML pages, software prototypes, CAD/BOM thinking, and a coherent architecture for the product family.</p>
+        <p>It is early, but it is no longer just an idea.</p>
+      </div>
+    </section>
+
+    <section class="card ask">
+      <h2>The Ask</h2>
       <p>
-        <strong style="color:var(--text);">System Q</strong> (line / platform) with customer-facing descriptor
-        <strong style="color:var(--text);">Recording Environment</strong>. Short, memorable system name; longer name carries the “unified studio stack” story.
-        Alternate umbrella: <em>Project 2075 studio stack</em> for alignment with linked AIP / alliance narratives on the main site.
+        I am looking for a qualified strategic conversation: review the architecture, identify the strongest first product,
+        and decide whether acquisition, licensing, partnership, or incubation is the right path.
       </p>
-    </div>
+    </section>
 
-    <div class="card">
-      <h2>WHAT THE REPOSITORY REPRESENTS</h2>
-      <p>An end-to-end <strong style="color:var(--text);">analog-first, session-ready recording ecosystem</strong>: central controller, left/right processing racks,
-      modular cube I/O, networked musician workstations, and companion software—documented as HTML specs, CAD, BOM-style artifacts, pitch drafts, and visuals.</p>
-      <ul>
-        <li><strong style="color:var(--text);">Root</strong> — <code style="font-size:0.88em;color:var(--gold);">index.html</code> public landing; <code style="font-size:0.88em;color:var(--gold);">investors.html</code> (this page); deployment notes in <code style="font-size:0.88em;color:var(--gold);">CLOUDFLARE_STUDIO.txt</code>, <code style="font-size:0.88em;color:var(--gold);">GITHUB_PAGES.txt</code>.</li>
-        <li><strong style="color:var(--text);">studio/</strong> — Deeper studio overview and links into specs.</li>
-        <li><strong style="color:var(--text);">html/</strong> — Browser-open specs: central controller, left rack, cube entry line, BOM pages, layout canvases.</li>
-        <li><strong style="color:var(--text);">cad/</strong> — CadQuery/Python sources and STEP exports (enclosure, connectors, power parts, tube array references).</li>
-        <li><strong style="color:var(--text);">GRACE_PITCH/</strong> — Partner-oriented drafts (e.g. Grace Design), BOM build scripts, combined pricing workbooks, remote control spec copies.</li>
-        <li><strong style="color:var(--text);">visuals/</strong> — Chart generators, console artwork pipeline, mic/pre documentation.</li>
-        <li><strong style="color:var(--text);">TXT/</strong> — Supplementary engineering notes.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>FUNCTIONALITY (INVESTOR LENS)</h2>
-      <ul>
-        <li><strong style="color:var(--text);">Product definition</strong> — Coherent story from preamp through monitoring; modular cubes for entry; enterprise-style central surface for power users.</li>
-        <li><strong style="color:var(--text);">De-risking</strong> — Faceplate/BOM pages and CAD reduce “vapor” perception; pricing workbooks support COGS conversations.</li>
-        <li><strong style="color:var(--text);">Partnership hooks</strong> — Reference-grade front ends and conversion called out in studio copy; Grace pitch package signals OEM / co-development lane.</li>
-        <li><strong style="color:var(--text);">Deployment</strong> — Static site from repo (Cloudflare Pages command documented); fits a buyer that already uses edge hosting.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h2>STRATEGIC VALIDATION (NAMED LANES)</h2>
-      <p>
-        For <strong style="color:var(--text);">acquisition-minded</strong> readers, parallel validation tracks help test fit without over-committing:
-      </p>
-      <ul>
-        <li><strong style="color:var(--text);">Yuli</strong> &amp; <strong style="color:var(--text);">Uli</strong> — Use as <em>independent product / workflow validators</em> (session flow, ergonomics, musician-facing narrative).</li>
-        <li><strong style="color:var(--text);">Bergen</strong> — Use as a <em>regional or channel</em> checkpoint (EU/Nordic perspective, distribution realism, or named operator feedback—define role in your deck).</li>
-        <li><strong style="color:var(--text);">Behringer</strong> — Use as a <em>mass-market MI / manufacturing realism</em> reference: scale, SKU economics, and brand adjacency—not an endorsement unless you have one.</li>
-      </ul>
-      <p>Keep each name tied to a single, explicit question (e.g. “Would this ship as a sub-brand?” “Does the cube story retail?”) so diligence stays crisp.</p>
-    </div>
-
-    <p class="note">
-      Source repository (example): <a href="https://github.com/racinc19/System-Q" target="_blank" rel="noopener" style="color:var(--accent);">github.com/racinc19/System-Q</a>.
-      Cloudflare deploy: see <code style="color:var(--gold);">CLOUDFLARE_STUDIO.txt</code> in repo root.
+    <p class="links">
+      <a href="uli-review.html">Open review page</a>
+      <a href="index.html">Open product story</a>
+      <a href="https://github.com/racinc19/System-Q" target="_blank" rel="noopener">GitHub</a>
     </p>
-  </div>
+  </main>
 </body>
 </html>

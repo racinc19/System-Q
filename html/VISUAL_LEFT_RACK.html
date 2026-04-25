@@ -1,318 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Left rack unit — face + 6-slot cage (visual)</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Racks — GIG Premium Analog Path</title>
   <style>
     :root {
-      --bg: #0c1220;
-      --panel: #141c2e;
-      --border: #334155;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --gold: #d4a574;
-      --slot1: #1e3a5f;
-      --slot2: #3d2e5c;
-      --slot3: #4c3418;
-      --slot4: #164535;
-      --slot5: #2d3544;
-      --slot6: #3d1f2e;
+      --bg: #080c12;
+      --panel: rgba(255,255,255,0.045);
+      --border: rgba(0,212,255,0.18);
+      --text: #f0f4f8;
+      --muted: #aab6c3;
+      --accent: #00d4ff;
+      --gold: #ffd700;
+      --mat: #c8d2dc;
     }
     * { box-sizing: border-box; }
     body {
-      font-family: system-ui, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
       margin: 0;
-      padding: 1.25rem 1.5rem 2.5rem;
-      max-width: 52rem;
-      margin-inline: auto;
-      line-height: 1.45;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 520px at 16% 0%, rgba(0,212,255,0.14), transparent 62%),
+        linear-gradient(180deg, #1b2633 0%, var(--bg) 55%, #050810 100%);
+      line-height: 1.6;
     }
-    header { margin-bottom: 1.25rem; }
-    .badge {
-      display: inline-block;
-      background: #1e3a5f;
-      color: #7dd3fc;
-      padding: 0.2rem 0.55rem;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.5rem;
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }
+    .nav { margin-bottom: 18px; color: var(--muted); font-size: 0.9rem; }
+    .nav a { color: var(--accent); text-decoration: none; margin-right: 14px; }
+    .hero, .split {
+      display: grid;
+      gap: 22px;
+      align-items: center;
+      grid-template-columns: 1fr;
+      background: rgba(5,8,16,0.58);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.35);
     }
-    h1 {
-      font-size: 1.35rem;
-      font-weight: 700;
-      margin: 0 0 0.35rem;
-      letter-spacing: 0.02em;
+    @media (min-width: 860px) { .hero, .split { grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr); } }
+    img {
+      width: 100%;
+      display: block;
+      border-radius: 16px;
+      background: radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.48), var(--mat) 48%, #6f7b86 100%);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 16px 42px rgba(0,0,0,0.28);
     }
-    .lead { color: var(--muted); font-size: 0.92rem; margin: 0; max-width: 44rem; }
-    .flow-note {
-      margin-top: 1rem;
-      padding: 0.65rem 0.85rem;
+    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.76rem; font-weight: 700; }
+    h1 { margin: 8px 0 12px; font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1.04; }
+    .lead { color: var(--muted); font-size: 1.08rem; max-width: 620px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 22px; }
+    @media (min-width: 760px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+    .card {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 0.82rem;
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .card h2 { margin: 0 0 8px; color: var(--gold); font-size: 1rem; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .split { margin-top: 18px; }
+    .list { display: grid; gap: 10px; }
+    .pill {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 10px 14px;
       color: var(--muted);
+      background: rgba(0,0,0,0.18);
     }
-    .flow-note strong { color: var(--accent); font-weight: 600; }
-    .rack {
-      margin-top: 1.25rem;
-      border: 2px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      background: #0a1018;
-    }
-    .rack:first-of-type { margin-top: 0; }
-    .rack-cap {
-      background: linear-gradient(180deg, #1a2332 0%, #121a28 100%);
-      padding: 0.5rem 0.75rem;
-      font-size: 0.75rem;
-      color: var(--muted);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-    }
-    .rack-cap span { font-variant-numeric: tabular-nums; }
-    .face-row {
-      display: grid;
-      grid-template-columns: 9.5rem 1fr;
-      gap: 0.75rem 1rem;
-      padding: 0.65rem 0.75rem;
-      border-bottom: 1px solid var(--border);
-      align-items: start;
-    }
-    .face-row:last-child { border-bottom: none; }
-    .face-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--accent);
-      padding-top: 0.1rem;
-    }
-    .face-value { font-size: 0.84rem; color: #cbd5e1; }
-    .face-value strong { color: var(--text); font-weight: 600; }
-    .gold { color: var(--gold); }
-    .slot {
-      display: grid;
-      grid-template-columns: 3.25rem 1fr minmax(9rem, 38%);
-      gap: 0.65rem 0.75rem;
-      align-items: stretch;
-      padding: 0.65rem 0.75rem;
-      border-bottom: 1px solid var(--border);
-      min-height: 4.25rem;
-    }
-    .slot:last-child { border-bottom: none; }
-    .slot-num {
-      font-weight: 800;
-      font-size: 1.35rem;
-      font-variant-numeric: tabular-nums;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 6px;
-      color: #f1f5f9;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
-    }
-    .slot-main { display: flex; flex-direction: column; justify-content: center; gap: 0.2rem; min-width: 0; }
-    .slot-title { font-weight: 700; font-size: 0.95rem; letter-spacing: 0.01em; }
-    .slot-sub { font-size: 0.78rem; color: var(--muted); line-height: 1.35; }
-    .params {
-      font-size: 0.72rem;
-      color: #cbd5e1;
-      line-height: 1.4;
-      padding: 0.45rem 0.5rem;
-      background: rgba(0,0,0,0.25);
-      border-radius: 4px;
-      border-left: 3px solid var(--accent);
-      align-self: center;
-    }
-    .params dt { font-weight: 700; color: var(--accent); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.2rem; }
-    .params dd { margin: 0; }
-    .s1 .slot-num { background: var(--slot1); }
-    .s2 .slot-num { background: var(--slot2); }
-    .s3 .slot-num { background: var(--slot3); }
-    .s4 .slot-num { background: var(--slot4); }
-    .s5 .slot-num { background: var(--slot5); }
-    .s6 .slot-num { background: var(--slot6); }
-    .arrow {
-      text-align: center;
-      font-size: 0.7rem;
-      color: var(--muted);
-      padding: 0.15rem 0;
-      background: rgba(56, 189, 248, 0.06);
-      border-bottom: 1px solid var(--border);
-    }
-    .section-label {
-      margin-top: 1.5rem;
-      margin-bottom: 0.35rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-    }
-    footer {
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-    @media (max-width: 640px) {
-      .slot { grid-template-columns: 2.75rem 1fr; }
-      .params { grid-column: 1 / -1; }
-      .face-row { grid-template-columns: 1fr; }
-    }
-    .nav { font-size: 0.8rem; margin-bottom: 1rem; }
-    .nav a { color: var(--accent); }
+    .pill strong { color: var(--text); }
+    footer { margin-top: 26px; color: var(--muted); font-size: 0.86rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 18px; }
+    footer a { color: var(--accent); text-decoration: none; margin-right: 14px; }
   </style>
 </head>
 <body>
-  <p class="nav">
-    <a href="VISUAL_CENTRAL_CONTROLLER.html">Central controller →</a>
-    &nbsp;·&nbsp;
-    <a href="VISUAL_RIGHT_RACK.html">Right rack →</a>
-  </p>
+  <main class="wrap">
+    <nav class="nav">
+      <a href="../uli-review.html">GIG Review</a>
+      <a href="VISUAL_CENTRAL_CONTROLLER.html?v=overview-2">Control</a>
+      <a href="VISUAL_CUBE_ENTRY_LEVEL.html?v=overview-2">Cube</a>
+      <a href="VISUAL_RIGHT_RACK.html?v=overview-2">Venue / Output</a>
+    </nav>
 
-  <header>
-    <span class="badge">LEFT RACK UNIT</span>
-    <h1>Face, enclosure &amp; processing cage</h1>
-    <p class="lead">
-      One physical unit: the <strong>touch-screen face</strong> and <strong>see-through / dark acrylic</strong> enclosure are the same left-rack product as the <strong>6-slot signal stack</strong> below — not a separate “central” page. Five processing cards plus converter; tube bank; EQ routing; one effects card (transient + saturator + exciter); perforated rear service panel for slide-out access.
-    </p>
-    <p class="flow-note">
-      <strong>Tube path:</strong> optional path from the tube box into preamp, compressor, and EQ — drive sets how hard the tube is pushed. <strong>EQ routing:</strong> HPF/LPF live on the EQ card; switching places them before the preamp’s band gain when selected. After slot 6, digital ties to the right-zone compute. Rear panel is slide-out/perforated; side channels route harnessing (power separated from low-level signal).
-    </p>
-  </header>
-
-  <p class="section-label">Face &amp; enclosure (same unit)</p>
-  <div class="rack" role="region" aria-label="Left rack face and enclosure">
-    <div class="rack-cap">
-      <span>Operator surface &amp; case</span>
-      <span>with 6-slot stack below</span>
-    </div>
-    <div class="face-row">
-      <div class="face-label">Face</div>
-      <div class="face-value"><strong>Touch screen</strong> — primary UI (strips, metering, touch targets).</div>
-    </div>
-    <div class="face-row">
-      <div class="face-label">Front</div>
-      <div class="face-value"><strong>19″ class</strong> width (rack-style front; overall height per CAD).</div>
-    </div>
-    <div class="face-row">
-      <div class="face-label">Enclosure</div>
-      <div class="face-value">Sleek <strong>see-through</strong> case · <strong>LED</strong> lighting · <strong>dark acrylic</strong> theme.</div>
-    </div>
-    <div class="face-row">
-      <div class="face-label">Side I/O</div>
-      <div class="face-value"><strong>12</strong> × <strong>microphone / line</strong> inputs · <span class="gold">gold-plated</span> connectors · on the <strong>side</strong> of the unit (layout per mechanical).</div>
-    </div>
-    <div class="face-row">
-      <div class="face-label">Rear service</div>
-      <div class="face-value"><strong>Slide-out perforated panel</strong> on side rails with captive fasteners and pull handle for quick service.</div>
-    </div>
-    <div class="face-row">
-      <div class="face-label">Transfer I/O</div>
-      <div class="face-value"><strong>5-pin XLR</strong> pair for balanced analog transfer and <strong>RJ45</strong> system/network link as needed by build.</div>
-    </div>
-  </div>
-
-  <p class="section-label">Processing cage — 6 slots</p>
-  <div class="rack" role="img" aria-label="Left rack six slot diagram">
-    <div class="rack-cap">
-      <span>Signal direction</span>
-      <span>↓ slot 1 → slot 6 ↓</span>
-    </div>
-
-    <section class="slot s1">
-      <div class="slot-num">1</div>
-      <div class="slot-main">
-        <div class="slot-title">Preamplifier</div>
-        <div class="slot-sub">12 ch · mic/line front end · optional tube path + tube drive</div>
+    <section class="hero">
+      <img src="../Image/Left.png" alt="GIG Racks left unit">
+      <div>
+        <div class="eyebrow">GIG Racks</div>
+        <h1>Touchscreen racks with swappable analog cards.</h1>
+        <p class="lead">Racks are the premium GIG path: two touchscreen-faced analog frames with modular PCB cards for preamp, compressor, EQ, tone, routing, monitoring, summing, and recall.</p>
       </div>
-      <dl class="params">
-        <dt>Parameters</dt>
-        <dd>Channels: <strong>12</strong> · Gain · Polarity · Phantom · <strong>Tube route</strong> (from tube bank) · <strong>Tube drive</strong></dd>
-      </dl>
     </section>
-    <div class="arrow">▼</div>
 
-    <section class="slot s2">
-      <div class="slot-num">2</div>
-      <div class="slot-main">
-        <div class="slot-title">Harmonics</div>
-        <div class="slot-sub">12 ch · seven harmonic bands</div>
+    <section class="grid">
+      <div class="card"><h2>Touchscreen Face</h2><p>The rack front is the display and touch surface for channel focus, metering, and signal-stage control.</p></div>
+      <div class="card"><h2>Swappable Cards</h2><p>Instead of replacing the whole box, slide in different analog PCB cards for preamps, compressors, EQ, and tone modules.</p></div>
+      <div class="card"><h2>Analog Character</h2><p>Clean, colored, tube, harmonic, compression, EQ, saturation, and output behavior.</p></div>
+      <div class="card"><h2>Hybrid Recall</h2><p>Digital control remembers analog and hybrid signal-chain decisions.</p></div>
+    </section>
+
+    <section class="split">
+      <img src="../Image/Right.png" alt="GIG Racks right/output unit">
+      <div class="list">
+        <div class="pill"><strong>Two touchscreen faces:</strong> left rack for channel processing, right rack for monitoring, summing, output, and Venue handoff.</div>
+        <div class="pill"><strong>Card-frame concept:</strong> analog cards slide into internal slots, more like a modular computer backplane than fixed outboard gear.</div>
+        <div class="pill"><strong>Swappable preamps:</strong> clean, transformer, tube, colored, or future specialty front-end cards.</div>
+        <div class="pill"><strong>Swappable dynamics/EQ:</strong> compressor, limiter, gate, EQ, transient, saturation, and exciter modules can evolve by card family.</div>
+        <div class="pill"><strong>Digital control:</strong> the touchscreen and Control surface steer the analog card stack with recall.</div>
       </div>
-      <dl class="params">
-        <dt>Parameters</dt>
-        <dd>Channels: <strong>12</strong> · <strong>7</strong> harmonic bands · level per harmonic</dd>
-      </dl>
     </section>
-    <div class="arrow">▼</div>
 
-    <section class="slot s3">
-      <div class="slot-num">3</div>
-      <div class="slot-main">
-        <div class="slot-title">Compressor</div>
-        <div class="slot-sub">12 ch · dynamics + limiter + gate + multiband sweep · tube path</div>
-      </div>
-      <dl class="params">
-        <dt>Parameters</dt>
-        <dd>Channels: <strong>12</strong> · Threshold · Ratio · Attack · Release · Makeup · GR · <strong>Limiter</strong> · <strong>Gate</strong> · <strong>Multiband sweep</strong> · <strong>Tube route</strong> · <strong>Tube drive</strong></dd>
-      </dl>
-    </section>
-    <div class="arrow">▼</div>
-
-    <section class="slot s4">
-      <div class="slot-num">4</div>
-      <div class="slot-main">
-        <div class="slot-title">Equalizer (analog)</div>
-        <div class="slot-sub">12 ch · 3-band EQ · HPF &amp; LPF routable before mic pre gain · multiband sweep · tube path</div>
-      </div>
-      <dl class="params">
-        <dt>Parameters</dt>
-        <dd>Channels: <strong>12</strong> · <strong>3-band</strong> EQ · <strong>HPF</strong> · <strong>LPF</strong> · route filters <strong>before preamp gain</strong> · <strong>Multiband sweep</strong> · <strong>Tube route</strong> · <strong>Tube drive</strong></dd>
-      </dl>
-    </section>
-    <div class="arrow">▼</div>
-
-    <section class="slot s5">
-      <div class="slot-num">5</div>
-      <div class="slot-main">
-        <div class="slot-title">Transient, saturator &amp; exciter</div>
-        <div class="slot-sub">12 ch · one card (not separate slots)</div>
-      </div>
-      <dl class="params">
-        <dt>Parameters</dt>
-        <dd>Channels: <strong>12</strong> · <strong>Frequency</strong> · <strong>Attack</strong> · <strong>Sustain</strong> · <strong>Drive</strong></dd>
-      </dl>
-    </section>
-    <div class="arrow">▼</div>
-
-    <section class="slot s6">
-      <div class="slot-num">6</div>
-      <div class="slot-main">
-        <div class="slot-title">Converter + digital bridge</div>
-        <div class="slot-sub">Last card · A/D and D/A · tie to host / right zone</div>
-      </div>
-      <dl class="params">
-        <dt>Parameters</dt>
-        <dd>A/D: <strong>12</strong> in · D/A: <strong>32→12</strong> return · <strong>1× USB</strong> bidirectional · Clock sync with network / DAW path</dd>
-      </dl>
-    </section>
-  </div>
-
-  <footer>
-    Reference: <code>GRACE_PITCH/CARD_LAYOUT.txt</code> · Single HTML: face + cage. Open in browser; no build step.
-  </footer>
+    <footer>
+      <a href="../index.html">Product Landing</a>
+      <a href="SPEC_BOM_LEFT.html">Left BOM</a>
+      <a href="SPEC_BOM_RIGHT.html">Right BOM</a>
+      <a href="../investors.html">Strategic Fit</a>
+    </footer>
+  </main>
 </body>
 </html>
