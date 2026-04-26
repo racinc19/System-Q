@@ -20,7 +20,7 @@ Images must exist as files inside this repo to appear on the deployed site.
   - `Image/Recording Environment.png` (hero / ecosystem)
   - `Image/Left.png`, `Image/Right.png`
   - `Image/cube.png`
-  - `Image/Controll.png` (Control render; filename kept as existing asset)
+  - `Image/Console.png` (Console render)
   - `Image/Pedal.png`
   - `Image/Venue.png`
   - `Image/download.png` (vertical CH02 strip screenshot used in Software section)
@@ -72,5 +72,4 @@ To verify deployments:
   - It’s a transient lock file used by Git.
 
 ## Optional cleanup
-- Consider renaming `Image/Controll.png` to `Image/Control.png` and updating references.
 - Consider renaming `Image/download.png` to something stable like `Image/strip-ch02.png` and updating references.

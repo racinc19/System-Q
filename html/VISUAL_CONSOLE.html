@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rig — GIG Musician Endpoint</title>
+  <title>Console — GIG Command Surface</title>
   <style>
     :root {
       --bg: #080c12;
       --panel: rgba(255,255,255,0.045);
-      --border: rgba(0,212,255,0.2);
+      --border: rgba(0,212,255,0.18);
       --text: #f0f4f8;
       --muted: #aab6c3;
       --accent: #00d4ff;
@@ -40,7 +40,7 @@
       box-shadow: 0 24px 70px rgba(0,0,0,0.35);
     }
     @media (min-width: 860px) { .hero { grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr); } }
-    img {
+    .hero img, .image-card img {
       width: 100%;
       display: block;
       border-radius: 16px;
@@ -48,29 +48,27 @@
       border: 1px solid rgba(255,255,255,0.22);
       box-shadow: 0 16px 42px rgba(0,0,0,0.28);
     }
-    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.76rem; font-weight: 700; }
+    .eyebrow {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
     h1 { margin: 8px 0 12px; font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1.04; }
     .lead { color: var(--muted); font-size: 1.08rem; max-width: 620px; }
     .grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 22px; }
     @media (min-width: 760px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-    .card {
+    .card, .image-card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 18px;
     }
-    .card h2 { margin: 0 0 8px; color: var(--gold); font-size: 1rem; }
-    .card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
-    .sequence { display: grid; gap: 12px; margin-top: 18px; }
-    @media (min-width: 760px) { .sequence { grid-template-columns: repeat(4, 1fr); } }
-    .step {
-      background: rgba(0,0,0,0.2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-    }
-    .step strong { color: var(--accent); display: block; margin-bottom: 6px; }
-    .step span { color: var(--muted); font-size: 0.92rem; }
+    .card h2, .image-card h2 { margin: 0 0 8px; color: var(--gold); font-size: 1rem; }
+    .card p, .image-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .two { display: grid; gap: 18px; grid-template-columns: 1fr; margin-top: 18px; }
+    @media (min-width: 860px) { .two { grid-template-columns: 1fr 1fr; } }
     footer { margin-top: 26px; color: var(--muted); font-size: 0.86rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 18px; }
     footer a { color: var(--accent); text-decoration: none; margin-right: 14px; }
   </style>
@@ -78,34 +76,37 @@
 <body>
   <main class="wrap">
     <nav class="nav">
-      <a href="../index.html#personal">Rig on Landing</a>
+      <a href="../uli-review.html">GIG Review</a>
       <a href="VISUAL_CUBE_ENTRY_LEVEL.html?v=overview-2">Cube</a>
       <a href="VISUAL_LEFT_RACK.html?v=overview-2">Racks</a>
-      <a href="VISUAL_CONSOLE.html?v=overview-1">Console</a>
       <a href="VISUAL_RIGHT_RACK.html?v=overview-2">Venue / Output</a>
     </nav>
 
     <section class="hero">
-      <img src="../Image/Pedal.png" alt="GIG Rig musician endpoint">
+      <img src="../Image/Console.png" alt="GIG Console surface">
       <div>
-        <div class="eyebrow">GIG Rig</div>
-        <h1>Each musician's doorway into the system.</h1>
-        <p class="lead">Rig is the personal endpoint for GIG: instrument or microphone input, IEM mix, talkback, playback, patches, sheet music, and session control in one connected unit.</p>
+        <div class="eyebrow">GIG Console</div>
+        <h1>One surface for rehearsal, studio, and live.</h1>
+        <p class="lead">Console is the tactile command layer for GIG. It manages transport, faders, monitoring, stage focus, and the 6-DOF edit control across the entire ecosystem.</p>
       </div>
     </section>
 
     <section class="grid">
-      <div class="card"><h2>Input</h2><p>Instrument or microphone entry into the shared GIG session.</p></div>
-      <div class="card"><h2>Monitoring</h2><p>Personal IEM/headphone mix, talkback, and cue control for each player.</p></div>
-      <div class="card"><h2>Playback</h2><p>Reference tracks, rehearsal material, and session playback stay close to the musician.</p></div>
-      <div class="card"><h2>Session Tools</h2><p>Patches, sheet music, status, and controls travel with the player.</p></div>
+      <div class="card"><h2>6-DOF Editing</h2><p>SpaceMouse-style selection and adjustment from one hand position.</p></div>
+      <div class="card"><h2>Less Switching</h2><p>Fewer plugin windows, disconnected knobs, and menu jumps.</p></div>
+      <div class="card"><h2>Whole Session</h2><p>Rehearsal, recording, mix review, playback, and Venue operation.</p></div>
+      <div class="card"><h2>Analog Recall</h2><p>Digital control of analog and hybrid sound-shaping paths.</p></div>
     </section>
 
-    <section class="sequence">
-      <div class="step"><strong>01 Plug In</strong><span>The musician connects instrument, mic, ears, and session tools.</span></div>
-      <div class="step"><strong>02 Join</strong><span>Rigs connect into the shared band session over the network.</span></div>
-      <div class="step"><strong>03 Play</strong><span>Each player controls their own monitoring while staying in the same system.</span></div>
-      <div class="step"><strong>04 Carry Forward</strong><span>The same Rig language follows rehearsal, recording, playback, and live use.</span></div>
+    <section class="two">
+      <div class="image-card">
+        <h2>Why It Matters</h2>
+        <p>Console is not just a DAW controller. It is the shared physical language for GIG, so a musician or operator can move from practice to recording to live playback without learning separate tools.</p>
+      </div>
+      <div class="image-card">
+        <h2>System Role</h2>
+        <p>Console sits after the musician Rigs, Cube, Racks, and Venue as the unifying command surface: the one place where the ecosystem becomes playable.</p>
+      </div>
     </section>
 
     <footer>
