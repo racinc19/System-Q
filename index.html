@@ -20,13 +20,60 @@
       --hero-img: none;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 4.25rem;
+    }
     body {
       font-family: 'Inter', sans-serif;
       background: var(--bg3);
       color: var(--text);
       line-height: 1.7;
       -webkit-font-smoothing: antialiased;
+      padding-top: 3.45rem;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: rgba(5, 8, 16, 0.92);
+      border-bottom: 1px solid rgba(0,212,255,0.16);
+      box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+      backdrop-filter: blur(16px);
+    }
+    .site-header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0.7rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      justify-content: flex-end;
+    }
+    .site-nav a {
+      padding: 0.5rem 1.1rem;
+      border: 1.5px solid var(--card-border);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .site-nav a:hover {
+      background: rgba(0,212,255,0.12);
+      border-color: var(--accent);
+      color: var(--text);
+      text-decoration: none;
     }
 
     /* ── HERO ── */
@@ -84,28 +131,6 @@
       max-width: 600px;
       margin: 0 auto 2rem;
     }
-    .hero-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      justify-content: center;
-    }
-    .hero-nav a {
-      padding: 0.5rem 1.1rem;
-      border: 1.5px solid var(--card-border);
-      border-radius: 999px;
-      color: var(--accent);
-      font-size: 0.82rem;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background 0.2s, color 0.2s, border-color 0.2s;
-    }
-    .hero-nav a:hover {
-      background: rgba(0,212,255,0.12);
-      border-color: var(--accent);
-      color: var(--text);
-    }
-
     /* ── SECTIONS ── */
     .section {
       max-width: 860px;
@@ -333,9 +358,41 @@
     footer a:hover { text-decoration: underline; }
     .footer-links { margin-top: 0.5rem; }
     .footer-links a { margin-right: 1.25rem; }
+
+    @media (max-width: 760px) {
+      html { scroll-padding-top: 6.7rem; }
+      body { padding-top: 6rem; }
+      .site-header-inner {
+        justify-content: flex-start;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+      .site-nav {
+        justify-content: flex-start;
+        gap: 0.35rem;
+      }
+      .site-nav a {
+        padding: 0.35rem 0.62rem;
+        font-size: 0.72rem;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#breakthroughs">Why it matters</a>
+        <a href="#flow">How it works</a>
+        <a href="#racks">Racks</a>
+        <a href="#cubes">Cubes</a>
+        <a href="#control">Control</a>
+        <a href="#personal">Workstation</a>
+        <a href="#venue">Venue</a>
+      </nav>
+    </div>
+  </header>
 
   <!-- ════════════════ HERO ════════════════ -->
   <div class="hero">
@@ -346,15 +403,6 @@
         A unified musician ecosystem for rehearsal, recording, sound shaping, mix review, and venue playback.
         Workstation, Cube, Racks, Control, Venue, and software all share one operating language.
       </p>
-      <nav class="hero-nav">
-        <a href="#breakthroughs">Why it matters</a>
-        <a href="#flow">How it works</a>
-        <a href="#racks">Racks</a>
-        <a href="#cubes">Cubes</a>
-        <a href="#control">Control</a>
-        <a href="#personal">Workstation</a>
-        <a href="#venue">Venue</a>
-      </nav>
     </div>
   </div>
 
