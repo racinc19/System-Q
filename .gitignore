@@ -18,6 +18,9 @@ desktop.ini
 .env
 .env.*
 
+# Patent / IP drafts
+patent_work/
+
 # Cloudflare Wrangler local state
 .wrangler/
 
