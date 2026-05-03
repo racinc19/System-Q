@@ -55,3 +55,7 @@ software/loops/*.wav
 
 # Oversized vendor asset (> GitHub limit); keep local-only
 LEWITTxEYESHALFSHUT.zip
+LEWITTxEYESHALFSHUT/
+
+# Automated GUI evidence captures (regenerate via software/capture_*_evidence.py)
+Evidence/
