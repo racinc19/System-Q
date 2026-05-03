@@ -41,6 +41,9 @@ console_debug.log
 # Generated stem WAVs (see software/generate_band_stems.py)
 software/band_stems/*.wav
 
+# Session / imported multitrack WAVs
+software/tracks/**/*.wav
+
 # Generated CAD exports
 *.step
 
@@ -49,3 +52,6 @@ software/loops/*.wav
 
 # Spreadsheet exports
 *.xlsx
+
+# Oversized vendor asset (> GitHub limit); keep local-only
+LEWITTxEYESHALFSHUT.zip

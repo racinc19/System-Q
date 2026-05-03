@@ -1,0 +1,32 @@
+---
+description: Every turn / every code change — operate machine, verify, visible proof (Computer Control ethos); never hand off-only instructions.
+alwaysApply: true
+---
+
+# Every session and every code change (non‑negotiable)
+
+Apply **every** turn the user engages you (especially when they asked for fixes, features, or “does it work”):
+
+1. **Change real code** in the repo — no “here’s how you’d patch it,” no leaving half-done edits.
+2. **Run checks from here** (`verify_system_q.py`, tests, linter, compile) — not “you should run them.” Paste pass/fail into chat.
+3. **Start the live thing from here** when it’s runnable on this PC: **`Start-Process` / `py -3 …`** with correct **`WorkingDirectory`**. Assume the **human does not** run launchers unless they said they want to operate it themselves.
+4. **Prove it visibly when UI matters**: real window grabs (e.g. `software/visible_nav_proof_capture.py`), env `SYSTEM_Q_AGENT_PROOF` runs, agent-proof PNG/GIF flows — **not** exit codes alone as “confirmed.” Say what scenario the proof covers; don’t pretend one geometry proves all cases.
+5. **Report plainly**: what changed, how to recognize it on screen or in logs, verifier result, whether the process **was launched** from the agent.
+
+**Restart without being asked.** After runtime-affecting edits, replace stale processes **from here** before claiming done (kill old `system_q_console` PID(s) when needed), then launch fresh Python so disk code is loaded.
+
+**Computer Control** (`C:\Users\racin\Desktop\computer-control\README.md` + `CONTEXT.md`): when work is browser/Sheets automation — real Chrome Debug **9222**, CDP attach, **`bring_to_front`**, **`runner.py` full lifecycle** for sheet side-effects, visible proof paths. Same ethos: **agent runs terminals and scripts**, user watches outcomes.
+
+Do not substitute delivery with hedge-y “you might try…”-only handoffs unless launch/automation **cannot** reach this machine after exhausting options — then say the **blocking** reason in one blunt sentence.
+
+---
+
+# System Q / Tk specifics
+
+After changes to `software/system_q_console.py` or visual/layout/audio paths tied to it:
+
+1. Launch from `recording-environment/software`: `py -3 system_q_console.py` via **visible / detached process** (`Start-Process`; correct working directory required).
+2. **Before handing off visually sensitive nav:** optional `SYSTEM_Q_AGENT_PROOF=1`, `dual`, `all`, or `--agent-proof=…`; dwell `SYSTEM_Q_AGENT_VISIBLE_MS`; read resulting **PNG/GIF** from workspace before claiming nav/UI proof.
+3. **Read image artifacts** produced by tooling before claiming verified UI — not hypotheses.
+
+Final message checklist: verifier result • process started (yes/no + entrypoint + cwd) • path to proof files if captured.

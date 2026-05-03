@@ -17,7 +17,7 @@ import soundfile as sf
 
 POL_BANDS = 36
 POL_LOW_HZ = 20.0
-POL_HIGH_HZ = 20000.0
+POL_HIGH_HZ = 22000.0
 LOG_LOW = math.log10(POL_LOW_HZ)
 LOG_HIGH = math.log10(POL_HIGH_HZ)
 
@@ -54,6 +54,35 @@ def hsv_to_hex(h: float, s: float, v: float) -> str:
     return f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}"
 
 
+def freq_rainbow_hue_hz(freq_hz: float) -> float:
+    """Log-frequency sweep: blue @ POL_LOW … red @ POL_HIGH (matches console EQ/spectrum hues)."""
+
+    lf = math.log10(float(np.clip(freq_hz, POL_LOW_HZ, POL_HIGH_HZ)))
+    pos = (lf - LOG_LOW) / max(1e-9, LOG_HIGH - LOG_LOW)
+    pos = float(np.clip(pos, 0.0, 1.0))
+    hue_blue = 240.0 / 360.0
+    hue_red = 0.0
+    return hue_blue * (1.0 - pos) + hue_red * pos
+
+
+def hz_log_lerp_hz(a_hz: float, b_hz: float, t: float) -> float:
+    t = float(np.clip(t, 0.0, 1.0))
+    a_hz = float(np.clip(a_hz, POL_LOW_HZ, POL_HIGH_HZ))
+    b_hz = float(np.clip(b_hz, POL_LOW_HZ, POL_HIGH_HZ))
+    la = math.log(a_hz)
+    lb = math.log(b_hz)
+    return float(math.exp(la + t * (lb - la)))
+
+
+def eq_rainbow_color(gain_db: float, center_hz: float) -> str:
+    h = freq_rainbow_hue_hz(center_hz)
+    g = float(np.clip(gain_db, -24.0, 24.0))
+    mag = min(1.0, abs(g) / 18.0)
+    sat = 0.42 + 0.50 * mag
+    val = 0.42 + 0.52 * mag
+    return hsv_to_hex(h, float(np.clip(sat, 0.18, 0.97)), float(np.clip(val, 0.24, 0.97)))
+
+
 def rgb_to_hex(r: int, g: int, b: int) -> str:
     return f"#{max(0, min(255, r)):02x}{max(0, min(255, g)):02x}{max(0, min(255, b)):02x}"
 
@@ -68,10 +97,15 @@ def lerp_color(c1: tuple[int, int, int], c2: tuple[int, int, int], t: float) -> 
 
 
 def eq_gain_color(gain_db: float) -> str:
-    gain_db = max(-18.0, min(18.0, gain_db))
-    if gain_db < 0.0:
-        return lerp_color((255, 60, 46), (255, 208, 138), (gain_db + 18.0) / 18.0)
-    return lerp_color((255, 208, 138), (105, 223, 242), gain_db / 18.0)
+    """Deprecated for polar EQ: use ``eq_rainbow_color(gain_db, center_hz)``."""
+
+    g = float(np.clip(gain_db, -18.0, 18.0))
+    t = (g + 18.0) / 36.0
+    hue = (240.0 * (1.0 - t)) / 360.0
+    mag = abs(g) / 18.0
+    sat = 0.38 + 0.57 * mag
+    val = 0.46 + 0.50 * mag
+    return hsv_to_hex(max(0.0, min(1.0, hue)), max(0.0, min(1.0, sat)), max(0.0, min(1.0, val)))
 
 
 class SpaceMouseController:
@@ -86,8 +120,49 @@ class SpaceMouseController:
         self.x_axis = 0
         self.y_axis = 1
         self.z_axis = 2
-        self.direction_threshold = 0.52
+        self.direction_threshold = 0.45
+        # Z cap: short push past threshold then release → "press" on neutral.
+        # Sustained push ≥ engage_hold_s → "engage_toggle" once (engage/disengage).
+        # Pull (back) uses depress_hold_s only.
+        self.depress_hold_s = 0.35
+        self.engage_hold_s = 1.0
+        self._z_press_hold_start: float | None = None
+        self._z_back_hold_start: float | None = None
+        self._z_engage_emitted = False
+        self._z_latched_kind: str | None = None
+        # Dominant tilt cardinal; hold repeats nav on xy_repeat_* timers (up/down/left/right).
+        self._latch_xy = False
+        self._active_xy_primary: str | None = None
+        # Kept for code that still reads _active_xy_x / _active_xy_y (one set at a time).
+        self._active_xy_x: str | None = None
+        self._active_xy_y: str | None = None
+        self._latch_z = False
+        # Sustained twist: CW / CCW hold emits editor enter/exit (see system_q_console).
+        self.twist_hold_s = 3.0
+        # Must be > twist_release_abs so sustained twist accumulates (no 0.18–0.22 dead band).
+        self.twist_threshold = 0.16
+        self.twist_release_abs = 0.10
+        self._twist_cw_start: float | None = None
+        self._twist_ccw_start: float | None = None
+        self._twist_hold_latch = False
+        # X/Y tilt: first step on deflection, then repeat while held (all four cardinals).
+        self.xy_repeat_initial_s = 0.45
+        self.xy_repeat_interval_s = 0.12
+        self._xy_repeat_dom: str | None = None
+        self._xy_next_repeat_at: float | None = None
+        # Sustained tilt toward DOWN (Y axis): 3s -> down_hold. Uses raw Y, not
+        # cardinal dominance, so slight L/R while tilting down still counts.
+        self.down_hold_s = 3.0
+        self._y_down_hold_start: float | None = None
+        self._y_down_hold_fired = False
+        self._y_down_was_active = False
+        self.xy_z_max_for_nav = 0.38
+        # Kept for backwards compatibility with any callers/tests that still
+        # poke the old single-flag latch. Mirrors "any axis still latched".
         self.direction_latch = False
+        self.buttons_held: list[int] = []
+        # Twist axis index (defaults to gain_axis). Set SYSTEM_Q_SPACEMOUSE_TWIST_AXIS if CW/CCW map wrong.
+        self.twist_axis: int = self.gain_axis
         try:
             os.environ.setdefault("SDL_VIDEODRIVER", "dummy")
             pygame.init()
@@ -116,6 +191,12 @@ class SpaceMouseController:
                 max_axes = max(j.get_numaxes() for j in self._sticks)
                 if max_axes <= self.gain_axis:
                     self.gain_axis = min(2, max(0, max_axes - 1))
+                self.twist_axis = int(self.gain_axis)
+                ta = os.environ.get("SYSTEM_Q_SPACEMOUSE_TWIST_AXIS")
+                if ta is not None and str(ta).strip().lstrip("-").isdigit():
+                    ti = int(str(ta).strip())
+                    if 0 <= ti < max_axes:
+                        self.twist_axis = ti
         except Exception:
             self.available = False
 
@@ -130,10 +211,10 @@ class SpaceMouseController:
 
     def poll(self):
         if not self.available or not self._sticks:
+            self.buttons_held = []
             return 0.0, [], []
         pygame.event.pump()
-        raw = self._merged_axis(self.gain_axis)
-        axis_value = raw if abs(raw) >= self.deadzone else 0.0
+        raw = self._merged_axis(getattr(self, "twist_axis", self.gain_axis))
 
         merged = [0, 0, 0]
         for j in self._sticks:
@@ -145,6 +226,7 @@ class SpaceMouseController:
             if merged[idx] and not self.last_buttons[idx]:
                 pressed.append(idx)
         self.last_buttons = merged
+        self.buttons_held = [idx for idx in range(3) if merged[idx]]
 
         directional = []
         x_val = self._merged_axis(self.x_axis)
@@ -155,32 +237,207 @@ class SpaceMouseController:
         right = x_val >= self.direction_threshold
         up = y_val <= -self.direction_threshold
         down = y_val >= self.direction_threshold
-        press = z_val <= -self.direction_threshold
-        back = z_val >= self.direction_threshold
+        press = z_val >= self.direction_threshold
+        back = z_val <= -self.direction_threshold
 
-        if not self.direction_latch:
-            if press:
-                directional.append("press")
-                self.direction_latch = True
-            elif back:
+        # Z (press / back): spring‑back hysteresis plus a short hold so brief Z
+        # spikes during X/Y motion do not toggle. Emit once per push; release
+        # near zero, independent of X/Y.
+        neutral_z = abs(z_val) < 0.2 and not press and not back
+        if neutral_z:
+            now = time.monotonic()
+            if (
+                self._z_press_hold_start is not None
+                and not self._z_engage_emitted
+                and not self._latch_z
+            ):
+                elapsed = now - float(self._z_press_hold_start)
+                if elapsed >= float(self.depress_hold_s):
+                    directional.append("press")
+            self._latch_z = False
+            self._z_press_hold_start = None
+            self._z_back_hold_start = None
+            self._z_latched_kind = None
+            self._z_engage_emitted = False
+        elif self._latch_z:
+            pass
+        elif press:
+            self._z_back_hold_start = None
+            now = time.monotonic()
+            if self._z_press_hold_start is None:
+                self._z_press_hold_start = now
+                self._z_engage_emitted = False
+            elapsed = now - float(self._z_press_hold_start)
+            if not self._z_engage_emitted and elapsed >= float(self.engage_hold_s):
+                directional.append("engage_toggle")
+                self._z_engage_emitted = True
+                self._latch_z = True
+                self._z_latched_kind = "engage"
+                self._z_press_hold_start = None
+                self._z_back_hold_start = None
+        elif back:
+            self._z_press_hold_start = None
+            self._z_engage_emitted = False
+            now = time.monotonic()
+            if self._z_back_hold_start is None:
+                self._z_back_hold_start = now
+            elif now - float(self._z_back_hold_start) >= float(self.depress_hold_s):
                 directional.append("back")
-                self.direction_latch = True
-            elif left:
-                directional.append("left")
-                self.direction_latch = True
-            elif right:
-                directional.append("right")
-                self.direction_latch = True
-            elif up:
-                directional.append("up")
-                self.direction_latch = True
-            elif down:
-                directional.append("down")
-                self.direction_latch = True
-        if not left and not right and not up and not down and not press and not back and abs(x_val) < 0.2 and abs(y_val) < 0.2 and abs(z_val) < 0.2:
-            self.direction_latch = False
+                self._latch_z = True
+                self._z_latched_kind = "back"
+                self._z_press_hold_start = None
+                self._z_back_hold_start = None
+        else:
+            # Hysteresis wedge (not neutral, but not press/back): abandon buildup.
+            self._z_press_hold_start = None
+            self._z_back_hold_start = None
+            self._z_engage_emitted = False
+
+        # X/Y: single cardinal via dominant axis; holding keeps stepping on a timer.
+        # xy_z_max_for_nav: below this |Z|, tilt nav runs. Small cap pressure was
+        # wiping the 3s down-hold timer every frame at the old 0.22 cutoff.
+        th = self.direction_threshold
+        y_down_active = float(y_val) >= float(th)
+        xy_z_clear = abs(z_val) < float(getattr(self, "xy_z_max_for_nav", 0.38))
+        xy_now = time.monotonic()
+        if not xy_z_clear:
+            self._latch_xy = False
+            self._active_xy_primary = None
+            self._active_xy_x = None
+            self._active_xy_y = None
+            self._xy_repeat_dom = None
+            self._xy_next_repeat_at = None
+            self._y_down_hold_start = None
+            self._y_down_hold_fired = False
+            self._y_down_was_active = False
+        else:
+            ax = abs(x_val)
+            ay = abs(y_val)
+            dom = None
+            if max(ax, ay) >= th:
+                # Stronger axis wins (no vertical bias — fixes LEFT eaten by slight Y drift).
+                tie = 0.06
+                if ax >= th and ay >= th:
+                    if ax > ay + tie:
+                        dom = "left" if x_val < 0 else "right"
+                    elif ay > ax + tie:
+                        dom = "up" if y_val < 0 else "down"
+                    else:
+                        if ax >= ay:
+                            dom = "left" if x_val < 0 else "right"
+                        else:
+                            dom = "up" if y_val < 0 else "down"
+                elif ax >= th:
+                    dom = "left" if x_val < 0 else "right"
+                else:
+                    dom = "up" if y_val < 0 else "down"
+            if dom is None:
+                self._latch_xy = False
+                self._active_xy_primary = None
+                self._active_xy_x = None
+                self._active_xy_y = None
+                self._xy_repeat_dom = None
+                self._xy_next_repeat_at = None
+            else:
+                self._latch_xy = True
+                self._active_xy_primary = dom
+                self._active_xy_x = dom if dom in ("left", "right") else None
+                self._active_xy_y = dom if dom in ("up", "down") else None
+                if dom == "down":
+                    self._xy_repeat_dom = "down"
+                    self._xy_next_repeat_at = None
+                else:
+                    if self._xy_repeat_dom != dom:
+                        directional.append(dom)
+                        self._xy_repeat_dom = dom
+                        self._xy_next_repeat_at = xy_now + float(self.xy_repeat_initial_s)
+                    elif (
+                        self._xy_next_repeat_at is not None
+                        and xy_now >= float(self._xy_next_repeat_at)
+                    ):
+                        directional.append(dom)
+                        self._xy_next_repeat_at = xy_now + float(self.xy_repeat_interval_s)
+
+            # Raw-Y down hold / short tap (independent of whether X wins dominance).
+            if y_down_active:
+                if self._y_down_hold_start is None:
+                    self._y_down_hold_start = xy_now
+                    self._y_down_hold_fired = False
+                elif (
+                    not self._y_down_hold_fired
+                    and (xy_now - float(self._y_down_hold_start)) >= float(self.down_hold_s)
+                ):
+                    directional.append("down_hold")
+                    self._y_down_hold_fired = True
+                    if os.environ.get("SYSTEM_Q_NAV_DEBUG", "").strip() in ("1", "true", "yes"):
+                        print("SpaceMouse: down_hold (3s tilt Y)", flush=True)
+            else:
+                if (
+                    self._y_down_was_active
+                    and self._y_down_hold_start is not None
+                    and not self._y_down_hold_fired
+                    and (xy_now - float(self._y_down_hold_start)) < float(self.down_hold_s)
+                ):
+                    directional.append("down")
+                self._y_down_hold_start = None
+                self._y_down_hold_fired = False
+            self._y_down_was_active = bool(y_down_active)
+
+        # Sustained twist on gain axis: CW vs CCW (editor open/close in System Q).
+        tw_raw = float(raw)
+        rel = float(getattr(self, "twist_release_abs", 0.10))
+        tw_neutral = abs(tw_raw) < rel
+        now = time.monotonic()
+        if tw_neutral:
+            self._twist_hold_latch = False
+            self._twist_cw_start = None
+            self._twist_ccw_start = None
+        elif not self._twist_hold_latch:
+            tthr = float(self.twist_threshold)
+            if tw_raw >= tthr:
+                self._twist_ccw_start = None
+                if self._twist_cw_start is None:
+                    self._twist_cw_start = now
+                elif now - float(self._twist_cw_start) >= float(self.twist_hold_s):
+                    directional.append("twist_cw_hold")
+                    self._twist_hold_latch = True
+                    self._twist_cw_start = None
+                    self._twist_ccw_start = None
+            elif tw_raw <= -tthr:
+                self._twist_cw_start = None
+                if self._twist_ccw_start is None:
+                    self._twist_ccw_start = now
+                elif now - float(self._twist_ccw_start) >= float(self.twist_hold_s):
+                    directional.append("twist_ccw_hold")
+                    self._twist_hold_latch = True
+                    self._twist_cw_start = None
+                    self._twist_ccw_start = None
+            # else: noisy mid zone — keep existing CW/CCW timers running
+
+        axis_value = float(raw) if abs(float(raw)) >= self.deadzone else 0.0
+        if self._twist_hold_latch:
+            axis_value = 0.0
+
+        self.direction_latch = bool(self._latch_xy or self._latch_z or self._twist_hold_latch)
 
         return axis_value, pressed, directional
+
+    def active_xy_cardinals_held(self) -> list[str]:
+        """Single sustained cardinal from dominant X/Y (never two at once)."""
+
+        if getattr(self, "_latch_xy", False):
+            p = getattr(self, "_active_xy_primary", None)
+            return [p] if p else []
+        return []
+
+    def active_z_latched_kind(self) -> str | None:
+        """After ``poll`` commits Z: ``\"press\"`` | ``\"back\"`` | ``\"engage\"`` (long push).
+
+        Tilt release uses ``neutral_z`` in ``poll`` — no continuous Z samples here.
+        """
+        if not self._latch_z:
+            return None
+        return getattr(self, "_z_latched_kind", None)
 
 
 class AudioPlayer:
@@ -1427,12 +1684,12 @@ class PolVisualizerApp:
             if axis_value != 0.0:
                 if self.mic_pre_selected.get() == "lpf" and self.lpf_var.get():
                     current = self.player.mic_pre_lpf_hz
-                    updated = float(np.clip(current * (1.0 + axis_value * 0.06), 20.0, 20000.0))
+                    updated = float(np.clip(current * (1.0 + axis_value * 0.06), POL_LOW_HZ, POL_HIGH_HZ))
                     if abs(updated - current) > 1e-6:
                         self.player.mic_pre_lpf_hz = updated
                 elif self.mic_pre_selected.get() == "hpf" and self.hpf_var.get():
                     current = self.player.mic_pre_hpf_hz
-                    updated = float(np.clip(current * (1.0 - axis_value * 0.06), 20.0, 20000.0))
+                    updated = float(np.clip(current * (1.0 - axis_value * 0.06), POL_LOW_HZ, POL_HIGH_HZ))
                     if abs(updated - current) > 1e-6:
                         self.player.mic_pre_hpf_hz = updated
                 elif self.mic_pre_selected.get() == "":
@@ -1539,6 +1796,8 @@ class PolVisualizerApp:
                     self._toggle_selected_tone_processor()
 
         for target in directional:
+            if target in ("twist_cw_hold", "twist_ccw_hold", "engage_toggle"):
+                continue
             if stage == "mic_pre":
                 self._handle_mic_pre_direction(target)
             elif stage == "harmonics":
@@ -2086,21 +2345,26 @@ class PolVisualizerApp:
                 start_ry = outer_ry - (outer_ry - inner_ry) * start_pos
                 end_rx = outer_rx - (outer_rx - inner_rx) * end_pos
                 end_ry = outer_ry - (outer_ry - inner_ry) * end_pos
-                color = eq_gain_color(gain_db)
+                color = eq_rainbow_color(gain_db, center)
                 edge = "#fff2d8" if selected and (freq_selected or width_selected) else color
                 band_layers = 9 if selected else 6
                 for layer in range(band_layers):
                     mix = layer / max(1, band_layers - 1)
                     layer_rx = start_rx + (end_rx - start_rx) * mix
                     layer_ry = start_ry + (end_ry - start_ry) * mix
-                    layer_color = "#fff2d8" if selected and freq_selected and abs(mix - 0.5) < 0.18 else color
+                    layer_hz = hz_log_lerp_hz(start_hz, end_hz, mix)
+                    layer_color = (
+                        "#fff2d8"
+                        if selected and freq_selected and abs(mix - 0.5) < 0.18
+                        else eq_rainbow_color(gain_db, layer_hz)
+                    )
                     layer_width = 3 if selected else 2
                     c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=layer_color, width=layer_width)
                 if selected and width_selected:
                     c.create_oval(cx - start_rx, cy - start_ry, cx + start_rx, cy + start_ry, outline=edge, width=2)
                     c.create_oval(cx - end_rx, cy - end_ry, cx + end_rx, cy + end_ry, outline=edge, width=2)
             elif kind in ("LOW SHELF", "HIGH SHELF"):
-                color = eq_gain_color(gain_db)
+                color = eq_rainbow_color(gain_db, center)
                 edge = "#fff2d8" if selected and (freq_selected or width_selected) else color
                 transition_oct = max(0.20, min(3.0, width))
                 if kind == "LOW SHELF":
@@ -2113,7 +2377,10 @@ class PolVisualizerApp:
                         mix = layer / max(1, band_layers - 1)
                         layer_rx = rx + (trans_end_rx - rx) * mix
                         layer_ry = ry + (trans_end_ry - ry) * mix
-                        layer_color = "#fff2d8" if selected and freq_selected and layer == 0 else color
+                        layer_hz = hz_log_lerp_hz(center, trans_end_hz, mix)
+                        layer_color = (
+                            "#fff2d8" if selected and freq_selected and layer == 0 else eq_rainbow_color(gain_db, layer_hz)
+                        )
                         c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=layer_color, width=3 if selected else 2)
                     c.create_oval(cx - outer_rx, cy - outer_ry, cx + outer_rx, cy + outer_ry, outline=color, width=3 if selected else 2)
                     if selected and width_selected:
@@ -2128,7 +2395,12 @@ class PolVisualizerApp:
                         mix = layer / max(1, band_layers - 1)
                         layer_rx = trans_start_rx + (rx - trans_start_rx) * mix
                         layer_ry = trans_start_ry + (ry - trans_start_ry) * mix
-                        layer_color = "#fff2d8" if selected and freq_selected and layer == band_layers - 1 else color
+                        layer_hz = hz_log_lerp_hz(trans_start_hz, center, mix)
+                        layer_color = (
+                            "#fff2d8"
+                            if selected and freq_selected and layer == band_layers - 1
+                            else eq_rainbow_color(gain_db, layer_hz)
+                        )
                         c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=layer_color, width=3 if selected else 2)
                     c.create_oval(cx - inner_rx, cy - inner_ry, cx + inner_rx, cy + inner_ry, outline=color, width=3 if selected else 2)
                     if selected and width_selected:
@@ -2138,13 +2410,17 @@ class PolVisualizerApp:
                     mix = layer / 9.0
                     layer_rx = rx + (outer_rx - rx) * mix
                     layer_ry = ry + (outer_ry - ry) * mix
-                    c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline="#d22a1c", width=2)
+                    lh = hz_log_lerp_hz(center, POL_HIGH_HZ, mix)
+                    lc = eq_rainbow_color(gain_db, lh)
+                    c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=lc, width=2)
             elif kind == "HPF":
                 for layer in range(10):
                     mix = layer / 9.0
                     layer_rx = inner_rx + (rx - inner_rx) * mix
                     layer_ry = inner_ry + (ry - inner_ry) * mix
-                    c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline="#d22a1c", width=2)
+                    lh = hz_log_lerp_hz(POL_LOW_HZ, center, mix)
+                    lc = eq_rainbow_color(gain_db, lh)
+                    c.create_oval(cx - layer_rx, cy - layer_ry, cx + layer_rx, cy + layer_ry, outline=lc, width=2)
             if selected:
                 c.create_text(cx, cy - ry - 18, text=f"{kind} {center:.0f} Hz", fill="#f6a864", font=("Orbitron", 10, "bold"))
 

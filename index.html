@@ -345,6 +345,177 @@
       line-height: 1.45;
     }
 
+    /* ── SWAPPABLE CARD SLOTS ── */
+    .slots-grid {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0.5rem 1.5rem 1rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+    .slot-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .slot-row:hover {
+      border-color: rgba(255,215,0,0.4);
+      background: rgba(255,215,0,0.025);
+    }
+    @media (min-width: 720px) {
+      .slot-row { grid-template-columns: 220px 1fr; align-items: center; }
+    }
+    .slot-label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .slot-label .slot-kicker {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .slot-label .slot-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .slot-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .slot-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.42rem 0.78rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,215,0,0.28);
+      background: rgba(255,215,0,0.06);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .slot-card::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(255,215,0,0.55);
+      flex-shrink: 0;
+    }
+    .slots-note {
+      max-width: 980px;
+      margin: 0 auto 1.5rem;
+      padding: 0 1.5rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .slots-group-label {
+      max-width: 980px;
+      margin: 1rem auto 0.25rem;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .slots-group-label .label-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+    .slots-group-label .label-rule {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,215,0,0.35), rgba(255,215,0,0));
+    }
+    .slots-group-label:first-child { margin-top: 0; }
+
+    /* ── CTA BUTTON ── */
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-top: 1.1rem;
+    }
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.7rem 1.15rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--gold);
+      background: rgba(255,215,0,0.08);
+      color: var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+    }
+    .cta-button:hover {
+      background: rgba(255,215,0,0.18);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+    .cta-button .arrow { font-size: 1rem; line-height: 1; }
+    .cta-button.secondary {
+      border-color: var(--card-border);
+      background: rgba(0,212,255,0.06);
+      color: var(--accent);
+    }
+    .cta-button.secondary:hover {
+      background: rgba(0,212,255,0.14);
+      color: var(--text);
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(123,240,170,0.12);
+      border: 1px solid rgba(123,240,170,0.4);
+      color: #7bf0aa;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .live-badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #7bf0aa;
+      box-shadow: 0 0 8px rgba(123,240,170,0.7);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+
     /* ── FOOTER ── */
     footer {
       max-width: 860px;
@@ -386,8 +557,10 @@
         <a href="#breakthroughs">Why it matters</a>
         <a href="#flow">How it works</a>
         <a href="#racks">Racks</a>
+        <a href="#cards">Cards</a>
         <a href="#cubes">Cubes</a>
         <a href="#console">Console</a>
+        <a href="#software">Jimmy</a>
         <a href="#personal">Rig</a>
         <a href="#venue">Venue</a>
       </nav>
@@ -408,7 +581,7 @@
 
   <div class="media-grid" style="padding-top: 1.25rem;">
     <div class="media wide">
-      <img src="Image/Recording Environment.png" alt="Recording Environment render" loading="eager">
+      <img src="Image/Recording Environment.png?v=2026-04-27" alt="Recording Environment render" loading="eager">
       <div class="cap">Ecosystem render &mdash; racks, surface, and entry nodes as one coherent system.</div>
     </div>
   </div>
@@ -430,7 +603,7 @@
     </div>
     <div class="breakthrough">
       <h3>Swappable Rack Cards</h3>
-      <p>Touchscreen rack frames can accept analog PCB card families for preamp, compression, EQ, and tone.</p>
+      <p>One slot, many voicings. Drop in a Neve-style preamp today, an SSL color tomorrow, or trade an 1176-style FET comp for an LA-2A-style opto &mdash; without touching the rest of the chain.</p>
     </div>
     <div class="breakthrough">
       <h3>Venue Translation</h3>
@@ -482,26 +655,164 @@
     <p class="section-label">02 &mdash; Hardware</p>
     <h2>Racks</h2>
     <p>
-      The racks are the studio-grade analog core: two touchscreen-faced frames for preamplification, dynamics, EQ,
-      harmonic stages, conversion, routing, monitoring, and summing. The front face is functional touchscreen control,
-      not decoration.
+      The racks are the studio-grade analog core, split as <strong>input rack</strong> and <strong>output rack</strong>.
+      The signal path stays analog from input through to monitor &mdash; you are <span class="highlight">always hearing analog</span>,
+      not a digital reconstruction of the sound you're tracking.
     </p>
     <p>
-      The card-frame idea is the product leap: swap analog PCB cards for preamp, compressor, EQ, tone, dynamics,
-      and future module families instead of replacing the entire piece of hardware.
+      Both racks are <strong>card frames</strong>: every slot ships with an analog PCB card, and every card pulls and swaps.
+      Where competing systems hand you an empty digitally-controlled path you have to fill with outboard, the GIG racks
+      arrive populated &mdash; pull a card, drop in another voicing, change the chain without rewiring anything.
     </p>
   </div>
 
   <div class="media-grid" style="padding-top: 0;">
     <div class="media">
-      <img src="Image/Left.png" alt="Left rack render" loading="lazy">
-      <div class="cap">Left rack &mdash; main channel processing and voice.</div>
+      <img src="Image/Left.png" alt="Input rack render" loading="lazy">
+      <div class="cap">Input rack &mdash; preamp, dynamics, EQ, and tone cards per channel.</div>
     </div>
     <div class="media">
-      <img src="Image/Right.png" alt="Right rack render" loading="lazy">
-      <div class="cap">Output rack &mdash; monitoring, summing, and Venue handoff.</div>
+      <img src="Image/Right.png" alt="Output rack render" loading="lazy">
+      <div class="cap">Output rack &mdash; bus comp, master EQ, summing color, monitor &amp; Venue handoff.</div>
     </div>
   </div>
+
+  <!-- ════════════════ SWAPPABLE CARDS ════════════════ -->
+  <div class="section" id="cards" style="padding-top: 1rem; padding-bottom: 0.75rem;">
+    <p class="section-label">02a &mdash; Slot &times; Card</p>
+    <h2>Swappable Cards</h2>
+    <p>
+      Every rack bay is a <strong>slot</strong>. Every slot ships with an analog PCB card. Pull the card, drop in
+      another voicing &mdash; the slot stays the same, the character changes. Input rack shapes each channel on the
+      way in. Output rack glues the mix on the way out.
+    </p>
+  </div>
+
+  <div class="slots-group-label">
+    <span class="label-text">Input Rack &mdash; per channel</span>
+    <span class="label-rule"></span>
+  </div>
+
+  <div class="slots-grid">
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">In &middot; Slot 01</span>
+        <span class="slot-name">Preamp</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Neve-style 1073</span>
+        <span class="slot-card">SSL-style E-Series</span>
+        <span class="slot-card">API-style 312</span>
+        <span class="slot-card">Tube V72-style</span>
+        <span class="slot-card">Clean / transparent</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">In &middot; Slot 02</span>
+        <span class="slot-name">Compressor</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">1176-style FET</span>
+        <span class="slot-card">LA-2A-style opto</span>
+        <span class="slot-card">dbx 160-style VCA</span>
+        <span class="slot-card">Distressor-style</span>
+        <span class="slot-card">Vari-mu</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">In &middot; Slot 03</span>
+        <span class="slot-name">EQ</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Pultec-style EQP-1A</span>
+        <span class="slot-card">Massive Passive-style</span>
+        <span class="slot-card">API-style 550</span>
+        <span class="slot-card">Neve-style 1081</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">In &middot; Slot 04</span>
+        <span class="slot-name">Tone &amp; Tube</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">12AX7 tube stage</span>
+        <span class="slot-card">Class A solid state</span>
+        <span class="slot-card">Transformer color</span>
+        <span class="slot-card">Harmonic exciter</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="slots-group-label">
+    <span class="label-text">Output Rack &mdash; stereo bus</span>
+    <span class="label-rule"></span>
+  </div>
+
+  <div class="slots-grid">
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">Out &middot; Slot 01</span>
+        <span class="slot-name">Bus Compressor</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">SSL G-style bus</span>
+        <span class="slot-card">Fairchild-style vari-mu</span>
+        <span class="slot-card">API 2500-style VCA</span>
+        <span class="slot-card">Manley-style tube bus</span>
+        <span class="slot-card">Clean glue</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">Out &middot; Slot 02</span>
+        <span class="slot-name">Master EQ</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Pultec-style master</span>
+        <span class="slot-card">Neve-style master</span>
+        <span class="slot-card">Mastering parametric</span>
+        <span class="slot-card">Tilt / shelf</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">Out &middot; Slot 03</span>
+        <span class="slot-name">Summing Color</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Transformer summing</span>
+        <span class="slot-card">Tube summing</span>
+        <span class="slot-card">Discrete Class A</span>
+        <span class="slot-card">Clean / linear</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">Out &middot; Slot 04</span>
+        <span class="slot-name">Monitor / Venue Out</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Reference-flat</span>
+        <span class="slot-card">Console-voiced</span>
+        <span class="slot-card">Mastering insert</span>
+        <span class="slot-card">Venue translation</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="slots-note">
+    Card names are illustrative voicings &mdash; references identify the classic units that inspired each card profile,
+    not licensed clones.
+  </p>
 
   <div class="divider"><hr></div>
 
@@ -524,27 +835,42 @@
 
   <div class="divider"><hr></div>
 
-  <!-- ════════════════ SOFTWARE ════════════════ -->
+  <!-- ════════════════ SOFTWARE / JIMMY ════════════════ -->
   <div class="section" id="software">
     <p class="section-label">04 &mdash; Software</p>
-    <h2>Software</h2>
+    <h2>Jimmy &mdash; the live prototype <span class="live-badge">Live in browser</span></h2>
     <p>
-      The software mirrors the rack and Console language: channel stages, POL-style visual editing, parameter focus,
-      and recall stay consistent across analog and digital paths.
+      Jimmy is the in-browser prototype of the GIG software layer. It mirrors the rack and Console language &mdash;
+      channel stages, POL-style visual editing, parameter focus, and recall &mdash; so the same operating model holds
+      across analog cards, digital paths, and the surface.
     </p>
     <p>
-      There is now a live browser prototype called <a href="jimmy.html" style="color:var(--gold);text-decoration:none;">Jimmy</a>
-      that sketches the direction: armed channel strips, parameter focus, POL-style stage behavior, and 6-DOF inspired editing.
+      It sketches the whole flow: musicians on personal Rigs, a 12-channel input strip with polar mic-pre / harmonics /
+      compressor / EQ / tone stages per channel, and the Console surface with faders, encoders, and 6-DOF focus. It is
+      where the operating model becomes <em>visible</em>.
     </p>
+    <p style="margin-top: 1.25rem;">
+      Alongside Jimmy is <strong>System Q Console</strong> &mdash; the desktop application with a working audio engine.
+      A 12-channel rehearsal / recording console with armed channel strips, per-channel mic pre with polar focus,
+      harmonics, compressor, EQ, FX, sends, transport, and master &mdash; the same operating model from the racks
+      and Console surface, running as real software today.
+    </p>
+  </div>
+
+  <div class="media-grid" style="padding-top: 0;">
+    <div class="media wide">
+      <img src="Image/system_q_console.png" alt="System Q Console desktop application: 12-channel strip with mic pre / polar focus on Kick channel" loading="lazy">
+      <div class="cap">System Q Console &mdash; desktop app, 12-channel strip with armed channels, VU meters, EQ, FX, and per-channel mic pre with polar focus on the Kick.</div>
+    </div>
   </div>
 
   <div class="media-grid split" style="padding-top: 0;">
     <div class="media">
       <img src="Image/download.png" alt="Channel strip sections: mic pre, harmonics, compressor, EQ, effects" loading="lazy">
-      <div class="cap">One strip model across 12 channels &mdash; each section is a dedicated stage.</div>
+      <div class="cap">One strip model across 12 channels &mdash; each section is a dedicated stage in Jimmy.</div>
     </div>
     <div class="media">
-      <h3 style="margin: 0 0 .65rem;">Sections</h3>
+      <h3 style="margin: 0 0 .65rem;">Sections (per channel in Jimmy)</h3>
       <p style="margin: 0 0 .75rem;">
         Each stage uses POL (polar) editing: the mic pre and dynamics close in on the polar graph. Ring radius maps frequency
         (bigger = low, smaller = high).
@@ -585,6 +911,8 @@
 
   <!-- ════════════════ PEDAL ════════════════ -->
   <div class="section" id="personal">
+    <!-- Fragment alias: Rig section (historic id retained as #personal) -->
+    <span id="rig" aria-hidden="true"></span>
     <p class="section-label">06 &mdash; Musician Endpoint</p>
     <h2>Rig</h2>
     <p>

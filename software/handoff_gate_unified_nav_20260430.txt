@@ -1,0 +1,43 @@
+HANDOFF — System Q / unified grid / gate+CMP bypass (recording-environment repo)
+
+REPO ROOT
+  C:\Users\racin\Desktop\recording-environment
+  Remote: origin → https://github.com/racinc19/System-Q.git
+  Focus path: software\system_q_console.py, software\verify_system_q.py
+
+WHAT THIS SESSION WAS ABOUT
+  Per-cell bypass on PRE/HRM/GTE/CMP/EQ/TON matrix (PRESS / long-cap engage_toggle).
+  Bug class: unified grid is ALWAYS drawn, but editor_nav_scope could stay legacy
+  (module-stage/module-body/body/stage or empty). Legacy _handle_module_editor_nav + PRESS
+  on invisible "stage" column toggled coarse *_enabled (whole CMP/GTE/etc.) instead of
+  *_param_bypass dict entries.
+
+IMPLEMENTED (see git history after this commit)
+  - _coerce_editor_nav_to_unified_stage_grid(): remap orphan scopes using editor_stage_col;
+    sync selected_stage_key to that column for polar parity; exempt faders, pre-*, transport,
+    comp/eQ/tone-top, utility; treat module-*, body, stage, blank string as orphan.
+  - _sync_from_engine: call coerce once per redraw when nav_scope == editor.
+  - _handle_nav(editor): coerce before branching.
+  - _poll_spacemouse(editor): coerce before directional handling.
+  - _press_unified_editor_cell(): coerce first.
+  - _handle_cap_engage_toggle(): coerce FIRST then stage_grid → _press_unified_editor_cell
+    (engage_toggle runs before poll coerce — this was a real no-op path for scope "stage"/"").
+  - After long engage_toggle: suppress same-poll XY nav + duplicate joystick press in editor.
+  - PRE→non-PRE in editor: _normalize_stage_selection sets stage_grid + column, not module-stage.
+  - Cap engage no longer gated on SYSTEM_Q_AGENT_PROOF (twist/down-hold still respect proof).
+  - verify_system_q.py regression tests including stale module-stage + THR bypass, column-truth,
+    coerce for "stage"/"", faders unchanged.
+
+HOW TO VERIFY LOCALLY
+  py -3 software\verify_system_q.py        (cwd: recording-environment; or cd software first)
+  Run console: py -3 software\system_q_console.py — title line MUST show BUILD id matching file:
+  SYSTEM_Q_BUILD_ID in system_q_console.py (search coerce-stage-faders-cap or latest in file).
+
+IF BYPASS STILL FAILS WHEN USER RETURNS
+  1. Confirm banner build id loaded (old Python process kills bypass).
+  2. CMP engaged (header/coarse)* — param bypass ≠ insert off.
+  3. If GR reads 0 dB with CMP on: THR bypass can make detector always-open (audible/GR effect,
+     not same as comp_enabled False — polar still shows COMP unless comp_enabled is false).
+  4. Log: console_debug.log in software\ (logging from _press_unified_editor_cell).
+
+END

@@ -1,0 +1,20 @@
+{
+  "python.defaultInterpreterPath": "C:\\Users\\racin\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+  "python.terminal.activateEnvironment": false,
+  "terminal.integrated.cwd": "${workspaceFolder}",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/*.pyc": true
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "jimmy_audio.py": "STABILITY_FIXES.md",
+    "system_q_console.py": "console_debug.log, check_system_q_nav.py",
+    "pol_visualizer.py": "",
+    "generate_band_stems.py": "band_stems",
+    "generate_test_loops.py": "loops",
+    "requirements.txt": "*.md, *.txt"
+  },
+  "workbench.editor.labelFormat": "short"
+}
