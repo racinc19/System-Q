@@ -257,34 +257,34 @@ class UIMixin:
     def _draw_focus_mic_pre(self, c: tk.Canvas, ch: ChannelState, w: int, h: int) -> None:
         cx, cy, orx, ory, irx, iry = self._focus_geometry(w, h)
         self._draw_focus_ring_grid(c, cx, cy, orx, ory, irx, iry)
-        self._draw_focus_signal(c, ch, cx, cy, orx, ory, irx, iry)
+        self._draw_focus_signal(c, self.engine.master_channel, cx, cy, orx, ory, irx, iry)
         c.create_text(cx, h - 40, text="MIC PRE", fill="#7cf0a9", font=("Segoe UI", 10, "bold"))
 
     def _draw_focus_harmonics(self, c: tk.Canvas, ch: ChannelState, w: int, h: int) -> None:
         cx, cy, orx, ory, irx, iry = self._focus_geometry(w, h)
         self._draw_focus_ring_grid(c, cx, cy, orx, ory, irx, iry)
-        self._draw_focus_signal(c, ch, cx, cy, orx, ory, irx, iry)
+        self._draw_focus_signal(c, self.engine.master_channel, cx, cy, orx, ory, irx, iry)
         c.create_text(cx, h - 40, text="HARMONICS", fill="#5cb8ff", font=("Segoe UI", 10, "bold"))
 
     def _draw_focus_gate(self, c: tk.Canvas, ch: ChannelState, w: int, h: int) -> None:
         cx, cy, orx, ory, irx, iry = self._focus_geometry(w, h)
         self._draw_focus_ring_grid(c, cx, cy, orx, ory, irx, iry)
-        self._draw_focus_signal(c, ch, cx, cy, orx, ory, irx, iry)
+        self._draw_focus_signal(c, self.engine.master_channel, cx, cy, orx, ory, irx, iry)
         c.create_text(cx, h - 40, text="GATE", fill="#ddc270", font=("Segoe UI", 10, "bold"))
 
     def _draw_focus_compressor(self, c: tk.Canvas, ch: ChannelState, w: int, h: int) -> None:
         cx, cy, orx, ory, irx, iry = self._focus_geometry(w, h)
         self._draw_focus_ring_grid(c, cx, cy, orx, ory, irx, iry)
-        self._draw_focus_signal(c, ch, cx, cy, orx, ory, irx, iry)
+        self._draw_focus_signal(c, self.engine.master_channel, cx, cy, orx, ory, irx, iry)
         c.create_text(cx, h - 40, text="COMPRESSOR", fill="#ff7d6e", font=("Segoe UI", 10, "bold"))
 
     def _draw_focus_tone(self, c: tk.Canvas, ch: ChannelState, w: int, h: int) -> None:
         cx, cy, orx, ory, irx, iry = self._focus_geometry(w, h)
         self._draw_focus_ring_grid(c, cx, cy, orx, ory, irx, iry)
-        self._draw_focus_signal(c, ch, cx, cy, orx, ory, irx, iry)
+        self._draw_focus_signal(c, self.engine.master_channel, cx, cy, orx, ory, irx, iry)
         sk = getattr(self, "selected_stage_key", "tbe")
         fill = self._STAGE_HEADER_FILL.get(sk, "#ff8f3a")
-        c.create_text(cx, h - 40, text=sk.upper(), fill=fill, font=("Segoe UI", 10, "bold"))
+        c.create_text(cx, h - 40, text=self._stage_label(sk).upper(), fill=fill, font=("Segoe UI", 10, "bold"))
 
     # --- Editor Renders ---
     def _draw_editor_controls(self) -> None:
