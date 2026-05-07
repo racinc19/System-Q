@@ -321,16 +321,59 @@ class UIMixin:
 
     def _draw_strips(self) -> None:
         c = self.strip_canvas; c.delete("all")
-        w, h = max(c.winfo_width(), 980), max(c.winfo_height(), 720)
+        w, h = max(c.winfo_width(), 980), max(c.winfo_height(), 600)
         c.create_rectangle(0, 0, w, h, fill="#0c1014", outline="")
+        
         sw, gap = self.STRIP_WIDTH, 8
         sources = list(self.engine.channels) + [self.engine.master_channel]
-        tw = len(sources)*sw + (len(sources)-1)*gap
-        sx = max(18, (w - tw)/2)
+        n = len(sources)
+        tw = n * sw + (n - 1) * gap
+        sx = max(18, (w - tw) / 2)
+        
         for i, ch in enumerate(sources):
-            x0, x1 = sx + i*(sw+gap), sx + i*(sw+gap) + sw
-            is_s = (i == self.selected_channel)
-            c.create_rectangle(x0, 24, x1, h-14, fill="#181e25", outline="#7cf0a9" if is_s and getattr(self, "nav_scope", "")=="console" else "#30404f", width=2 if is_s else 1)
+            is_m = (i == n - 1)
+            x0, x1 = sx + i * (sw + gap), sx + i * (sw + gap) + sw
+            is_s = (i == self.selected_channel and not is_m)
+            
+            # Selection Highlight Glow
+            if is_s and getattr(self, "nav_scope", "") == "console":
+                c.create_rectangle(x0 - 4, 10, x1 + 4, h - 10, fill="#1c252f", outline="#7cf0a9", width=1)
+            
+            # Main Strip Body
+            c.create_rectangle(x0, 20, x1, h - 20, fill="#161b22", outline="#2a3848", width=1)
+            
+            # Channel Name & Index
+            lbl = "MASTER" if is_m else f"{i+1:02d} {ch.name.upper()}"
+            c.create_text(x0 + sw/2, 44, text=lbl, fill="#f2f3f6" if is_s else "#7d8a9b", font=("Segoe UI", 8, "bold"))
+            
+            # Meter Slot
+            my0, my1 = 68, h - 140
+            c.create_rectangle(x0 + 14, my0, x1 - 14, my1, fill="#0c1118", outline="#202935")
+            
+            # Meter Level (using band_levels peaks)
+            if hasattr(ch, "band_levels"):
+                val = float(np.max(ch.band_levels))
+                mh = (my1 - my0) * val
+                grad_c = "#6ff0c1" if val < 0.85 else "#fbcfe8"
+                c.create_rectangle(x0 + 16, my1 - mh, x1 - 16, my1, fill=grad_c, outline="")
+                # Tick marks
+                for db in [0, -6, -12, -24, -48]:
+                    ty = my0 + (my1 - my0) * (1.0 - math.pow(10, db/40)) # very rough db mapping
+                    c.create_line(x0 + 14, ty, x1 - 14, ty, fill="#1a222e")
+
+            # Fader Track
+            fy0, fy1 = h - 120, h - 45
+            c.create_line(x0 + sw/2, fy0, x0 + sw/2, fy1, fill="#2a3848", width=3)
+            
+            # Fader Handle
+            gain_val = ch.gain if hasattr(ch, "gain") else 0.8
+            fpos = fy1 - (fy1 - fy0) * gain_val
+            c.create_rectangle(x0 + sw/2 - 14, fpos - 6, x0 + sw/2 + 14, fpos + 6, fill="#344250", outline="#8fa3b8", width=1)
+            c.create_line(x0 + sw/2 - 10, fpos, x0 + sw/2 + 10, fpos, fill="#7cf0a9", width=2)
+            
+            # Insert indicator
+            if not is_m:
+                c.create_oval(x0 + sw/2 - 3, h - 32, x0 + sw/2 + 3, h - 26, fill="#7cf0a9" if ch.pre_enabled else "#30404f", outline="")
 
     # --- Events ---
     def _poll_spacemouse(self) -> None:

@@ -72,7 +72,16 @@ class ConsoleApp(UIMixin):
         sys.exit(0)
 
 def main() -> None:
-    logging.basicConfig(level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+    log_file = Path(__file__).resolve().parent / "console_debug.log"
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        handlers=[
+            logging.FileHandler(log_file, mode="a"),
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+    _log.info(f"System Q Console Starting. Build: {SYSTEM_Q_BUILD_ID}")
     root = tk.Tk()
     app = ConsoleApp(root)
     root.mainloop()
