@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simple strategic framing for GIG / System Q as a Music Tribe acquisition or partnership conversation.">
+  <title>Strategic Framing — GIG / System Q</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050810;
+      --panel: rgba(255,255,255,0.045);
+      --border: rgba(0,212,255,0.2);
+      --accent: #00d4ff;
+      --gold: #ffd700;
+      --text: #f0f4f8;
+      --muted: #aab6c3;
+      --mat: #c8d2dc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background:
+        radial-gradient(900px 520px at 16% 0%, rgba(0,212,255,0.15), transparent 62%),
+        linear-gradient(160deg, #1a0a2e 0%, #0a1929 50%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.65;
+    }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+    .nav { font-size: 0.9rem; color: var(--muted); margin-bottom: 1.25rem; }
+    .nav a { color: var(--accent); text-decoration: none; margin-right: 1rem; }
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      align-items: center;
+      background: rgba(5,8,16,0.62);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 1.1rem;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.35);
+      margin-bottom: 1.2rem;
+    }
+    @media (min-width: 860px) { .hero { grid-template-columns: minmax(0, 1fr) minmax(360px, 0.9fr); } }
+    .hero img {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      background: radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.48), var(--mat) 48%, #6f7b86 100%);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 16px 42px rgba(0,0,0,0.28);
+    }
+    .tag {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.76rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      line-height: 1.05;
+      margin-bottom: 0.85rem;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .lead { color: var(--muted); font-size: 1.08rem; max-width: 620px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem; }
+    @media (min-width: 760px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.25rem;
+    }
+    .card h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--gold);
+      font-size: 1rem;
+      margin-bottom: 0.55rem;
+    }
+    .card p { color: var(--muted); margin-bottom: 0.65rem; }
+    .card p:last-child { margin-bottom: 0; }
+    .ask {
+      margin-top: 1rem;
+      background: rgba(255,215,0,0.08);
+      border-color: rgba(255,215,0,0.24);
+    }
+    .links { margin-top: 1.4rem; color: var(--muted); font-size: 0.92rem; }
+    .links a { color: var(--accent); text-decoration: none; margin-right: 1rem; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a href="uli-review.html">GIG review</a>
+      <a href="index.html">Product story</a>
+      <a href="html/VISUAL_CONSOLE.html?v=overview-1">Console</a>
+      <a href="html/VISUAL_LEFT_RACK.html?v=overview-2">Racks</a>
+    </nav>
+
+    <section class="hero">
+      <img src="Image/Recording Environment.png" alt="GIG recording ecosystem">
+      <div>
+        <div class="tag">Strategic framing</div>
+        <h1>A musician ecosystem worth a serious review.</h1>
+        <p class="lead">
+          GIG / System Q is a recording, rehearsal, and live playback ecosystem: musician Rigs,
+          Cube, touchscreen Racks, Console, Venue, and software working as one product family.
+        </p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>What It Is</h2>
+        <p>A complete musician environment that moves from practice to recording to live playback without breaking the workflow.</p>
+        <p>The core idea is simple: make serious sound and session control available inside one coherent system.</p>
+      </div>
+
+      <div class="card">
+        <h2>Why It Matters</h2>
+        <p>GIG reduces dependence on scattered plugin stacks and disconnected hardware.</p>
+        <p>Its strongest ideas are sound without dependency, 6-DOF Console, swappable analog rack cards, and Venue mix-level playback.</p>
+      </div>
+
+      <div class="card">
+        <h2>Why Music Tribe</h2>
+        <p>Music Tribe has the manufacturing scale, audio brands, hardware reach, and live-sound footprint to judge whether this should become a platform.</p>
+        <p>The question is not whether one founder should build all of it. The question is whether it belongs inside a company that can.</p>
+      </div>
+
+      <div class="card">
+        <h2>What Exists Today</h2>
+        <p>There are product renders, public HTML pages, software prototypes, CAD/BOM thinking, and a coherent architecture for the product family.</p>
+        <p>It is early, but it is no longer just an idea.</p>
+      </div>
+    </section>
+
+    <section class="card ask">
+      <h2>The Ask</h2>
+      <p>
+        I am looking for a qualified strategic conversation: review the architecture, identify the strongest first product,
+        and decide whether acquisition, licensing, partnership, or incubation is the right path.
+      </p>
+    </section>
+
+    <p class="links">
+      <a href="uli-review.html">Open review page</a>
+      <a href="index.html">Open product story</a>
+      <a href="https://github.com/racinc19/System-Q" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </main>
+</body>
+</html>

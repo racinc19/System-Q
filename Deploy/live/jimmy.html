@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="System Q Console — Jimmy Iovine audio engine demo">
+  <title>Jimmy — Workflow Visual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #5b6066;
+      --panel: #3b4046;
+      --panel-2: #4a5057;
+      --line: rgba(255,255,255,0.12);
+      --text: #eef2f7;
+      --muted: #c4ccd7;
+      --cyan: #7deaff;
+      --green: #7bf0aa;
+      --red: #ff7f88;
+      --gold: #f1dea4;
+      --orange: #ffb44f;
+      --shadow: 0 10px 24px rgba(0,0,0,0.14);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #686d73 0%, #575c63 100%);
+      color: var(--text);
+    }
+    .page {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 1rem 1rem 2rem;
+    }
+    .crumb {
+      display: inline-block;
+      margin-bottom: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+    }
+    .crumb:hover { color: var(--cyan); }
+    .hero {
+      margin-bottom: 0.9rem;
+    }
+    .hero h1 {
+      margin: 0 0 0.25rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 860px;
+    }
+    .story-grid {
+      display: grid;
+      gap: 0.7rem;
+      margin-bottom: 0.7rem;
+    }
+    .story-card,
+    .canvas {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .story-card {
+      padding: 0.8rem 0.9rem;
+    }
+    .story-card h2 {
+      margin: 0 0 0.35rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.76rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+    .story-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .musicians {
+      padding: 0.9rem;
+    }
+    .musician-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(140px, 1fr));
+      gap: 0.7rem;
+    }
+    .musician {
+      background: var(--panel-2);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 8px;
+      padding: 0.7rem;
+    }
+    .musician h3 {
+      margin: 0 0 0.45rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .avatar {
+      height: 92px;
+      border-radius: 6px;
+      background:
+        radial-gradient(circle at 50% 26%, rgba(255,255,255,0.16), transparent 18%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
+    .avatar::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 18px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--gold);
+      transform: translateX(-50%);
+    }
+    .avatar::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 44px;
+      width: 58px;
+      height: 34px;
+      border-radius: 16px 16px 8px 8px;
+      background: rgba(255,255,255,0.12);
+      transform: translateX(-50%);
+    }
+    .pedal {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      background: #262b31;
+      padding: 0.45rem;
+    }
+    .pedal-screen {
+      height: 40px;
+      border-radius: 4px;
+      margin-bottom: 0.35rem;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.16), rgba(0,0,0,0.1)),
+        radial-gradient(circle at 50% 50%, rgba(125,234,255,0.18), transparent 46%);
+      border: 1px solid rgba(125,234,255,0.18);
+    }
+    .pedal-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.3rem;
+      font-size: 0.65rem;
+      font-family: 'Orbitron', sans-serif;
+      color: var(--green);
+    }
+    .pedal-meta .hot { color: var(--red); }
+    .pedal-note {
+      margin-top: 0.45rem;
+      color: var(--muted);
+      font-size: 0.74rem;
+      line-height: 1.4;
+    }
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.7rem;
+      margin-bottom: 0.7rem;
+    }
+    .step {
+      padding: 0.75rem;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .step strong {
+      display: block;
+      margin-bottom: 0.28rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--cyan);
+      text-transform: uppercase;
+    }
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+    .dual {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 0.7rem;
+    }
+    .canvas-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.7rem 0.85rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+    .canvas-head span {
+      color: var(--muted);
+      font-size: 0.66rem;
+      letter-spacing: 0.08em;
+    }
+    .rack {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .rack-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(88px, 1fr));
+      gap: 0.45rem;
+    }
+    .rack-channel {
+      border-right: 1px solid rgba(255,255,255,0.11);
+      padding-right: 0.4rem;
+    }
+    .rack-channel:last-child {
+      border-right: 0;
+      padding-right: 0;
+    }
+    .rack-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.3rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.68rem;
+      color: var(--text);
+    }
+    .rack-label span {
+      color: var(--muted);
+      font-size: 0.6rem;
+    }
+    .module {
+      background: #565b63;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 0.35rem;
+      margin-bottom: 0.35rem;
+      min-height: 104px;
+    }
+    .module.empty {
+      opacity: 0.42;
+    }
+    .polar-mini,
+    .eq-mini,
+    .bars-mini {
+      border-radius: 4px;
+      background: rgba(255,255,255,0.03);
+      margin-bottom: 0.3rem;
+    }
+    .polar-mini {
+      height: 58px;
+      position: relative;
+      overflow: hidden;
+    }
+    .polar-mini::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 50%, rgba(179,110,255,0.75), rgba(255,183,92,0.9) 55%, rgba(255,125,125,0.6) 70%, transparent 76%);
+      transform: translate(-50%, -50%);
+    }
+    .polar-mini::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 52px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--cyan);
+      transform: translate(-50%, -50%);
+    }
+    .bars-mini {
+      height: 58px;
+      display: flex;
+      align-items: end;
+      gap: 0.1rem;
+      padding: 0.25rem;
+    }
+    .bars-mini i {
+      flex: 1;
+      border-radius: 2px 2px 0 0;
+      background: var(--orange);
+    }
+    .eq-mini {
+      height: 58px;
+      overflow: hidden;
+    }
+    .eq-mini svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .module-text {
+      color: var(--muted);
+      font-size: 0.6rem;
+      line-height: 1.35;
+      min-height: 36px;
+      white-space: pre-line;
+    }
+    .module-tags {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.25rem;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.58rem;
+      color: var(--green);
+    }
+    .module-tags .hot {
+      color: var(--red);
+    }
+    .controller {
+      padding: 0.75rem;
+    }
+    .top-screen,
+    .scribbles,
+    .faders-top,
+    .faders,
+    .scribble-row {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(40px, 1fr));
+      gap: 0.28rem;
+    }
+    .top-screen,
+    .scribbles {
+      margin-bottom: 0.55rem;
+    }
+    .screen-cell,
+    .scribble-cell {
+      background: #262b31;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 0.38rem 0.22rem;
+      text-align: center;
+    }
+    .screen-cell strong,
+    .scribble-cell strong {
+      display: block;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.58rem;
+      margin-bottom: 0.15rem;
+    }
+    .screen-cell span,
+    .scribble-cell span {
+      color: var(--muted);
+      font-size: 0.56rem;
+    }
+    .controller-body {
+      display: grid;
+      grid-template-columns: 130px 1fr 250px;
+      gap: 0.55rem;
+      align-items: start;
+    }
+    .transport-col,
+    .monitor-col,
+    .faders-col {
+      background: #444950;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 0.45rem;
+    }
+    .transport-grid,
+    .monitor-grid {
+      display: grid;
+      gap: 0.28rem;
+    }
+    .transport-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .monitor-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 0.45rem;
+    }
+    .transport-grid div,
+    .monitor-grid div {
+      background: #252a31;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      padding: 0.4rem 0.3rem;
+      color: var(--muted);
+      font-size: 0.6rem;
+      min-height: 42px;
+    }
+    .transport-grid strong,
+    .monitor-grid strong {
+      display: block;
+      color: var(--text);
+      font-size: 0.58rem;
+      margin-bottom: 0.12rem;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .encoder {
+      height: 34px;
+      width: 34px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 1px solid rgba(0,0,0,0.16);
+    }
+    .faders-top {
+      margin-bottom: 0.35rem;
+    }
+    .faders {
+      margin-bottom: 0.35rem;
+    }
+    .fader {
+      height: 188px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #242930, #1d2127);
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    .fader::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 14px;
+      bottom: 14px;
+      width: 2px;
+      background: rgba(255,255,255,0.12);
+      transform: translateX(-50%);
+    }
+    .fader::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: calc(22px + var(--level, 50) * 1.2px);
+      width: 16px;
+      height: 38px;
+      border-radius: 4px;
+      background: #ff8d2f;
+      transform: translateX(-50%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
+    .scribble-row div {
+      height: 28px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #a72020, #347c2a, #8a661b);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .big-knobs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      align-items: start;
+    }
+    .big-knob {
+      display: grid;
+      justify-items: center;
+      gap: 0.25rem;
+    }
+    .big-knob .disc {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: var(--gold);
+      border: 1px solid rgba(0,0,0,0.18);
+    }
+    .big-knob span {
+      color: var(--muted);
+      font-size: 0.62rem;
+      text-align: center;
+    }
+    .focus-note {
+      margin-top: 0.55rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-size: 0.76rem;
+      line-height: 1.45;
+    }
+    @media (max-width: 1100px) {
+      .musician-grid,
+      .timeline {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .dual,
+      .controller-body {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 760px) {
+      .musician-grid,
+      .timeline,
+      .top-screen,
+      .scribbles,
+      .faders-top,
+      .faders,
+      .scribble-row {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+      .monitor-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <a class="crumb" href="/">&larr; Back to Recording Environment</a>
+
+    <section class="hero">
+      <h1>Jimmy</h1>
+      <p>A flat visual story: musicians come in, plug into their personal stations, rehearse, record through the rack/controller system, and move toward playback and venue.</p>
+    </section>
+    <section class="story-grid">
+      <div class="story-card">
+        <h2>01 — Musicians Arrive</h2>
+        <p>Each player puts in their ears, plugs into the network, and joins the same room-wide system before rehearsal starts.</p>
+      </div>
+      <div class="canvas musicians">
+        <div class="musician-grid">
+          <div class="musician"><h3>Guitar</h3><div class="avatar"></div><div class="pedal"><div class="pedal-screen"></div><div class="pedal-meta"><span>IEM</span><span class="hot">AMP</span><span>NET</span></div></div><div class="pedal-note">Personal rig, playback, and in-ear mix.</div></div>
+          <div class="musician"><h3>Bass</h3><div class="avatar"></div><div class="pedal"><div class="pedal-screen"></div><div class="pedal-meta"><span>IEM</span><span class="hot">DRV</span><span>NET</span></div></div><div class="pedal-note">Low-end control and cue mix on one endpoint.</div></div>
+          <div class="musician"><h3>Keys</h3><div class="avatar"></div><div class="pedal"><div class="pedal-screen"></div><div class="pedal-meta"><span>IEM</span><span class="hot">PLY</span><span>NET</span></div></div><div class="pedal-note">Playback, sounds, and local monitoring.</div></div>
+          <div class="musician"><h3>Vocal</h3><div class="avatar"></div><div class="pedal"><div class="pedal-screen"></div><div class="pedal-meta"><span>IEM</span><span class="hot">MIC</span><span>NET</span></div></div><div class="pedal-note">Vocal path, talkback, and reference playback.</div></div>
+          <div class="musician"><h3>Drums</h3><div class="avatar"></div><div class="pedal"><div class="pedal-screen"></div><div class="pedal-meta"><span>IEM</span><span class="hot">TRG</span><span>NET</span></div></div><div class="pedal-note">Triggers, cues, and isolation workflow.</div></div>
+          <div class="musician"><h3>Playback</h3><div class="avatar"></div><div class="pedal"><div class="pedal-screen"></div><div class="pedal-meta"><span>IEM</span><span class="hot">REF</span><span>NET</span></div></div><div class="pedal-note">Reference stems, charts, and session support.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="timeline">
+      <div class="step"><strong>Rehearse</strong><p>Everyone plugs in once and starts in the same environment they will later record in.</p></div>
+      <div class="step"><strong>Record</strong><p>The rack becomes the high-end analog path while the controller keeps the whole room aligned.</p></div>
+      <div class="step"><strong>Adjust</strong><p>Band-selective processing, sends, and faders stay in one operating model instead of separate tools.</p></div>
+      <div class="step"><strong>Play Back</strong><p>The same endpoints and system logic carry forward into playback and venue translation.</p></div>
+    </section>
+
+    <section class="dual">
+      <div class="canvas">
+        <div class="canvas-head">Input Rack <span>12-channel flat strip</span></div>
+        <div class="rack">
+          <div class="rack-grid">
+            <div class="rack-channel"><div class="rack-label"><strong>CH 01</strong><span>Live</span></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span class="hot">48</span><span class="hot">PHS</span><span class="hot">TBE</span></div></div><div class="module"><div class="bars-mini"><i style="height:46px"></i><i style="height:31px"></i><i style="height:22px"></i><i style="height:15px"></i><i style="height:11px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module"><div class="module-text">ATT 3.2ms
+REL 87ms
+RTO 4:1
+GR -4.2 dB</div></div><div class="module"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,48 C18,18 42,22 58,52 S84,76 100,38" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span>LPF</span><span class="hot">HPF</span><span class="hot">TBE</span></div></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span>TRN</span><span class="hot">CLR</span><span class="hot">XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 02</strong><span>Live</span></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span class="hot">48</span><span class="hot">PHS</span><span class="hot">TBE</span></div></div><div class="module"><div class="bars-mini"><i style="height:28px"></i><i style="height:35px"></i><i style="height:18px"></i><i style="height:10px"></i><i style="height:8px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module"><div class="module-text">ATT 2.8ms
+REL 126ms
+RTO 8:1
+GR -6.1 dB</div></div><div class="module"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,54 C18,46 36,26 58,22 S80,28 100,54" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span>LPF</span><span>HPF</span><span class="hot">TBE</span></div></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span>TRN</span><span>CLR</span><span class="hot">XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 03</strong><span>Live</span></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span>48</span><span>PHS</span><span class="hot">TBE</span></div></div><div class="module"><div class="bars-mini"><i style="height:52px"></i><i style="height:25px"></i><i style="height:29px"></i><i style="height:24px"></i><i style="height:15px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module"><div class="module-text">ATT 5.0ms
+REL 46ms
+RTO 2:1
+GR -2.8 dB</div></div><div class="module"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,60 C18,60 36,22 56,16 S80,26 100,54" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span class="hot">LPF</span><span class="hot">HPF</span><span>TBE</span></div></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span class="hot">TRN</span><span class="hot">CLR</span><span>XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 04</strong><span>Empty</span></div><div class="module empty"><div class="polar-mini"></div><div class="module-tags"><span>48</span><span>PHS</span><span>TBE</span></div></div><div class="module empty"><div class="bars-mini"><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module empty"><div class="module-text">ATT -
+REL -
+RTO STBY
+GR 0.0 dB</div></div><div class="module empty"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,48 C18,48 38,48 60,48 S82,48 100,48" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span>LPF</span><span>HPF</span><span>TBE</span></div></div><div class="module empty"><div class="polar-mini"></div><div class="module-tags"><span>TRN</span><span>CLR</span><span>XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 05</strong><span>Live</span></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span class="hot">48</span><span class="hot">PHS</span><span class="hot">TBE</span></div></div><div class="module"><div class="bars-mini"><i style="height:39px"></i><i style="height:31px"></i><i style="height:24px"></i><i style="height:18px"></i><i style="height:13px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module"><div class="module-text">ATT 1.6ms
+REL 20ms
+RTO 10:1
+GR -8.4 dB</div></div><div class="module"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,32 C18,24 32,78 52,50 S82,28 100,52" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span>LPF</span><span>HPF</span><span class="hot">TBE</span></div></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span>TRN</span><span>CLR</span><span class="hot">XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 06</strong><span>Live</span></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span>48</span><span>PHS</span><span>TBE</span></div></div><div class="module"><div class="bars-mini"><i style="height:22px"></i><i style="height:37px"></i><i style="height:26px"></i><i style="height:16px"></i><i style="height:11px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module"><div class="module-text">ATT 4.5ms
+REL 43ms
+RTO 3:1
+GR -3.1 dB</div></div><div class="module"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,40 C18,58 34,62 56,32 S80,78 100,40" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span class="hot">LPF</span><span>HPF</span><span>TBE</span></div></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span class="hot">TRN</span><span>CLR</span><span class="hot">XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 07</strong><span>Live</span></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span>48</span><span class="hot">PHS</span><span>TBE</span></div></div><div class="module"><div class="bars-mini"><i style="height:38px"></i><i style="height:27px"></i><i style="height:35px"></i><i style="height:18px"></i><i style="height:14px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module"><div class="module-text">ATT 6.8ms
+REL 38ms
+RTO 6:1
+GR -5.0 dB</div></div><div class="module"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,48 C20,34 38,40 58,52 S80,24 100,46" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span>LPF</span><span class="hot">HPF</span><span>TBE</span></div></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span>TRN</span><span class="hot">CLR</span><span>XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 08</strong><span>Empty</span></div><div class="module empty"><div class="polar-mini"></div><div class="module-tags"><span>48</span><span>PHS</span><span>TBE</span></div></div><div class="module empty"><div class="bars-mini"><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module empty"><div class="module-text">ATT -
+REL -
+RTO STBY
+GR 0.0 dB</div></div><div class="module empty"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,48 C18,48 38,48 60,48 S82,48 100,48" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span>LPF</span><span>HPF</span><span>TBE</span></div></div><div class="module empty"><div class="polar-mini"></div><div class="module-tags"><span>TRN</span><span>CLR</span><span>XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 09</strong><span>Live</span></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span class="hot">48</span><span>PHS</span><span>TBE</span></div></div><div class="module"><div class="bars-mini"><i style="height:33px"></i><i style="height:27px"></i><i style="height:36px"></i><i style="height:21px"></i><i style="height:15px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module"><div class="module-text">ATT 2.0ms
+REL 150ms
+RTO 4:1
+GR -7.2 dB</div></div><div class="module"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,44 C18,70 36,18 56,40 S76,44 100,48" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span>LPF</span><span class="hot">HPF</span><span>TBE</span></div></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span>TRN</span><span class="hot">CLR</span><span>XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 10</strong><span>Live</span></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span class="hot">48</span><span>PHS</span><span>TBE</span></div></div><div class="module"><div class="bars-mini"><i style="height:24px"></i><i style="height:22px"></i><i style="height:20px"></i><i style="height:35px"></i><i style="height:17px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module"><div class="module-text">ATT 3.8ms
+REL 95ms
+RTO 4:1
+GR -4.0 dB</div></div><div class="module"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,42 C18,30 36,36 62,40 S84,60 100,48" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span class="hot">LPF</span><span>HPF</span><span>TBE</span></div></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span class="hot">TRN</span><span>CLR</span><span class="hot">XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 11</strong><span>Live</span></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span>48</span><span>PHS</span><span class="hot">TBE</span></div></div><div class="module"><div class="bars-mini"><i style="height:20px"></i><i style="height:18px"></i><i style="height:16px"></i><i style="height:14px"></i><i style="height:46px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module"><div class="module-text">ATT 5.0ms
+REL 25ms
+RTO 2:1
+GR -1.9 dB</div></div><div class="module"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,44 C22,46 42,48 58,46 S76,14 100,46" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span>LPF</span><span class="hot">HPF</span><span>TBE</span></div></div><div class="module"><div class="polar-mini"></div><div class="module-tags"><span class="hot">TRN</span><span class="hot">CLR</span><span>XCT</span></div></div></div>
+            <div class="rack-channel"><div class="rack-label"><strong>CH 12</strong><span>Empty</span></div><div class="module empty"><div class="polar-mini"></div><div class="module-tags"><span>48</span><span>PHS</span><span>TBE</span></div></div><div class="module empty"><div class="bars-mini"><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i><i style="height:8px"></i></div><div class="module-tags"><span>H2</span><span>H3</span><span>H4</span><span>H5</span><span>H6</span></div></div><div class="module empty"><div class="module-text">ATT -
+REL -
+RTO STBY
+GR 0.0 dB</div></div><div class="module empty"><div class="eq-mini"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,48 C18,48 38,48 60,48 S82,48 100,48" fill="none" stroke="#ffd05c" stroke-width="2.2"/></svg></div><div class="module-tags"><span>LPF</span><span>HPF</span><span>TBE</span></div></div><div class="module empty"><div class="polar-mini"></div><div class="module-tags"><span>TRN</span><span>CLR</span><span>XCT</span></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="canvas-head">Controller <span>flat 2D workflow view</span></div>
+        <div class="controller">
+          <div class="top-screen">
+            <div class="screen-cell"><strong>CH01</strong><span>Mic</span></div><div class="screen-cell"><strong>CH02</strong><span>Mic</span></div><div class="screen-cell"><strong>CH03</strong><span>Mic</span></div><div class="screen-cell"><strong>CH04</strong><span>Pre</span></div><div class="screen-cell"><strong>CH05</strong><span>Harm</span></div><div class="screen-cell"><strong>CH06</strong><span>Comp</span></div><div class="screen-cell"><strong>CH07</strong><span>EQ</span></div><div class="screen-cell"><strong>CH08</strong><span>Shape</span></div><div class="screen-cell"><strong>CH09</strong><span>Mix</span></div><div class="screen-cell"><strong>CH10</strong><span>Rec</span></div><div class="screen-cell"><strong>CH11</strong><span>Play</span></div><div class="screen-cell"><strong>CH12</strong><span>Cue</span></div>
+          </div>
+          <div class="controller-body">
+            <div class="transport-col">
+              <div class="transport-grid">
+                <div><strong>Transport</strong>touchscreen</div><div><strong>Automation</strong>touchscreen</div><div><strong>Voice</strong>naming</div><div><strong>Focus</strong>param jump</div><div><strong>Solo</strong>touch once</div><div><strong>Mute</strong>touch twice</div>
+              </div>
+            </div>
+            <div class="faders-col">
+              <div class="faders-top"><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div><div class="encoder"></div></div>
+              <div class="faders"><div class="fader" style="--level:92"></div><div class="fader" style="--level:79"></div><div class="fader" style="--level:84"></div><div class="fader" style="--level:72"></div><div class="fader" style="--level:68"></div><div class="fader" style="--level:62"></div><div class="fader" style="--level:76"></div><div class="fader" style="--level:58"></div><div class="fader" style="--level:66"></div><div class="fader" style="--level:54"></div><div class="fader" style="--level:48"></div><div class="fader" style="--level:40"></div></div>
+              <div class="scribble-row"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+              <div class="focus-note">Encoder default is pan. Push once for Send 1, twice for Send 2, and so on, so live mixing can move between faders and sends without leaving the surface. The 6-DOF focus control band-selects parameters so transient, color, exciter, compression, EQ, and mic-pre behavior can be targeted across the whole signal or specific frequency regions.</div>
+            </div>
+            <div class="monitor-col">
+              <div class="monitor-grid">
+                <div><strong>HP 1</strong>volume trim</div><div><strong>HP 2</strong>volume trim</div><div><strong>HP 3</strong>volume trim</div><div><strong>In 1</strong>trim</div><div><strong>In 2</strong>trim</div><div><strong>In 3</strong>trim</div><div><strong>Out A</strong>speaker trim</div><div><strong>Out B</strong>speaker trim</div><div><strong>Out C</strong>speaker trim</div><div><strong>Talkback</strong>trim</div><div><strong>Dim</strong>trim</div><div><strong>Fine</strong>trim</div>
+              </div>
+              <div class="big-knobs">
+                <div class="big-knob"><div class="disc"></div><span>6-DOF focus / band select</span></div>
+                <div class="big-knob"><div class="disc"></div><span>main monitor controller</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="scribbles">
+            <div class="scribble-cell"><strong>CH01</strong><span>Open</span></div><div class="scribble-cell"><strong>CH02</strong><span>Open</span></div><div class="scribble-cell"><strong>CH03</strong><span>Solo</span></div><div class="scribble-cell"><strong>CH04</strong><span>Open</span></div><div class="scribble-cell"><strong>CH05</strong><span>Mute</span></div><div class="scribble-cell"><strong>CH06</strong><span>Open</span></div><div class="scribble-cell"><strong>CH07</strong><span>Open</span></div><div class="scribble-cell"><strong>CH08</strong><span>Open</span></div><div class="scribble-cell"><strong>CH09</strong><span>Open</span></div><div class="scribble-cell"><strong>CH10</strong><span>Open</span></div><div class="scribble-cell"><strong>CH11</strong><span>Open</span></div><div class="scribble-cell"><strong>CH12</strong><span>Open</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

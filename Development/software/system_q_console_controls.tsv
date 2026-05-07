@@ -1,0 +1,58 @@
+Area	ID / label	Interaction	Primary function	Notes / scope
+Keyboard	Arrow Left	Key press (tap)	Moves cap / focus left	One step per physical key; no OS autorepeat in app
+Keyboard	Arrow Right	Key press	Moves cap / focus right	
+Keyboard	Arrow Up	Key press	Moves cap / focus up	
+Keyboard	Arrow Down	Key press	Moves cap / focus down	
+Keyboard	Space	Key press	Action / PRESS semantics	Activates bypass / toggles depending on focused cell / row
+Keyboard	Backspace	Key press	BACK semantics	Usually exit / mute / cancel depending on strip row / scope
+Keyboard	Escape	Key release	Clear held nav-key set	Does not exit app
+Transport panel	SHT	Click	Toggle shuttle mode	Coarser PLY twist jog steps when enabled
+Transport panel	RWD	Click	Rewind playhead	to start (engine rewind)
+Transport panel	PLY	Click	Toggle playback	start/stop OutputStream priming handled in engine
+Transport panel	FWD	Click	Jump forward	~5 seconds
+Transport panel	SRB	Click	Toggle scrub mode	Fine timeline jog steps on PLY twist
+Transport panel	REC	Click	Arm global record placeholder	Toggles REC glyph arm state (disk recorder hooks TBD)
+Transport panel	OSC (~)	Click	Toggle oscillator monitor	OSC mode exclusive with PNK/WHT polar/focus repaint
+Transport panel	PNK	Click	Toggle pink noise calibration mode	Full-pane generator monitor visualization
+Transport panel	WHT	Click	Toggle white noise calibration mode	Full-pane generator monitor visualization
+Transport panel	RDE	Click	Automation READ stub	Log / flash only (future hook)
+Transport panel	WRT	Click	Automation WRITE stub	Log / flash only
+Transport panel	TRM	Click	Automation TRIM stub	Log / flash only
+Transport panel	LTC	Click	Automation LATCH stub	Log / flash only
+Transport panel	UNDO	Click	Undo stub	No command history wired yet — flash feedback
+Transport panel	REDO	Click	Redo stub	No command history wired yet — flash feedback
+Mixer strip	Columns (channels)	Mousewheel (console scope)	Paging selected channel	In console scope strips only
+Mixer strip	Single-click stage capsule	Click toggles OPEN path	Opens stage editor for clicked module on that strip
+Mixer strip	Double-click strip	Opens editor variation	Secondary open gesture on strip canvas
+Mixer strip	Strip SOLO footer	Click (when focused)	Focus-dependent — toggles Solo on indexed channel	when nav on footer strip row
+Mixer strip	Strip MUTE footer	Click / BACK row	Footer row selected: toggles mute
+Mixer strip	REC row capsule	Click	Record-arm toggle on input	when console_row record and input channel
+Mixer strip	Send / pan knob hotspot	Indirect + SpaceMouse	Editor sends row + knob SEND/PAN tweaks with twist when focused
+Mixer strip	Vertical gain fader	Visual + twist when scoped	Channel gain when SpaceMouse adjusts faders / console fader row
+Editor pane	Editor grid header PRE..TBE cell	Click	Select unified column header + row zero	Loads _STAGE_GRID column and stage_key
+Editor pane	Unified grid param cell (stage_cell)	Click	Focus cell for cap + tweaks	Opens column; commits param-row memory helper
+Editor pane	Editor SOLO / MUTE / REC row	buttons in editor transports row when shown	Toggles strip solo/mute/record arm depending on tagged cell
+Editor pane	Fader lane (Gain / SEND)	when editor_nav_scope faders horizontal faders	Set channel gain vs send_level by slot
+Unified grid	PRE column cells	twist/pick values	Mic-pre / channel inputs mapped per-label	
+Unified grid	HARM column	twist / press	Harmonic weights bypass / stage enable paths	
+Unified grid	GTE column Gate	dynamics	params + optional multiband BND expands strip/focus sizing
+Unified grid	CMP column Compressor	params + optional multiband BND	view similar pattern to Gate
+Unified grid	EQ column	multiband FRQ/GAN/SHP/BND etc	twist adjusts selected band EQ params — BND cycles bands / enables multi	
+Unified grid	TBE tone column	transient-exciter-shell params	Analogous layout to spreadsheet tone row
+Polar focus canvas	REVIT contextual rings	Redraw only on stage	Contextual polar visual per selected_stage_key (harm eq gate tone etc)
+Polar focus canvas	OSC armed overlay	OSD ring at osc_hz	Drawn when generator_mode osc on PRE/EQ/… polar stacks
+Navigation scope	Console	default strip matrix	Navigate channels + stage rows knobs faders footer with arrows
+Navigation scope	Editor	unified_stage_grid	cap ring across columns + down enters transport beneath column
+Navigation scope	Transport	cap grid 12x2 under strips	Navigate cells + PLY twist jogs timeline / OSC frequency when armed
+Navigation scope	Knobs	send/pan row cap mode	SpaceMouse twist adjusts send or pan per focused channel
+Navigation scope	Faders	gain row cap mode	SpaceMouse twist adjusts ch.gain on focused fader index
+SpaceMouse	Twist (no direction)	Analog	Parameter tweak or channel page depending on nav_scope and editor cell
+SpaceMouse	Cardinal tilt first event	Edge latched	Normal single-step nav for that direction (consumes directional this poll twists suppressed)
+SpaceMouse	Double tilt RIGHT	console/knobs/faders only	Opens editor (_open_stage_editor) for strip channel Second tilt suppressed duplicate nav Must repeat within DOUBLE_TAP_S (~0.32s)
+SpaceMouse	Double tilt LEFT	console/knobs/faders	Land console stages row Preserve channel clears transport entered marker
+SpaceMouse	Double tilt DOWN	console/knobs/faders	Focus transport PLAY cell	PLY cell focus; does not start playback by itself
+SpaceMouse	Double tilt UP	disabled purposely	Previously jumped to fader row Removed — UP always normal incremental nav Up clears double tilt latch tokens
+SpaceMouse	Pull/back combined editor up or back	Editor only scope	Toggles strip vs transport PLAY focus heuristic see pull_scope_toggle
+Utility row CH SND SOL MUT	legacy editor utility strip may still redraw in previews	Older layout paths Mostly superseded unified grid preview_only dead branch may still enumerate labels	
+Timeline (if drawn)	engine playhead_seek	Transport PLY jog + SCR/SHT modifies step size	See timeline_jog_step toggles shuttle scrub timeline_jog_step values 0.04 / 0.10 / 1.15
+Engine	Output device	primed on startup	when startup_play	PLY glyph warms amber before first actual play toggle

@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Jimmy: Audio (Mic Pre GUI)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}\\jimmy_audio.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Jimmy: System Q Console",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}\\system_q_console.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Jimmy: POL Visualizer",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}\\pol_visualizer.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Jimmy: Launch ALL (debug)",
+      "configurations": [
+        "Jimmy: Audio (Mic Pre GUI)",
+        "Jimmy: System Q Console",
+        "Jimmy: POL Visualizer"
+      ],
+      "stopAll": true
+    }
+  ]
+}

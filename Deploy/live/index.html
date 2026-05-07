@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GIG / System Q — a unified musician ecosystem for rehearsal, recording, sound shaping, and venue playback.">
+  <title>GIG / System Q</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #1a0a2e;
+      --bg2: #0a1929;
+      --bg3: #050810;
+      --accent: #00d4ff;
+      --gold: #ffd700;
+      --text: #f0f4f8;
+      --muted: #94a3b8;
+      --card-bg: rgba(255,255,255,0.035);
+      --card-border: rgba(0,212,255,0.18);
+      --hero-img: url('Image/Recording%20Environment.png');
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 4.25rem;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg3);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      padding-top: 3.45rem;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: rgba(5, 8, 16, 0.92);
+      border-bottom: 1px solid rgba(0,212,255,0.16);
+      box-shadow: 0 18px 44px rgba(0,0,0,0.26);
+      backdrop-filter: blur(16px);
+    }
+    .site-header-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0.7rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .site-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      justify-content: flex-end;
+    }
+    .site-nav a {
+      padding: 0.5rem 1.1rem;
+      border: 1.5px solid var(--card-border);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .site-nav a:hover {
+      background: rgba(0,212,255,0.12);
+      border-color: var(--accent);
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(165deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
+      padding: 4.5rem 1.5rem 3.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: var(--hero-img),
+        radial-gradient(900px 520px at 18% 12%, rgba(0,212,255,0.18) 0%, transparent 60%),
+        radial-gradient(860px 520px at 82% 18%, rgba(255,215,0,0.14) 0%, transparent 62%),
+        radial-gradient(620px 420px at 50% 62%, rgba(0,212,255,0.08) 0%, transparent 65%);
+      background-size: cover, auto, auto, auto;
+      background-position: center, center, center, center;
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding: 1rem;
+      border: 1px solid rgba(0,212,255,0.14);
+      border-radius: 22px;
+      background: rgba(5, 8, 16, 0.54);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.42);
+      backdrop-filter: blur(3px);
+    }
+    .hero-layout {
+      display: grid;
+      gap: 1.35rem;
+      grid-template-columns: 1fr;
+      align-items: center;
+    }
+    @media (min-width: 880px) {
+      .hero-layout { grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr); }
+    }
+    .hero-art {
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(0,212,255,0.18);
+      background: radial-gradient(ellipse at 50% 12%, rgba(255,255,255,0.38), rgba(200,210,220,0.72) 46%, rgba(111,123,134,0.92) 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 18px 44px rgba(0,0,0,0.34);
+    }
+    .hero-art img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .hero-copy {
+      padding: 0.4rem 0.35rem;
+      text-align: left;
+    }
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.02em;
+    }
+    .hero .sub {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.75rem;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text);
+      max-width: 600px;
+      margin: 0 0 2rem;
+    }
+    /* ── SECTIONS ── */
+    .section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3.5rem 1.5rem;
+    }
+    .section + .section { padding-top: 1rem; }
+    .section-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .section p {
+      font-size: 1.02rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      max-width: 680px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    .divider {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .divider hr {
+      border: none;
+      border-top: 1px solid rgba(0,212,255,0.1);
+    }
+
+    /* ── CARD GRID ── */
+    .card-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 3rem;
+    }
+    @media (min-width: 640px) {
+      .card-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.4rem 1.5rem;
+    }
+    .card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .card p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .card .highlight {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .breakthrough-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 3rem;
+    }
+    @media (min-width: 760px) {
+      .breakthrough-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .breakthrough {
+      background: linear-gradient(180deg, rgba(0,212,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.2rem;
+    }
+    .breakthrough h3 {
+      color: var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+    .breakthrough p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .flow-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    @media (min-width: 720px) {
+      .flow-grid { grid-template-columns: repeat(5, 1fr); }
+    }
+    .flow-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1rem;
+      position: relative;
+      min-height: 150px;
+    }
+    .flow-card::after {
+      content: '';
+      position: absolute;
+      right: -0.55rem;
+      top: 50%;
+      width: 1.1rem;
+      height: 1.1rem;
+      transform: translateY(-50%) rotate(45deg);
+      border-top: 1px solid rgba(0,212,255,0.22);
+      border-right: 1px solid rgba(0,212,255,0.22);
+      background: rgba(5,8,16,0.9);
+      display: none;
+    }
+    @media (min-width: 720px) {
+      .flow-card::after { display: block; }
+      .flow-card:last-child::after { display: none; }
+    }
+    .flow-step {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.55rem;
+    }
+    .flow-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 0.55rem;
+    }
+    .flow-card p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 0;
+    }
+
+    .media-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      align-items: start;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    .media-grid.split {
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .media-grid { grid-template-columns: repeat(3, 1fr); }
+      .media-grid .wide { grid-column: 1 / -1; }
+      .media-grid.split { grid-template-columns: 0.55fr 1fr; }
+      .media-grid.split .media img { max-height: 560px; width: auto; margin: 0 auto; }
+      .media-grid.split .wide { grid-column: auto; }
+    }
+    .media {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    .media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.12), transparent 60%);
+      pointer-events: none;
+      opacity: 0.45;
+    }
+    .media img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transform: translateZ(0);
+    }
+    .media .cap {
+      position: relative;
+      z-index: 1;
+      padding: 0.85rem 1rem 0.95rem;
+      border-top: 1px solid rgba(0,212,255,0.12);
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    /* ── SWAPPABLE CARD SLOTS ── */
+    .slots-grid {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 0.5rem 1.5rem 1rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+    .slot-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .slot-row:hover {
+      border-color: rgba(255,215,0,0.4);
+      background: rgba(255,215,0,0.025);
+    }
+    @media (min-width: 720px) {
+      .slot-row { grid-template-columns: 220px 1fr; align-items: center; }
+    }
+    .slot-label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .slot-label .slot-kicker {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .slot-label .slot-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .slot-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .slot-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.42rem 0.78rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,215,0,0.28);
+      background: rgba(255,215,0,0.06);
+      color: var(--text);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+    .slot-card::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(255,215,0,0.55);
+      flex-shrink: 0;
+    }
+    .slots-note {
+      max-width: 980px;
+      margin: 0 auto 1.5rem;
+      padding: 0 1.5rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .slots-group-label {
+      max-width: 980px;
+      margin: 1rem auto 0.25rem;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .slots-group-label .label-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+    .slots-group-label .label-rule {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(255,215,0,0.35), rgba(255,215,0,0));
+    }
+    .slots-group-label:first-child { margin-top: 0; }
+
+    /* ── CTA BUTTON ── */
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-top: 1.1rem;
+    }
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.7rem 1.15rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--gold);
+      background: rgba(255,215,0,0.08);
+      color: var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+    }
+    .cta-button:hover {
+      background: rgba(255,215,0,0.18);
+      color: var(--text);
+      transform: translateY(-1px);
+    }
+    .cta-button .arrow { font-size: 1rem; line-height: 1; }
+    .cta-button.secondary {
+      border-color: var(--card-border);
+      background: rgba(0,212,255,0.06);
+      color: var(--accent);
+    }
+    .cta-button.secondary:hover {
+      background: rgba(0,212,255,0.14);
+      color: var(--text);
+    }
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(123,240,170,0.12);
+      border: 1px solid rgba(123,240,170,0.4);
+      color: #7bf0aa;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .live-badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #7bf0aa;
+      box-shadow: 0 0 8px rgba(123,240,170,0.7);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.45; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { margin-top: 0.5rem; }
+    .footer-links a { margin-right: 1.25rem; }
+
+    @media (max-width: 760px) {
+      html { scroll-padding-top: 6.7rem; }
+      body { padding-top: 6rem; }
+      .site-header-inner {
+        justify-content: flex-start;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+      .site-nav {
+        justify-content: flex-start;
+        gap: 0.35rem;
+      }
+      .site-nav a {
+        padding: 0.35rem 0.62rem;
+        font-size: 0.72rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-header-inner">
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#breakthroughs">Why it matters</a>
+        <a href="#flow">How it works</a>
+        <a href="#racks">Racks</a>
+        <a href="#cards">Cards</a>
+        <a href="#cubes">Cubes</a>
+        <a href="#console">Console</a>
+        <a href="#software">Jimmy</a>
+        <a href="#personal">Rig</a>
+        <a href="#venue">Venue</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ════════════════ HERO ════════════════ -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-layout">
+        <div class="hero-art">
+          <img src="Image/Recording Environment.png" alt="GIG ecosystem overview">
+        </div>
+        <div class="hero-copy">
+          <h1>GIG</h1>
+          <p class="sub">System Q Recording Environment</p>
+          <p>
+            A unified musician ecosystem for rehearsal, recording, sound shaping, mix review, and venue playback.
+            Rig, Cube, Racks, Console, Venue, and software all share one operating language.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="breakthroughs" style="padding-bottom: 0;">
+    <p class="section-label">00 &mdash; Why it matters</p>
+    <h2>Four Product Hooks</h2>
+    <p>GIG is not just another interface or controller. These are the ideas that make it a product family.</p>
+  </div>
+
+  <div class="breakthrough-grid">
+    <div class="breakthrough">
+      <h3>Sound Without Dependency</h3>
+      <p>Analog and software paths can create serious tone before piling on extra plugins or outboard.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>6-DOF Console</h3>
+      <p>A SpaceMouse-style command surface keeps focus, selection, and value changes in one hand position.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Swappable Rack Cards</h3>
+      <p>One slot, many voicings. Drop in a Neve-style preamp today, an SSL color tomorrow, or trade an 1176-style FET comp for an LA-2A-style opto &mdash; without touching the rest of the chain.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Venue Translation</h3>
+      <p>The recorded mix plays back at its intended level relationships, then adapts to the room.</p>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="flow">
+    <p class="section-label">01 &mdash; Ecosystem</p>
+    <h2>One Musician Workflow</h2>
+    <p>
+      Each player brings a Rig, connects to the band, records through Cube or Racks, shapes the sound, and
+      carries the mix into Venue while Console keeps the whole system under one tactile language.
+    </p>
+  </div>
+
+  <div class="flow-grid">
+    <div class="flow-card">
+      <div class="flow-step">Step 01</div>
+      <h3>Rig</h3>
+      <p>Each musician plugs into a Rig for sounds, monitoring, playback, processing, and session control.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-step">Step 02</div>
+      <h3>Rehearse</h3>
+      <p>The band rehearses inside the same connected environment they will use to capture and refine the session.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-step">Step 03</div>
+      <h3>Record</h3>
+      <p>Choose the simpler Cube path or move into Racks for premium analog capture and processing.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-step">Step 04</div>
+      <h3>Shape</h3>
+      <p>Analog and software stages share one operating model so the sound can be dialed without breaking flow.</p>
+    </div>
+    <div class="flow-card">
+      <div class="flow-step">Step 05</div>
+      <h3>Console + Venue</h3>
+      <p>Use Console across rehearsal, studio, and live playback while Venue translates the result to the room.</p>
+    </div>
+  </div>
+
+  <!-- ════════════════ RACKS ════════════════ -->
+  <div class="section" id="racks">
+    <p class="section-label">02 &mdash; Hardware</p>
+    <h2>Racks</h2>
+    <p>
+      The racks are the studio-grade analog core, split as <strong>input rack</strong> and <strong>output rack</strong>.
+      The signal path stays analog from input through to monitor &mdash; you are <span class="highlight">always hearing analog</span>,
+      not a digital reconstruction of the sound you're tracking.
+    </p>
+    <p>
+      Both racks are <strong>card frames</strong>: every slot ships with an analog PCB card, and every card pulls and swaps.
+      Where competing systems hand you an empty digitally-controlled path you have to fill with outboard, the GIG racks
+      arrive populated &mdash; pull a card, drop in another voicing, change the chain without rewiring anything.
+    </p>
+  </div>
+
+  <div class="media-grid" style="padding-top: 0;">
+    <div class="media">
+      <img src="Image/Left.png" alt="Input rack render" loading="lazy">
+      <div class="cap">Input rack &mdash; preamp, dynamics, EQ, and tone cards per channel.</div>
+    </div>
+    <div class="media">
+      <img src="Image/Right.png" alt="Output rack render" loading="lazy">
+      <div class="cap">Output rack &mdash; bus comp, master EQ, summing color, monitor &amp; Venue handoff.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SWAPPABLE CARDS ════════════════ -->
+  <div class="section" id="cards" style="padding-top: 1rem; padding-bottom: 0.75rem;">
+    <p class="section-label">02a &mdash; Slot &times; Card</p>
+    <h2>Swappable Cards</h2>
+    <p>
+      Every rack bay is a <strong>slot</strong>. Every slot ships with an analog PCB card. Pull the card, drop in
+      another voicing &mdash; the slot stays the same, the character changes. Input rack shapes each channel on the
+      way in. Output rack glues the mix on the way out.
+    </p>
+  </div>
+
+  <div class="slots-group-label">
+    <span class="label-text">Input Rack &mdash; per channel</span>
+    <span class="label-rule"></span>
+  </div>
+
+  <div class="slots-grid">
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">In &middot; Slot 01</span>
+        <span class="slot-name">Preamp</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Neve-style 1073</span>
+        <span class="slot-card">SSL-style E-Series</span>
+        <span class="slot-card">API-style 312</span>
+        <span class="slot-card">Tube V72-style</span>
+        <span class="slot-card">Clean / transparent</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">In &middot; Slot 02</span>
+        <span class="slot-name">Compressor</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">1176-style FET</span>
+        <span class="slot-card">LA-2A-style opto</span>
+        <span class="slot-card">dbx 160-style VCA</span>
+        <span class="slot-card">Distressor-style</span>
+        <span class="slot-card">Vari-mu</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">In &middot; Slot 03</span>
+        <span class="slot-name">EQ</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Pultec-style EQP-1A</span>
+        <span class="slot-card">Massive Passive-style</span>
+        <span class="slot-card">API-style 550</span>
+        <span class="slot-card">Neve-style 1081</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">In &middot; Slot 04</span>
+        <span class="slot-name">Tone &amp; Tube</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">12AX7 tube stage</span>
+        <span class="slot-card">Class A solid state</span>
+        <span class="slot-card">Transformer color</span>
+        <span class="slot-card">Harmonic exciter</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="slots-group-label">
+    <span class="label-text">Output Rack &mdash; stereo bus</span>
+    <span class="label-rule"></span>
+  </div>
+
+  <div class="slots-grid">
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">Out &middot; Slot 01</span>
+        <span class="slot-name">Bus Compressor</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">SSL G-style bus</span>
+        <span class="slot-card">Fairchild-style vari-mu</span>
+        <span class="slot-card">API 2500-style VCA</span>
+        <span class="slot-card">Manley-style tube bus</span>
+        <span class="slot-card">Clean glue</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">Out &middot; Slot 02</span>
+        <span class="slot-name">Master EQ</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Pultec-style master</span>
+        <span class="slot-card">Neve-style master</span>
+        <span class="slot-card">Mastering parametric</span>
+        <span class="slot-card">Tilt / shelf</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">Out &middot; Slot 03</span>
+        <span class="slot-name">Summing Color</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Transformer summing</span>
+        <span class="slot-card">Tube summing</span>
+        <span class="slot-card">Discrete Class A</span>
+        <span class="slot-card">Clean / linear</span>
+      </div>
+    </div>
+
+    <div class="slot-row">
+      <div class="slot-label">
+        <span class="slot-kicker">Out &middot; Slot 04</span>
+        <span class="slot-name">Monitor / Venue Out</span>
+      </div>
+      <div class="slot-cards">
+        <span class="slot-card">Reference-flat</span>
+        <span class="slot-card">Console-voiced</span>
+        <span class="slot-card">Mastering insert</span>
+        <span class="slot-card">Venue translation</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="slots-note">
+    Card names are illustrative voicings &mdash; references identify the classic units that inspired each card profile,
+    not licensed clones.
+  </p>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ CUBES ════════════════ -->
+  <div class="section" id="cubes">
+    <p class="section-label">03 &mdash; Modular I/O</p>
+    <h2>Cubes</h2>
+    <p>
+      Cubes are the simple modular I/O path into GIG: small nodes for fast setup, smaller sessions, and musicians
+      who want the workflow without starting with the full rack footprint.
+    </p>
+  </div>
+
+  <div class="media-grid" style="padding-top: 0;">
+    <div class="media wide">
+      <img src="Image/cube.png" alt="Cube render" loading="lazy">
+      <div class="cap">Cubes &mdash; modular entry I/O nodes for fast setup.</div>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ SOFTWARE / JIMMY ════════════════ -->
+  <div class="section" id="software">
+    <p class="section-label">04 &mdash; Software</p>
+    <h2>Jimmy &mdash; the live prototype <span class="live-badge">Live in browser</span></h2>
+    <p>
+      Jimmy is the in-browser prototype of the GIG software layer. It mirrors the rack and Console language &mdash;
+      channel stages, POL-style visual editing, parameter focus, and recall &mdash; so the same operating model holds
+      across analog cards, digital paths, and the surface.
+    </p>
+    <p>
+      It sketches the whole flow: musicians on personal Rigs, a 12-channel input strip with polar mic-pre / harmonics /
+      compressor / EQ / tone stages per channel, and the Console surface with faders, encoders, and 6-DOF focus. It is
+      where the operating model becomes <em>visible</em>.
+    </p>
+    <p style="margin-top: 1.25rem;">
+      Alongside Jimmy is <strong>System Q Console</strong> &mdash; the desktop application with a working audio engine.
+      A 12-channel rehearsal / recording console with armed channel strips, per-channel mic pre with polar focus,
+      harmonics, compressor, EQ, FX, sends, transport, and master &mdash; the same operating model from the racks
+      and Console surface, running as real software today.
+    </p>
+  </div>
+
+  <div class="media-grid" style="padding-top: 0;">
+    <div class="media wide">
+      <img src="Image/system_q_console.png" alt="System Q Console desktop application: 12-channel strip with mic pre / polar focus on Kick channel" loading="lazy">
+      <div class="cap">System Q Console &mdash; desktop app, 12-channel strip with armed channels, VU meters, EQ, FX, and per-channel mic pre with polar focus on the Kick.</div>
+    </div>
+  </div>
+
+  <div class="media-grid split" style="padding-top: 0;">
+    <div class="media">
+      <img src="Image/download.png" alt="Channel strip sections: mic pre, harmonics, compressor, EQ, effects" loading="lazy">
+      <div class="cap">One strip model across 12 channels &mdash; each section is a dedicated stage in Jimmy.</div>
+    </div>
+    <div class="media">
+      <h3 style="margin: 0 0 .65rem;">Sections (per channel in Jimmy)</h3>
+      <p style="margin: 0 0 .75rem;">
+        Each stage uses POL (polar) editing: the mic pre and dynamics close in on the polar graph. Ring radius maps frequency
+        (bigger = low, smaller = high).
+      </p>
+      <p style="margin: 0 0 .55rem;"><strong>Mic pre</strong> &mdash; input gain, HPF, phantom, phase and the polar focus view.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Harmonics</strong> &mdash; a unique 5-band harmonic processor (H1&ndash;H5) for controlled character.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Compressor</strong> &mdash; frequency-focused dynamics (with gate/limiter behavior in the same model).</p>
+      <p style="margin: 0 0 .55rem;"><strong>EQ</strong> &mdash; band shaping that follows the same ring-driven frequency targeting.</p>
+      <p style="margin: 0;"><strong>Effects processor</strong> &mdash; transient designer + saturation/exciter as a single stage.</p>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ CONTROLLER ════════════════ -->
+  <div class="section" id="console">
+    <p class="section-label">05 &mdash; Command</p>
+    <h2>Console</h2>
+    <p>
+      Console is the command surface for rehearsal, studio, mix, and live operation. Its 6‑DOF SpaceMouse-style
+      edit control lets the operator select directionally and turn values without jumping across unrelated knobs,
+      plugin windows, and menus.
+    </p>
+    <p>
+      It is the shared tactile layer across the whole ecosystem: touch focus, transport, monitoring, faders,
+      and parameter editing in one surface.
+    </p>
+  </div>
+
+  <div class="media-grid" style="padding-top: 0;">
+    <div class="media wide">
+      <img src="Image/Console.png" alt="Console render" loading="lazy">
+      <div class="cap">Console &mdash; touch focus + 6‑DOF parameter edit + monitoring and transport.</div>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ PEDAL ════════════════ -->
+  <div class="section" id="personal">
+    <!-- Fragment alias: Rig section (historic id retained as #personal) -->
+    <span id="rig" aria-hidden="true"></span>
+    <p class="section-label">06 &mdash; Musician Endpoint</p>
+    <h2>Rig</h2>
+    <p>
+      Each musician has a Rig for instrument or microphone input, IEM mix, talkback, playback, recording,
+      patches, sheet music, and session tools. It is the personal doorway into the band network.
+    </p>
+  </div>
+
+  <div class="media-grid" style="padding-top: 0;">
+    <div class="media wide">
+      <img src="Image/Pedal.png" alt="Pedal render" loading="lazy">
+      <div class="cap">Rig &mdash; musician endpoint for IEM, talkback, playback, recording, and performance control.</div>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="venue">
+    <p class="section-label">07 &mdash; Output</p>
+    <h2>Venue</h2>
+    <p>
+      Venue is the live output and room translation layer. It plays the audio file at the recorded mix's level
+      relationships, then helps adapt that intended balance to the room.
+    </p>
+    <p>
+      Reference mic feedback can help with balancing and translation, so playback and final checks stay inside the
+      same ecosystem.
+    </p>
+  </div>
+
+  <div class="media-grid" style="padding-top: 0;">
+    <div class="media wide">
+      <img src="Image/Venue.png" alt="Venue render" loading="lazy">
+      <div class="cap">Venue &mdash; live output, monitoring, and translation to the room.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SUMMARY CARDS ════════════════ -->
+  <div class="card-grid">
+    <div class="card">
+      <h3>Analog-First</h3>
+      <p>Hardware chain from preamp to conversion. Dial in <span class="highlight">any character</span>&mdash;clean, colored, or tube-saturated.</p>
+    </div>
+    <div class="card">
+      <h3>Session-Ready</h3>
+      <p>Show up, plug in, track. The system handles routing, clocking, and monitoring so you <span class="highlight">start making music immediately</span>.</p>
+    </div>
+    <div class="card">
+      <h3>Personal Mixes</h3>
+      <p>Every musician controls their own headphone mix. No amps, no extra rig&mdash;just the <span class="highlight">network and your ears</span>.</p>
+    </div>
+    <div class="card">
+      <h3>One Mental Model</h3>
+      <p>Surface, software, and hardware present <span class="highlight">the same operating model</span>. What you touch is what you hear.</p>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <!-- ════════════════ AIP FOUNDATION ════════════════ -->
+  <div class="section" id="mission" style="padding-bottom: 3.5rem;">
+    <p class="section-label">08 &mdash; The Engine</p>
+    <h2>Business for the sake of humanity</h2>
+    <div class="cta-row" style="margin-top: 1.25rem;">
+      <a href="https://production.aip-guardian-brief.pages.dev/brief-memo.html" class="cta-button" target="_blank" rel="noopener noreferrer">
+        Read Foundation Briefing <span class="arrow">&rarr;</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- ════════════════ FOOTER ════════════════ -->
+  <footer>
+    <div>GIG &middot; System Q Recording Environment</div>
+    <div class="footer-links">
+      <a href="studio/index.html">Studio overview</a>
+      <a href="html/VISUAL_RIG.html?v=overview-1">Rig overview</a>
+      <a href="html/VISUAL_CONSOLE.html?v=overview-1">Console overview</a>
+      <a href="html/VISUAL_LEFT_RACK.html?v=overview-2">Racks overview</a>
+      <a href="html/VISUAL_RIGHT_RACK.html?v=overview-2">Venue / output</a>
+      <a href="#venue">Venue</a>
+    </div>
+  </footer>
+
+</body>
+</html>

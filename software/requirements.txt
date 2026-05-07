@@ -1,4 +1,0 @@
-numpy
-pygame
-sounddevice
-soundfile

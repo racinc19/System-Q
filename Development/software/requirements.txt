@@ -1,0 +1,6 @@
+numpy
+pygame
+sounddevice
+soundfile
+openpyxl
+Pillow

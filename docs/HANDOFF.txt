@@ -1,0 +1,34 @@
+GIG / System Q handoff
+Updated: Apr 26, 2026
+
+Current direction
+GIG is being shaped as a musician ecosystem for recording, rehearsal, and live playback, with Music Tribe / Behringer as the first strategic review target. Keep the first-pass buyer story simple: product first, strategic fit second, AIP as deeper context only if the conversation opens.
+
+Core product story
+- Rig: each musician's endpoint for input, IEM mix, playback, talkback, patches, sheet music, and session tools.
+- Cube: simple modular I/O path into GIG for fast setup without the full rack footprint.
+- Racks: premium touchscreen-faced analog frames. The key new idea is swappable PCB analog cards for preamp, compressor, EQ, tone, dynamics, and future module families.
+- Console: one command surface for rehearsal, studio recording, mix review, playback, and live operation. Lead with the 6-DOF SpaceMouse-style edit control.
+- Venue: live playback and room translation layer. The important idea is mix-level reproduction: play the audio file at the recorded mix's level relationships, then translate that balance to the room.
+
+Pages changed
+- uli-review.html is the main Music Tribe / Behringer review page.
+- investors.html is now a simple buyer memo, not a diligence inventory.
+- index.html is the public product story.
+- html/VISUAL_CONSOLE.html, html/VISUAL_CUBE_ENTRY_LEVEL.html, html/VISUAL_LEFT_RACK.html, html/VISUAL_RIGHT_RACK.html, and html/VISUAL_RIG.html are simplified visual overview pages.
+- studio/index.html links to the simplified overview pages.
+
+What is working
+- The product flow is clearer: Rig, networked session, Cube, Racks, Venue, then Console as the unifying layer.
+- The strongest hooks are now visible: sound without dependency, 6-DOF Console, swappable analog rack cards, and Venue mix-level playback.
+- The strategic framing page is shorter and easier to absorb.
+
+Next punch-list
+- Reduce uli-review.html further. It still feels dense for a first external read.
+- Move the four breakthrough hooks closer to the top of uli-review.html.
+- Make index.html less encyclopedic and more emotionally immediate.
+- Decide whether to deploy the local changes to the public site.
+
+Notes
+- Browser cache caused confusion on the overview pages. Links now include ?v=overview-2 to force fresh loads.
+- takeoff_work/ is unrelated construction work and should not be included in the GIG commit.

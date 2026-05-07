@@ -1,0 +1,35 @@
+{
+  "folders": [
+    {
+      "name": "Jimmy (software)",
+      "path": "software"
+    },
+    {
+      "name": "recording-environment (root)",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "window.title": "Jimmy — ${rootName}${separator}${activeEditorShort}",
+    "explorer.openEditors.visible": 0,
+    "workbench.startupEditor": "none",
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/*.pyc": true
+    },
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+      "jimmy_audio.py": "STABILITY_FIXES.md, console_debug.log",
+      "*.py": "${capture}.log, ${capture}.md"
+    },
+    "terminal.integrated.cwd": "${workspaceFolder:Jimmy (software)}",
+    "python.defaultInterpreterPath": "C:\\Users\\racin\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "python.terminal.activateEnvironment": false
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python"
+    ]
+  }
+}

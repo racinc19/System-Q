@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open To-Do - System Q</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #00d4ff;
+            --warning: #ffd700;
+            --critical: #ff4444;
+            --text: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px;
+            background-image: radial-gradient(circle at 50% -20%, #1a0a2e, #050505);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0;
+            background: linear-gradient(to right, var(--accent), #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .task-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 0;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(255,255,255,0.05);
+            padding: 15px 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            vertical-align: top;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-pill {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-yellow { background: rgba(255, 215, 0, 0.1); color: var(--warning); border: 1px solid rgba(255, 215, 0, 0.2); }
+        .status-red { background: rgba(255, 68, 68, 0.1); color: var(--critical); border: 1px solid rgba(255, 68, 68, 0.2); }
+        .status-normal { background: rgba(255, 255, 255, 0.05); color: #888; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .status-green { background: rgba(0, 212, 255, 0.1); color: var(--accent); border: 1px solid rgba(0, 212, 255, 0.2); }
+
+        .comments {
+            font-size: 0.85rem;
+            color: #aaa;
+            line-height: 1.4;
+        }
+
+        .next-steps {
+            font-size: 0.8rem;
+            color: var(--accent);
+            margin-top: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>System Q To-Do</h1>
+            <span class="subtitle">Recording Environment • Updated May 6, 2026</span>
+        </header>
+
+        <div class="task-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">Item</th>
+                        <th style="width: 15%;">Status</th>
+                        <th>Comments & Next Steps</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Root Directory Cleanup</td>
+                        <td><span class="status-pill status-green">DONE</span></td>
+                        <td>
+                            <div class="comments">Organized all root files into <code>Deploy/</code>, <code>Development/</code>, <code>Research/</code>, <code>tools/</code>, <code>docs/</code>, and <code>Archive/</code>.</div>
+                            <div class="next-steps">Verify site links in Deploy/live/ and update deployment scripts.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>uli-review.html refinement</td>
+                        <td><span class="status-pill status-yellow">IN PROGRESS</span></td>
+                        <td>
+                            <div class="comments">Reduce density and move breakthrough hooks to the top.</div>
+                            <div class="next-steps">Rewrite intro section to lead with the 4 core hooks.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>index.html emotional hook</td>
+                        <td><span class="status-pill status-normal">OPEN</span></td>
+                        <td>
+                            <div class="comments">Current landing page is too "encyclopedic".</div>
+                            <div class="next-steps">Make copy more immediate for musicians; emphasize "Sound Without Dependency".</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DSP Bypass Logic</td>
+                        <td><span class="status-pill status-red">STUCK</span></td>
+                        <td>
+                            <div class="comments">Ensure GAN and SHP stages are truly bypassed in system_q_console.py.</div>
+                            <div class="next-steps">Verify zero-CPU/silence when stages are disabled.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>FFT Offloading</td>
+                        <td><span class="status-pill status-normal">BACKLOG</span></td>
+                        <td>
+                            <div class="comments">FFT analysis currently runs in the audio thread.</div>
+                            <div class="next-steps">Move to a worker thread to prevent dropouts on heavy loads.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Context System Setup</td>
+                        <td><span class="status-pill status-green">DONE</span></td>
+                        <td>
+                            <div class="comments">Implement HTML-based project and daily context folders.</div>
+                            <div class="next-steps">Verify sidebar docking works for persistent reference.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

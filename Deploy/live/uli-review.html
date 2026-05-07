@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GIG / System Q strategic review for Music Tribe / Behringer consideration.">
+  <title>GIG / System Q — Music Tribe Review</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #24313e;
+      --bg2: #111b27;
+      --bg3: #080c12;
+      --accent: #00d4ff;
+      --gold: #ffd700;
+      --text: #f0f4f8;
+      --muted: #94a3b8;
+      --card-bg: rgba(255,255,255,0.035);
+      --card-border: rgba(0,212,255,0.18);
+      --image-mat: #c8d2dc;
+      --image-mat-dark: #6f7b86;
+      --hero-img: none;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(900px 520px at 18% -8%, rgba(0,212,255,0.13), transparent 62%),
+        radial-gradient(900px 620px at 94% 8%, rgba(255,215,0,0.10), transparent 62%),
+        linear-gradient(180deg, #1b2633 0%, var(--bg3) 46%, #050810 100%);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .hero {
+      background:
+        linear-gradient(165deg, rgba(36,49,62,0.96) 0%, rgba(17,27,39,0.98) 55%, rgba(5,8,16,1) 100%);
+      padding: 3rem 1.5rem 2.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: var(--hero-img),
+        radial-gradient(920px 520px at 20% 12%, rgba(0,212,255,0.18) 0%, transparent 60%),
+        radial-gradient(860px 520px at 82% 16%, rgba(255,215,0,0.14) 0%, transparent 62%),
+        radial-gradient(620px 420px at 50% 62%, rgba(0,212,255,0.08) 0%, transparent 65%);
+      background-size: cover, auto, auto, auto;
+      background-position: center, center, center, center;
+      opacity: 0.22;
+      transform: scale(1);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        linear-gradient(180deg, rgba(5,8,16,0.18) 0%, rgba(5,8,16,0.64) 68%, rgba(5,8,16,0.96) 100%),
+        radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding: 1rem;
+      border: 1px solid rgba(0,212,255,0.14);
+      border-radius: 22px;
+      background: rgba(5, 8, 16, 0.54);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.42);
+      backdrop-filter: blur(3px);
+    }
+    .hero-layout {
+      display: grid;
+      gap: 1.35rem;
+      grid-template-columns: 1fr;
+      align-items: center;
+    }
+    @media (min-width: 880px) {
+      .hero-layout { grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr); }
+    }
+    .hero-art {
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid rgba(0,212,255,0.18);
+      background:
+        radial-gradient(ellipse at 50% 12%, rgba(255,255,255,0.38), rgba(200,210,220,0.72) 46%, rgba(111,123,134,0.92) 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18), 0 18px 44px rgba(0,0,0,0.34);
+    }
+    .hero-art img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .hero-copy {
+      padding: 0.4rem 0.35rem;
+      text-align: left;
+    }
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.6rem, 5vw, 2.6rem);
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.7rem;
+      letter-spacing: 0.02em;
+    }
+    .hero .sub {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+    .hero p {
+      font-size: 1.06rem;
+      color: #d7e1ec;
+      max-width: 720px;
+      margin: 0 0 1.25rem;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.65);
+    }
+    .hero-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: flex-start;
+    }
+    .hero-nav a {
+      padding: 0.5rem 1.1rem;
+      border: 1.5px solid var(--card-border);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .hero-nav a:hover {
+      background: rgba(0,212,255,0.12);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3.25rem 1.5rem;
+    }
+    .section + .section { padding-top: 1rem; }
+    .section-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(1.2rem, 3vw, 1.55rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .section p {
+      font-size: 1.02rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      max-width: 720px;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    .divider {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .divider hr {
+      border: none;
+      border-top: 1px solid rgba(0,212,255,0.1);
+    }
+
+    .card-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem 3rem;
+    }
+    @media (min-width: 720px) {
+      .card-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.4rem 1.5rem;
+    }
+    .card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .card p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .card .highlight {
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .breakthrough-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 2.25rem;
+    }
+    @media (min-width: 760px) {
+      .breakthrough-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .breakthrough {
+      background: linear-gradient(180deg, rgba(0,212,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.2rem;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.16);
+    }
+    .breakthrough h3 {
+      color: var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+    .breakthrough p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .flow-system {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 1.5rem 1.25rem;
+      display: grid;
+      gap: 1rem;
+    }
+    .flow-node {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.1rem;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.16);
+    }
+    @media (min-width: 720px) {
+      .flow-node { grid-template-columns: auto minmax(0, 1fr) minmax(290px, 42%); }
+    }
+    .flow-image {
+      grid-column: 1 / -1;
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.22);
+      background:
+        radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.44), rgba(200,210,220,0.78) 45%, rgba(111,123,134,0.96) 100%);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08), 0 14px 32px rgba(0,0,0,0.28);
+      object-fit: cover;
+      min-height: 180px;
+    }
+    @media (min-width: 720px) {
+      .flow-image {
+        grid-column: 3;
+        grid-row: 1;
+        height: 220px;
+      }
+    }
+    .flow-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,215,0,0.35);
+      background: rgba(0,212,255,0.08);
+      color: var(--gold);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+    }
+    .flow-node h3 {
+      margin-bottom: 0.25rem;
+      color: var(--text);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.92rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .flow-node p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.6;
+    }
+    .flow-branch {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .links {
+      list-style: none;
+      margin-top: 0.8rem;
+    }
+    .links li { margin: 0.55rem 0; }
+    .links a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .links a:hover { text-decoration: underline; }
+
+    .artifact-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+    @media (min-width: 760px) {
+      .artifact-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .artifact-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.16);
+    }
+    .artifact-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 1px solid rgba(0,212,255,0.14);
+      background:
+        radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.42), rgba(200,210,220,0.78) 46%, rgba(111,123,134,0.96) 100%);
+    }
+    .artifact-card div {
+      padding: 1rem;
+    }
+    .artifact-card h3 {
+      margin-bottom: 0.4rem;
+      color: var(--text);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .artifact-card p {
+      margin: 0 0 0.65rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+    .artifact-card a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.92rem;
+    }
+    .artifact-card a:hover { text-decoration: underline; }
+
+    .media-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 1.25rem;
+    }
+    @media (min-width: 720px) {
+      .media-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .media {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 16px 44px rgba(0,0,0,0.16);
+    }
+    .media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 20%, rgba(0,212,255,0.12), transparent 60%);
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    .media img {
+      width: 100%;
+      height: auto;
+      display: block;
+      background:
+        radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.42), rgba(200,210,220,0.78) 46%, rgba(111,123,134,0.96) 100%);
+    }
+    .media .cap {
+      position: relative;
+      z-index: 1;
+      padding: 0.75rem 0.9rem 0.85rem;
+      border-top: 1px solid rgba(0,212,255,0.12);
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    footer {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { margin-top: 0.5rem; }
+    .footer-links a { margin-right: 1.25rem; }
+  </style>
+</head>
+<body>
+
+  <div class="hero" style="--hero-img:url('Image/Recording Environment.png')">
+    <div class="hero-inner">
+      <div class="hero-layout">
+        <div class="hero-art">
+          <img src="Image/Recording Environment.png" alt="GIG ecosystem overview">
+        </div>
+        <div class="hero-copy">
+          <h1>GIG / System Q Review</h1>
+          <p class="sub">Strategic fit review &middot; Music Tribe / Behringer</p>
+          <p>
+            GIG is a unified musician ecosystem: musician Rigs, networked band sessions, Cube,
+            Racks, Console, and Venue. The question for review is whether this architecture could fit
+            Music Tribe as a product platform, partnership, or acquisition candidate.
+          </p>
+          <nav class="hero-nav">
+            <a href="#breakthroughs">Why pay attention</a>
+            <a href="#flow">How GIG works</a>
+            <a href="#what">What it is</a>
+            <a href="#fit">Why Music Tribe</a>
+            <a href="#links">Evidence</a>
+            <a href="#asks">Strategic ask</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="breakthroughs" style="padding-bottom: 0;">
+    <p class="section-label">00 &mdash; Why pay attention</p>
+    <h2>Four product hooks</h2>
+    <p>These are the ideas that make GIG more than another interface, controller, or recording app.</p>
+  </div>
+  <div class="breakthrough-grid">
+    <div class="breakthrough">
+      <h3>Sound without dependency</h3>
+      <p>Analog and software paths can be dialed toward familiar hardware and plugin-style character inside one system.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>6-DOF Console</h3>
+      <p>A SpaceMouse-style command surface keeps the hand in one place while focus and values change.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Swappable rack cards</h3>
+      <p>Touchscreen analog frames can accept different PCB card families for preamp, compressor, EQ, and tone modules.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Venue mix translation</h3>
+      <p>The recorded mix can play back at its intended level relationships, then adapt that balance to the room.</p>
+    </div>
+  </div>
+
+  <div class="section" id="flow">
+    <p class="section-label">01 &mdash; Product flow</p>
+    <h2>How GIG works</h2>
+    <p>
+      GIG starts with the musician, then connects the band, capture path, playback path, and command surface into one operating language.
+    </p>
+  </div>
+  <div class="flow-system">
+    <div class="flow-node">
+      <div class="flow-icon">01</div>
+      <div>
+        <h3>Rig</h3>
+        <p>Each musician has their own Rig: sounds, effects, patches, in-ear monitor mix, playback, talkback, sheet music, and instrument or microphone input.</p>
+      </div>
+      <img class="flow-image" src="Image/Pedal.png" alt="Musician Rig">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">02</div>
+      <div>
+        <h3>Networked Band Session</h3>
+        <p>The Rigs plug together by network cable. Everyone can hear the session, share playback, and build their own personal mix while still staying inside one shared environment.</p>
+      </div>
+      <img class="flow-image" src="Image/Recording Environment.png" alt="Networked band session">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">03</div>
+      <div>
+        <h3>Record Through Cube</h3>
+        <p>Cube is the simple modular path: fast setup, smaller I/O nodes, and the same operating language without the full rack footprint.</p>
+      </div>
+      <img class="flow-image" src="Image/cube.png" alt="Cube modular recording path">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">04</div>
+      <div>
+        <h3>Or Record Through Racks</h3>
+        <p>Racks are the premium path: two touchscreen-faced analog frames with swappable PCB cards for preamp, compressor, EQ, tone, routing, summing, monitoring, and serious studio capture.</p>
+      </div>
+      <img class="flow-image" src="Image/Left.png" alt="Racks premium recording path">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">05</div>
+      <div>
+        <h3>Play Back Through Venue</h3>
+        <p>Once the mix is ready, Venue carries it into the gig: the audio file plays back at the recorded mix's level relationships, then the system helps translate that balance to the room.</p>
+      </div>
+      <img class="flow-image" src="Image/Venue.png" alt="Venue live playback and automix">
+    </div>
+    <div class="flow-node">
+      <div class="flow-icon">06</div>
+      <div>
+        <h3>Console Controls Everything</h3>
+        <p>Console is the command surface across the whole ecosystem: rehearsal, studio recording, mix decisions, playback, and live gig operation all stay in one tactile language.</p>
+      </div>
+      <img class="flow-image" src="Image/Console.png" alt="GIG Console surface">
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="what">
+    <p class="section-label">02 &mdash; Summary</p>
+    <h2>What this is</h2>
+    <p>
+      GIG is a coherent recording, rehearsal, and live playback system with one mental model end-to-end: musician input,
+      processing, routing, monitoring, session control, playback, and venue translation.
+    </p>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="why">
+    <p class="section-label">03 &mdash; Product shape</p>
+    <h2>Platform, not one box</h2>
+    <p>
+      The product ladder is clear: Cube for entry, Rig for daily musician use, Racks for premium rooms,
+      Venue for live translation, and Console as the tactile surface across all of it.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Entry</h3>
+        <p>Cube makes the system approachable without forcing the full rack footprint.</p>
+      </div>
+      <div class="card">
+        <h3>Daily use</h3>
+        <p>Rigs make each musician's input, monitor mix, playback, and session tools portable.</p>
+      </div>
+      <div class="card">
+        <h3>Premium</h3>
+        <p>Racks carry the analog identity and modular card ecosystem.</p>
+      </div>
+      <div class="card">
+        <h3>Live</h3>
+        <p>Venue brings the recorded mix balance into the room.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="fit">
+    <p class="section-label">04 &mdash; Strategic fit</p>
+    <h2>Why start with Music Tribe</h2>
+    <p>
+      Music Tribe is not just a random audio buyer. The St. George connection makes the first conversation feel
+      reachable, and Behringer/Music Tribe already lives across the categories GIG connects: interfaces, mixers,
+      monitoring, control surfaces, live sound, software, manufacturing, and global distribution.
+    </p>
+    <p>
+      The reason to start there is simple: GIG probably needs a company that can think in ecosystems, not just one box.
+      Music Tribe has the breadth to ask whether this should become a product family instead of a founder trying to
+      manufacture every piece alone.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Local first step</h3>
+        <p>St. George makes the outreach feel less abstract: start with the closest plausible strategic door.</p>
+      </div>
+      <div class="card">
+        <h3>Audio breadth</h3>
+        <p>The ecosystem crosses recording, rehearsal, monitoring, control, and live sound.</p>
+      </div>
+      <div class="card">
+        <h3>Manufacturing reality</h3>
+        <p>GIG needs hardware, software, sourcing, support, and distribution working together.</p>
+      </div>
+      <div class="card">
+        <h3>Founder resonance</h3>
+        <p>The bigger idea is access: reduce friction so more musicians can create, rehearse, record, and perform.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="links">
+    <p class="section-label">05 &mdash; Evidence</p>
+    <h2>Review artifacts</h2>
+    <p>Open these for the supporting visuals and product pages. They are not meant to replace the conversation.</p>
+  </div>
+  <div class="artifact-grid">
+    <div class="artifact-card">
+      <img src="Image/Recording Environment.png" alt="Product landing artifact">
+      <div>
+        <h3>Product story</h3>
+        <p>The public-facing overview of GIG as one musician ecosystem.</p>
+        <a href="index.html">Open landing</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/Console.png" alt="Console artifact">
+      <div>
+        <h3>Console</h3>
+        <p>The command surface that ties rehearsal, recording, mixing, and live playback together.</p>
+        <a href="html/VISUAL_CONSOLE.html?v=overview-1">Open Console overview</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/Pedal.png" alt="Rig artifact">
+      <div>
+        <h3>Rig</h3>
+        <p>The musician endpoint for input, IEM mix, talkback, playback, patches, and session tools.</p>
+        <a href="html/VISUAL_RIG.html?v=overview-1">Open Rig overview</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/cube.png" alt="Cube artifact">
+      <div>
+        <h3>Cube</h3>
+        <p>The accessible modular I/O path into the broader ecosystem.</p>
+        <a href="html/VISUAL_CUBE_ENTRY_LEVEL.html?v=overview-2">Open Cube overview</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/Left.png" alt="Racks artifact">
+      <div>
+        <h3>Racks</h3>
+        <p>The premium touchscreen rack path with swappable analog card modules.</p>
+        <a href="html/VISUAL_LEFT_RACK.html?v=overview-2">Open Racks overview</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/Venue.png" alt="Venue artifact">
+      <div>
+        <h3>Venue</h3>
+        <p>The live playback, room translation, and assisted output layer for gigs.</p>
+        <a href="html/VISUAL_RIGHT_RACK.html?v=overview-2">Open Venue / output page</a>
+      </div>
+    </div>
+    <div class="artifact-card">
+      <img src="Image/Right.png" alt="Strategic review artifact">
+      <div>
+        <h3>Strategic fit</h3>
+        <p>The acquisition and Music Tribe fit narrative behind the product package.</p>
+        <a href="investors.html">Open strategic framing</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><hr></div>
+
+  <div class="section" id="asks">
+    <p class="section-label">06 &mdash; Strategic ask</p>
+    <h2>What I am asking for</h2>
+    <p>
+      I am looking for a qualified strategic review with someone who can evaluate whether GIG belongs inside
+      Music Tribe as an acquisition, licensing, partnership, or incubation conversation.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <h3>Review the architecture</h3>
+        <p>Does the product family make sense as a platform?</p>
+      </div>
+      <div class="card">
+        <h3>Identify the wedge</h3>
+        <p>Which first product should lead: Cube, Rig, Console, Racks, or Venue?</p>
+      </div>
+      <div class="card">
+        <h3>Assess transaction path</h3>
+        <p>Would acquisition, licensing, partnership, or incubation fit best?</p>
+      </div>
+      <div class="card">
+        <h3>Start the right conversation</h3>
+        <p>The goal is a serious review, not a public commitment.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>System Q &middot; recording-environment repository</div>
+    <div class="footer-links">
+      <a href="index.html">Landing</a>
+      <a href="studio/index.html">Studio</a>
+      <a href="investors.html">Strategic framing</a>
+    </div>
+  </footer>
+
+</body>
+</html>

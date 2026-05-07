@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Console — GIG Command Surface</title>
+  <style>
+    :root {
+      --bg: #080c12;
+      --panel: rgba(255,255,255,0.045);
+      --border: rgba(0,212,255,0.18);
+      --text: #f0f4f8;
+      --muted: #aab6c3;
+      --accent: #00d4ff;
+      --gold: #ffd700;
+      --mat: #c8d2dc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 520px at 16% 0%, rgba(0,212,255,0.14), transparent 62%),
+        linear-gradient(180deg, #1b2633 0%, var(--bg) 55%, #050810 100%);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 56px; }
+    .nav { margin-bottom: 18px; color: var(--muted); font-size: 0.9rem; }
+    .nav a { color: var(--accent); text-decoration: none; margin-right: 14px; }
+    .hero {
+      display: grid;
+      gap: 22px;
+      align-items: center;
+      grid-template-columns: 1fr;
+      background: rgba(5,8,16,0.58);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.35);
+    }
+    @media (min-width: 860px) { .hero { grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr); } }
+    .hero img, .image-card img {
+      width: 100%;
+      display: block;
+      border-radius: 16px;
+      background: radial-gradient(ellipse at 50% 18%, rgba(255,255,255,0.48), var(--mat) 48%, #6f7b86 100%);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 16px 42px rgba(0,0,0,0.28);
+    }
+    .eyebrow {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+    h1 { margin: 8px 0 12px; font-size: clamp(2rem, 5vw, 3.8rem); line-height: 1.04; }
+    .lead { color: var(--muted); font-size: 1.08rem; max-width: 620px; }
+    .grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 22px; }
+    @media (min-width: 760px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+    .card, .image-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+    .card h2, .image-card h2 { margin: 0 0 8px; color: var(--gold); font-size: 1rem; }
+    .card p, .image-card p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+    .two { display: grid; gap: 18px; grid-template-columns: 1fr; margin-top: 18px; }
+    @media (min-width: 860px) { .two { grid-template-columns: 1fr 1fr; } }
+    footer { margin-top: 26px; color: var(--muted); font-size: 0.86rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 18px; }
+    footer a { color: var(--accent); text-decoration: none; margin-right: 14px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <a href="../uli-review.html">GIG Review</a>
+      <a href="VISUAL_CUBE_ENTRY_LEVEL.html?v=overview-2">Cube</a>
+      <a href="VISUAL_LEFT_RACK.html?v=overview-2">Racks</a>
+      <a href="VISUAL_RIGHT_RACK.html?v=overview-2">Venue / Output</a>
+    </nav>
+
+    <section class="hero">
+      <img src="../Image/Console.png" alt="GIG Console surface">
+      <div>
+        <div class="eyebrow">GIG Console</div>
+        <h1>One surface for rehearsal, studio, and live.</h1>
+        <p class="lead">Console is the tactile command layer for GIG. It manages transport, faders, monitoring, stage focus, and the 6-DOF edit control across the entire ecosystem.</p>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card"><h2>6-DOF Editing</h2><p>SpaceMouse-style selection and adjustment from one hand position.</p></div>
+      <div class="card"><h2>Less Switching</h2><p>Fewer plugin windows, disconnected knobs, and menu jumps.</p></div>
+      <div class="card"><h2>Whole Session</h2><p>Rehearsal, recording, mix review, playback, and Venue operation.</p></div>
+      <div class="card"><h2>Analog Recall</h2><p>Digital control of analog and hybrid sound-shaping paths.</p></div>
+    </section>
+
+    <section class="two">
+      <div class="image-card">
+        <h2>Why It Matters</h2>
+        <p>Console is not just a DAW controller. It is the shared physical language for GIG, so a musician or operator can move from practice to recording to live playback without learning separate tools.</p>
+      </div>
+      <div class="image-card">
+        <h2>System Role</h2>
+        <p>Console sits after the musician Rigs, Cube, Racks, and Venue as the unifying command surface: the one place where the ecosystem becomes playable.</p>
+      </div>
+    </section>
+
+    <footer>
+      <a href="../index.html">Product Landing</a>
+      <a href="VISUAL_CUBE_ENTRY_LEVEL.html?v=overview-2">Cube</a>
+      <a href="VISUAL_LEFT_RACK.html?v=overview-2">Racks</a>
+      <a href="../investors.html">Strategic Fit</a>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Project Context Rule - System Q
+
+Any agent working on this repository MUST prioritize the information in the `Context/` folder to avoid redundant analysis and token waste.
+
+## Context Priority
+Before performing research or asking for project-wide details, read these files in order:
+1. `Context/To-Do.html` - Current active tasks and status.
+2. `Context/Daily/YYYY-MM-DD.html` - Latest progress and session notes.
+3. `Context/Project/Project_Context.html` - Repository info, API keys, and core product "Hooks."
+
+## Working Rules
+- **Do not re-summarize:** Use the existing summaries in the HTML context files.
+- **Update on progress:** After completing a significant task or session, update the `Daily` context and `To-Do.html`.
+- **Reference existing info:** If information (like the Gemini API key or Repo URL) is in `Project_Context.html`, do not ask the user for it or look elsewhere.
+
+## Aesthetic Requirements
+All HTML context files must maintain the **Premium Dark / Glassmorphism** aesthetic established in the initial templates.
