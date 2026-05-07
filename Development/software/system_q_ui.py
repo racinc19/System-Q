@@ -213,19 +213,19 @@ class UIMixin:
         return (math.log10(hz) - math.log10(POL_LOW_HZ)) / (math.log10(POL_HIGH_HZ) - math.log10(POL_LOW_HZ))
 
     def _draw_focus_ring_grid(self, c: tk.Canvas, cx: float, cy: float, orx: float, ory: float, irx: float, iry: float) -> None:
-        c.create_oval(cx - orx, cy - ory, cx + orx, cy + ory, outline="#1d2735", width=1)
-        c.create_oval(cx - irx, cy - iry, cx + irx, cy + iry, outline="#1d2735", width=1)
+        c.create_oval(cx - orx, cy - ory, cx + orx, cy + ory, outline="#2a3b4f", width=1)
+        c.create_oval(cx - irx, cy - iry, cx + irx, cy + iry, outline="#2a3b4f", width=1)
         for hz in [100, 1000, 10000]:
             p = self._freq_to_slider(hz)
             rx, ry = orx - (orx - irx) * p, ory - (ory - iry) * p
-            c.create_oval(cx - rx, cy - ry, cx + rx, cy + ry, outline="#1d2735", width=1, dash=(2, 2))
+            c.create_oval(cx - rx, cy - ry, cx + rx, cy + ry, outline="#222d3d", width=1, dash=(2, 2))
 
     def _draw_focus_signal(self, c: tk.Canvas, ch: ChannelState, cx: float, cy: float, orx: float, ory: float, irx: float, iry: float) -> None:
-        rings = getattr(ch, "spectrum_rings", None)
+        rings = getattr(ch, "band_levels", None)
         if rings is None: return
         for i in range(POL_BANDS):
             val = float(np.clip(rings[i], 0.0, 1.0))
-            if val < 0.01: continue
+            if val < 0.005: continue
             p = i / (POL_BANDS - 1)
             rx, ry = orx - (orx - irx) * p, ory - (ory - iry) * p
             hue = freq_rainbow_hue_hz(POL_BAND_CENTER_HZ[i])
