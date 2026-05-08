@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Context - May 7, 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #00d4ff;
+            --gold: #ffd700;
+            --danger: #ff5c7a;
+            --text: #e0e0e0;
+            --muted: #888;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px;
+            background-image: radial-gradient(circle at 50% -20%, #1a0a2e, #050505);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            margin: 0;
+            color: var(--accent);
+        }
+
+        .date {
+            color: var(--muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .session-block {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1rem;
+            color: var(--accent);
+            margin-top: 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        code {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+            font-family: monospace;
+        }
+
+        .warning {
+            border-color: rgba(255, 92, 122, 0.5);
+        }
+
+        .warning h2 {
+            color: var(--danger);
+        }
+
+        .token-savings {
+            font-size: 0.8rem;
+            color: #7bf0aa;
+            font-style: italic;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <span class="date">May 7, 2026</span>
+            <h1>Daily Progress: System Q Recovery</h1>
+        </header>
+
+        <div class="session-block warning">
+            <h2>Source of Truth</h2>
+            <ul>
+                <li>Use <code>Context/Project/Project_Context.html</code> as the Master context.</li>
+                <li>Use the current file, <code>Context/Daily/2026-05-07.html</code>, as today's Daily context.</li>
+                <li>Do not rely on old chat context, generated audit reports, or previous agent completion claims unless the HTML context and live app evidence confirm them.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Current Situation</h2>
+            <ul>
+                <li>The System Q console was split from a large monolithic file into modular files, and the refactor broke UI-to-engine wiring.</li>
+                <li>The UI has been partially restored visually, but controls cannot be assumed wired until tested against the live app.</li>
+                <li>The previous generated 58-step audit is invalid. It produced mislabeled screenshots, repeated duplicate images, and PASS reports that do not prove live behavior.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Verified Cleanup Finding</h2>
+            <ul>
+                <li>Multiple alleged proof screenshots were byte-for-byte duplicates under different step names.</li>
+                <li>Generated scripts such as <code>final_audit.py</code> used mock state and weak pass conditions, so their output is not accepted as implementation proof.</li>
+                <li>The generated audit clutter in <code>Development/software</code> should be removed before real recovery work continues.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Recovery Standard</h2>
+            <ul>
+                <li>No PASS unless the live application proves the exact control input reaches the intended control.</li>
+                <li>No PASS unless the underlying real state changes correctly.</li>
+                <li>No PASS unless the screenshot shows the expected visual delta for that exact action.</li>
+                <li>Do recovery one stage at a time: PRE, HRM, GTE, CMP, EQ, TRN/XCT/TBE, then transport.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Computer Control Review</h2>
+            <ul>
+                <li><code>C:\Users\racin\Desktop\computer-control</code> is the automation root from the Master context.</li>
+                <li>The existing runner pattern is good for side-effect work because it snapshots before, executes, snapshots after, and reports diffs.</li>
+                <li>System Q needs an equivalent desktop-console verification runner: launch or attach to the live app, execute one control action, capture before/after state, capture before/after screenshots, reject duplicate image hashes, and mark BLOCKED instead of PASS when proof is weak.</li>
+                <li>The operator should not have to babysit basic QA. The agent owns verification and must surface failures directly.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Verified Repair Baseline</h2>
+            <ul>
+                <li>Restored live SpaceMouse polling in <code>system_q_console.py</code>.</li>
+                <li>Fixed editor wiring mismatches in <code>system_q_ui.py</code>: one parameter focus field, matching click hitbox tags, and stage editor entry begins on the header.</li>
+                <li>Added <code>Development/software/verify_system_q_live.py</code>, a live verification gate using the real <code>ConsoleApp</code> and <code>ConsoleEngine</code>.</li>
+                <li>PRE stage verified PASS for 8 checks: header, TBE, LPF toggle, LPF adjust, 48V, phase, HPF toggle, and HPF adjust.</li>
+                <li>Full System Q gate verified PASS for 9 groups: PRE, HRM, GTE, CMP, EQ, TRN, XCT, TBE, and transport.</li>
+                <li>Final proof run: <code>Development/software/SYSTEM_Q_VERIFY_RUNS/20260507_141137/report.json</code>.</li>
+                <li>Follow-up correction: the first gate proved internal navigation actions, not literal UI mouse clicks. UI clicks were then wired for editor cells and transport labels.</li>
+                <li>Mouse-click proof run: <code>Development/software/SYSTEM_Q_VERIFY_RUNS/20260507_144456/report.json</code>.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Files to Treat Carefully</h2>
+            <ul>
+                <li>Core source files: <code>system_q_console.py</code>, <code>system_q_core.py</code>, <code>system_q_dsp.py</code>, <code>system_q_ui.py</code>, and <code>pol_visualizer.py</code>.</li>
+                <li>Do not overwrite existing source changes blindly. Review live code before editing.</li>
+                <li>Generated audit scripts, bogus screenshots, and untracked audit logs are cleanup targets, not trusted context.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>End-of-Day Handoff: Gate / Navigation Baseline</h2>
+            <ul>
+                <li>The live UI was restarted after the final gate changes. Start tomorrow from the committed source, not from any stale Python process.</li>
+                <li>PRE, HRM, generator display, solo/mute, and gate work made meaningful progress today, but the immediate handoff point is the gate editor and SpaceMouse navigation behavior.</li>
+                <li>SpaceMouse rotation is intentionally rate-limited and finer than the earlier version. Immediate repeat twist is dropped, small twist still moves the selected parameter, and stale polls drop nav but keep twist.</li>
+                <li>Header down navigation skips <code>TBE</code> on PRE/HRM/GTE. PRE lands on <code>LPF</code>, HRM lands on <code>H1</code>, and GTE lands on <code>THR</code>.</li>
+                <li>There should only be one active editor focus highlight. Avoid changes that reintroduce stuck highlights across stage headers, parameter cells, or transport buttons.</li>
+                <li>Gate <code>RAT</code> has been renamed visually to <code>DEP</code>. Internally it still uses the existing <code>gate_ratio</code> field, but the user-facing meaning is gate/expander closed depth in dB.</li>
+                <li>Gate depth model: 8 maps to about 32 dB closed reduction, 20 maps to about 80 dB closed reduction. This is intended to make the gate actually shut bleed down instead of acting like a weak ratio.</li>
+                <li>Gate full-band mode draws the full threshold/depth relationship as level rings. The bright red threshold ring is the main reference.</li>
+                <li>Gate frequency mode is off by default. <code>FRQ</code>, <code>WDT</code>, and <code>BND</code> remain inactive/dim until <code>FRQ</code> is pressed.</li>
+                <li>Pressing <code>FRQ</code> creates/selects Band 1 and activates frequency-band gate editing. Pressing <code>FRQ</code> again disables band mode and returns to the regular full-band gate display.</li>
+                <li>Pressing <code>BND</code> adds/selects the next independent band. Rotating <code>BND</code> switches among enabled bands.</li>
+                <li>Each gate band has independent <code>FRQ</code>, <code>WDT</code>, <code>THR</code>, <code>DEP</code>, <code>ATK</code>, <code>RLS</code>, and <code>GAN</code> values. Switching bands must hydrate that band's own values into the visible editor controls.</li>
+                <li>In frequency-band gate mode, the same gate visualization moves to the selected frequency window and width. The red closed area is constrained to that frequency band; the old dashed/funky frequency guide was removed.</li>
+                <li>Latest verified gate proof: <code>Development/software/SYSTEM_Q_VERIFY_RUNS/gate_visible_20260507_212714/gate_visible_report.json</code> passed 12/12.</li>
+                <li>Latest verified navigation proof: <code>Development/software/SYSTEM_Q_VERIFY_RUNS/nav_rate_limit_20260507_212732/nav_rate_limit_report.json</code> passed 11/11.</li>
+                <li>Before changing the next stage tomorrow, run the focused verifier for the touched behavior and capture screenshots/state diffs. Do not claim a control works from code inspection alone.</li>
+            </ul>
+        </div>
+
+        <div class="token-savings">
+            Context refreshed. Future work should start from Master HTML plus this Daily HTML.
+        </div>
+    </div>
+
+</body>
+</html>

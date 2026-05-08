@@ -115,17 +115,15 @@ class SpaceMouseController:
         self.joystick = None
         self._sticks: list = []
         self.last_buttons = [0, 0, 0]
-        self.deadzone = 0.12
+        self.deadzone = 0.22
         self.gain_axis = 5
         self.x_axis = 0
         self.y_axis = 1
         self.z_axis = 2
-        self.direction_threshold = 0.45
-        # Z cap: short push past threshold then release → "press" on neutral.
-        # Sustained push ≥ engage_hold_s → "engage_toggle" once (engage/disengage).
-        # Pull (back) uses depress_hold_s only.
-        self.depress_hold_s = 0.35
-        self.engage_hold_s = 1.0
+        self.direction_threshold = 0.34
+        # Z cap: press/bypass requires deliberate hold; twist never toggles.
+        self.depress_hold_s = 0.50
+        self.engage_hold_s = 999.0
         self._z_press_hold_start: float | None = None
         self._z_back_hold_start: float | None = None
         self._z_engage_emitted = False
@@ -137,19 +135,28 @@ class SpaceMouseController:
         self._active_xy_x: str | None = None
         self._active_xy_y: str | None = None
         self._latch_z = False
-        # Sustained twist: CW / CCW hold emits editor enter/exit (see system_q_console).
-        self.twist_hold_s = 3.0
+        # Twist is parameter-only. It must never emit editor enter/exit or bypass.
+        self.twist_hold_s = 0.75
         # Must be > twist_release_abs so sustained twist accumulates (no 0.18–0.22 dead band).
-        self.twist_threshold = 0.16
+        self.twist_threshold = 0.48
         self.twist_release_abs = 0.10
         self._twist_cw_start: float | None = None
         self._twist_ccw_start: float | None = None
         self._twist_hold_latch = False
         # X/Y tilt: first step on deflection, then repeat while held (all four cardinals).
-        self.xy_repeat_initial_s = 0.45
-        self.xy_repeat_interval_s = 0.12
+        self.x_nav_threshold = 0.40
+        self.xy_repeat_initial_s = 0.38
+        self.xy_repeat_interval_s = 0.48
+        self.y_nav_threshold = 0.24
+        self.y_nav_initial_s = 0.30
+        self.y_nav_interval_s = 0.38
         self._xy_repeat_dom: str | None = None
         self._xy_next_repeat_at: float | None = None
+        self._last_poll_at: float | None = None
+        self.max_poll_gap_s = 0.75
+        self.twist_nav_suppress_abs = 0.18
+        self.twist_nav_cooldown_s = 0.35
+        self._twist_nav_suppress_until = 0.0
         # Sustained tilt toward DOWN (Y axis): 3s -> down_hold. Uses raw Y, not
         # cardinal dominance, so slight L/R while tilting down still counts.
         self.down_hold_s = 3.0
@@ -215,6 +222,24 @@ class SpaceMouseController:
             return 0.0, [], []
         pygame.event.pump()
         raw = self._merged_axis(getattr(self, "twist_axis", self.gain_axis))
+        now_poll = time.monotonic()
+        poll_gap = 0.0 if self._last_poll_at is None else now_poll - float(self._last_poll_at)
+        self._last_poll_at = now_poll
+        stale_poll = poll_gap > float(getattr(self, "max_poll_gap_s", 0.18))
+        if stale_poll:
+            self._latch_xy = False
+            self._active_xy_primary = None
+            self._active_xy_x = None
+            self._active_xy_y = None
+            self._xy_repeat_dom = None
+            self._xy_next_repeat_at = None
+            self._y_down_hold_start = None
+            self._y_down_hold_fired = False
+            self._twist_hold_latch = False
+            self._twist_cw_start = None
+            self._twist_ccw_start = None
+        if abs(float(raw)) >= float(getattr(self, "twist_nav_suppress_abs", 0.18)):
+            self._twist_nav_suppress_until = now_poll + float(getattr(self, "twist_nav_cooldown_s", 0.35))
 
         merged = [0, 0, 0]
         for j in self._sticks:
@@ -297,10 +322,13 @@ class SpaceMouseController:
         # xy_z_max_for_nav: below this |Z|, tilt nav runs. Small cap pressure was
         # wiping the 3s down-hold timer every frame at the old 0.22 cutoff.
         th = self.direction_threshold
-        y_down_active = float(y_val) >= float(th)
+        x_th = float(getattr(self, "x_nav_threshold", th))
+        y_th = float(getattr(self, "y_nav_threshold", th))
+        y_down_active = float(y_val) >= y_th
+        twist_clear_for_nav = now_poll >= float(getattr(self, "_twist_nav_suppress_until", 0.0))
         xy_z_clear = abs(z_val) < float(getattr(self, "xy_z_max_for_nav", 0.38))
         xy_now = time.monotonic()
-        if not xy_z_clear:
+        if not xy_z_clear or not twist_clear_for_nav:
             self._latch_xy = False
             self._active_xy_primary = None
             self._active_xy_x = None
@@ -314,22 +342,25 @@ class SpaceMouseController:
             ax = abs(x_val)
             ay = abs(y_val)
             dom = None
-            if max(ax, ay) >= th:
-                # Stronger axis wins (no vertical bias — fixes LEFT eaten by slight Y drift).
-                tie = 0.06
-                if ax >= th and ay >= th:
+            if ay >= y_th and ax < max(x_th, ay + 0.12):
+                dom = "up" if y_val < 0 else "down"
+            elif max(ax, ay) >= min(x_th, th):
+                # Horizontal movement must be deliberate; vertical gets a small
+                # bias so down/up are not eaten by hand drift on X.
+                tie = 0.10
+                if ax >= x_th and ay >= y_th:
                     if ax > ay + tie:
                         dom = "left" if x_val < 0 else "right"
                     elif ay > ax + tie:
                         dom = "up" if y_val < 0 else "down"
                     else:
-                        if ax >= ay:
+                        if ax >= ay + 0.04:
                             dom = "left" if x_val < 0 else "right"
                         else:
                             dom = "up" if y_val < 0 else "down"
-                elif ax >= th:
+                elif ax >= x_th:
                     dom = "left" if x_val < 0 else "right"
-                else:
+                elif ay >= y_th:
                     dom = "up" if y_val < 0 else "down"
             if dom is None:
                 self._latch_xy = False
@@ -345,15 +376,17 @@ class SpaceMouseController:
                 self._active_xy_y = dom if dom in ("up", "down") else None
                 
                 if self._xy_repeat_dom != dom:
-                    directional.append(dom)
                     self._xy_repeat_dom = dom
-                    self._xy_next_repeat_at = xy_now + float(self.xy_repeat_initial_s)
+                    initial_s = float(getattr(self, "y_nav_initial_s", self.xy_repeat_initial_s)) if dom in ("up", "down") else float(self.xy_repeat_initial_s)
+                    directional.append(dom)
+                    self._xy_next_repeat_at = xy_now + initial_s
                 elif (
                     self._xy_next_repeat_at is not None
                     and xy_now >= float(self._xy_next_repeat_at)
                 ):
                     directional.append(dom)
-                    self._xy_next_repeat_at = xy_now + float(self.xy_repeat_interval_s)
+                    interval_s = float(getattr(self, "y_nav_interval_s", self.xy_repeat_interval_s)) if dom in ("up", "down") else float(self.xy_repeat_interval_s)
+                    self._xy_next_repeat_at = xy_now + interval_s
 
             # Raw-Y down hold / short tap (independent of whether X wins dominance).
             if y_down_active:
@@ -373,44 +406,23 @@ class SpaceMouseController:
                 self._y_down_hold_fired = False
             self._y_down_was_active = bool(y_down_active)
 
-        # Sustained twist on gain axis: CW vs CCW (editor open/close in System Q).
+        # Twist is parameter adjustment only. Do not emit directional tokens from
+        # sustained twist; leaving a parameter requires explicit X/Y navigation.
         tw_raw = float(raw)
         rel = float(getattr(self, "twist_release_abs", 0.10))
         tw_neutral = abs(tw_raw) < rel
-        now = time.monotonic()
         if tw_neutral:
             self._twist_hold_latch = False
             self._twist_cw_start = None
             self._twist_ccw_start = None
-        elif not self._twist_hold_latch:
-            tthr = float(self.twist_threshold)
-            if tw_raw >= tthr:
-                self._twist_ccw_start = None
-                if self._twist_cw_start is None:
-                    self._twist_cw_start = now
-                elif now - float(self._twist_cw_start) >= float(self.twist_hold_s):
-                    directional.append("twist_cw_hold")
-                    self._twist_hold_latch = True
-                    self._twist_cw_start = None
-                    self._twist_ccw_start = None
-            elif tw_raw <= -tthr:
-                self._twist_cw_start = None
-                if self._twist_ccw_start is None:
-                    self._twist_ccw_start = now
-                elif now - float(self._twist_ccw_start) >= float(self.twist_hold_s):
-                    directional.append("twist_ccw_hold")
-                    self._twist_hold_latch = True
-                    self._twist_cw_start = None
-                    self._twist_ccw_start = None
-            # else: noisy mid zone — keep existing CW/CCW timers running
+        else:
+            self._twist_hold_latch = False
 
         axis_value = float(raw) if abs(float(raw)) >= self.deadzone else 0.0
-        if self._twist_hold_latch:
-            axis_value = 0.0
 
         self.direction_latch = bool(self._latch_xy or self._latch_z or self._twist_hold_latch)
 
-        return axis_value, pressed, directional
+        return axis_value, pressed, [] if stale_poll else directional
 
     def active_xy_cardinals_held(self) -> list[str]:
         """Single sustained cardinal from dominant X/Y (never two at once)."""

@@ -1,0 +1,13 @@
+{
+  "run_dir": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\solo_mute_visible_20260507_185834",
+  "solo_state": true,
+  "mute_state": true,
+  "nav_mute_state_ch2": true,
+  "solo_visible_changed": true,
+  "mute_visible_changed": true,
+  "screenshots": {
+    "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\solo_mute_visible_20260507_185834\\before.png",
+    "after_solo": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\solo_mute_visible_20260507_185834\\after_solo.png",
+    "after_mute": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\solo_mute_visible_20260507_185834\\after_mute.png"
+  }
+}

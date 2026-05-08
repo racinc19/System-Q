@@ -36,13 +36,18 @@ class ConsoleEngine:
     def _bootstrap_cleared_mix_state(self) -> None:
         for ch in getattr(self, "channels", []) or []:
             ch.solo = ch.mute = ch.record_armed = ch.pre_enabled = ch.phantom = ch.phase = ch.tube = False
+            ch.pre_gain_db = 0.0
+            ch.pre_squeeze = 1.0
             ch.harm_tube = ch.gate_tube = ch.comp_tube = ch.eq_tube = ch.lpf_enabled = ch.hpf_enabled = False
-            ch.lpf_hz, ch.hpf_hz = float(POL_HIGH_HZ), float(POL_LOW_HZ)
+            ch.lpf_hz, ch.hpf_hz = 5000.0, 200.0
             ch.harmonics_enabled = ch.comp_enabled = ch.limit_enabled = ch.gate_enabled = False
             ch.harmonics[:] = 0.0
             ch.harmonic_makeup = 1.0
             ch.comp_band_enabled = ch.limit_band_enabled = ch.gate_band_enabled = False
-            ch.gate_dyn_band_count = ch.gate_dyn_ui_band = ch.comp_dyn_band_count = ch.comp_dyn_ui_band = 1, 0
+            ch.gate_dyn_band_count = 1
+            ch.gate_dyn_ui_band = 0
+            ch.comp_dyn_band_count = 1
+            ch.comp_dyn_ui_band = 0
             for db in ch.gate_dyn_bands: db.update(enabled=False, freq=3000.0, width_oct=4.0, threshold_db=-45.0, ratio=8.0, attack_ms=3.0, release_ms=140.0, makeup=1.0)
             for db in ch.comp_dyn_bands: db.update(enabled=False, freq=3000.0, width_oct=4.0, threshold_db=-18.0, ratio=4.0, attack_ms=8.0, release_ms=120.0, makeup=1.0)
             ch.eq_enabled = ch.eq_band_enabled = False
@@ -209,7 +214,17 @@ class ConsoleEngine:
         return np.vstack([head, *wraps]).astype(np.float32)
 
     def _process_channel(self, ch: ChannelState, block: np.ndarray) -> np.ndarray:
-        x = block.astype(np.float32) * ch.gain
+        x = block.astype(np.float32)
+        if ch.pre_enabled:
+            pre_gain = float(np.clip(getattr(ch, "pre_gain_db", 0.0), -24.0, 24.0))
+            squeeze = float(np.clip(getattr(ch, "pre_squeeze", 1.0), 1.0, 8.0))
+            x *= float(10.0 ** (pre_gain / 20.0))
+            if squeeze > 1.001:
+                threshold = 0.32
+                mag = np.abs(x)
+                over = mag > threshold
+                compressed = threshold + (mag - threshold) / squeeze
+                x = np.sign(x) * np.where(over, compressed, mag)
         if ch.pre_enabled and ch.phase: x[:, 1] *= -1.0
         if ch.tube: x = np.tanh(x * 1.18).astype(np.float32)
         if ch.harmonics_enabled and np.any(ch.harmonics > 0.001): x = self._apply_harmonics(x, ch.harmonics, ch.harmonic_makeup, getattr(ch, "harm_param_bypass", {}))
@@ -234,8 +249,9 @@ class ConsoleEngine:
         if ch.trn_enabled: x = self._apply_trn(x, ch)
         if ch.xct_enabled: x = self._apply_xct(x, ch)
         if ch.tbe_enabled: x = self._apply_tbe(x, ch)
-        if ch.lpf_enabled: x = self._apply_pre_filter(ch, x, ch.lpf_hz, "lowpass")
-        if ch.hpf_enabled: x = self._apply_pre_filter(ch, x, ch.hpf_hz, "highpass")
+        if ch.pre_enabled:
+            if ch.lpf_enabled: x = self._apply_pre_filter(ch, x, ch.lpf_hz, "lowpass")
+            if ch.hpf_enabled: x = self._apply_pre_filter(ch, x, ch.hpf_hz, "highpass")
         return np.clip(x, -1.0, 1.0).astype(np.float32)
 
     def _analyze_channel(self, ch: ChannelState, block: np.ndarray) -> None:
@@ -268,7 +284,18 @@ class ConsoleEngine:
         self._hydrate_gate_dyn_to_scalars(ch)
         if ch.gate_band_enabled:
             b = ch.gate_dyn_bands[max(0, min(int(ch.gate_dyn_band_count)-1, int(ch.gate_dyn_ui_band)))]
-            if not b.get("enabled") or b.get("makeup", 1.0) <= 0.001: return block
+            if not b.get("enabled"):
+                b.update(
+                    enabled=True,
+                    freq=float(ch.gate_center_hz),
+                    width_oct=float(ch.gate_width_oct),
+                    threshold_db=float(ch.gate_threshold_db),
+                    ratio=float(ch.gate_ratio),
+                    attack_ms=float(ch.gate_attack_ms),
+                    release_ms=float(ch.gate_release_ms),
+                    makeup=float(ch.gate_makeup),
+                )
+            if b.get("makeup", 1.0) <= 0.001: return block
             atk, rls, thr, rat, mk = b["attack_ms"], b["release_ms"], b["threshold_db"], b["ratio"], b["makeup"]
         elif ch.gate_enabled:
             if ch.gate_makeup <= 0.001: return block
@@ -278,7 +305,11 @@ class ConsoleEngine:
         a_env = math.exp(-1.0 / max(1.0, ((0.05 if bp.get("ATK") else atk)/1000.0)*SAMPLE_RATE))
         r_env = math.exp(-1.0 / max(1.0, ((0.05 if bp.get("RLS") else rls)/1000.0)*SAMPLE_RATE))
         ag, rg = math.exp(-1.0 / max(1.0, (atk*0.25/1000.0)*SAMPLE_RATE)), math.exp(-1.0 / max(1.0, (rls*0.3/1000.0)*SAMPLE_RATE))
-        thr_db = -168.0 if bp.get("THR") else thr; floor = 1.0 if bp.get("RAT") else 1.0/max(1.001, rat); mkup = 1.0 if bp.get("GAN") else max(0.001, mk)
+        thr_db = -168.0 if bp.get("THR") else thr
+        # Gate RAT is depth, not a compressor-style bleed ratio. 8:1 is about
+        # -32 dB closed; 20:1 is about -80 dB, effectively shut.
+        floor = 1.0 if bp.get("RAT") else 10.0 ** (-float(np.clip(rat, 1.0, 20.0)) * 4.0 / 20.0)
+        mkup = 1.0 if bp.get("GAN") else max(0.001, mk)
         env, sm = float(ch.gate_env), float(ch.gate_gain_smooth); gs = np.empty(len(mono), dtype=np.float32)
         for i, s in enumerate(mono):
             env = (a_env if abs(s)>env else r_env)*env + (1.0-(a_env if abs(s)>env else r_env))*abs(s)
@@ -398,6 +429,17 @@ class ConsoleEngine:
     def _hydrate_gate_dyn_to_scalars(self, ch: ChannelState) -> None:
         if not getattr(ch, "gate_band_enabled", False): return
         b = ch.gate_dyn_bands[max(0, min(int(ch.gate_dyn_band_count)-1, int(ch.gate_dyn_ui_band)))]
+        if not b.get("enabled"):
+            b.update(
+                enabled=True,
+                freq=float(ch.gate_center_hz),
+                width_oct=float(ch.gate_width_oct),
+                threshold_db=float(ch.gate_threshold_db),
+                ratio=float(ch.gate_ratio),
+                attack_ms=float(ch.gate_attack_ms),
+                release_ms=float(ch.gate_release_ms),
+                makeup=float(ch.gate_makeup),
+            )
         ch.gate_center_hz, ch.gate_width_oct, ch.gate_threshold_db, ch.gate_ratio, ch.gate_attack_ms, ch.gate_release_ms, ch.gate_makeup = b["freq"], b["width_oct"], b["threshold_db"], b["ratio"], b["attack_ms"], b["release_ms"], b["makeup"]
 
     def _hydrate_comp_dyn_to_scalars(self, ch: ChannelState) -> None:
@@ -408,7 +450,16 @@ class ConsoleEngine:
     def _flush_gate_scalars_to_dyn_band(self, ch: ChannelState) -> None:
         if getattr(ch, "gate_band_enabled", False):
             b = ch.gate_dyn_bands[max(0, min(int(ch.gate_dyn_band_count)-1, int(ch.gate_dyn_ui_band)))]
-            b["freq"], b["width_oct"] = float(ch.gate_center_hz), float(ch.gate_width_oct)
+            b.update(
+                enabled=True,
+                freq=float(ch.gate_center_hz),
+                width_oct=float(ch.gate_width_oct),
+                threshold_db=float(ch.gate_threshold_db),
+                ratio=float(ch.gate_ratio),
+                attack_ms=float(ch.gate_attack_ms),
+                release_ms=float(ch.gate_release_ms),
+                makeup=float(ch.gate_makeup),
+            )
 
     def _flush_comp_scalars_to_dyn_band(self, ch: ChannelState) -> None:
         if getattr(ch, "comp_band_enabled", False):
@@ -427,6 +478,13 @@ class ConsoleEngine:
             b = ch.comp_dyn_bands[max(0, min(int(ch.comp_dyn_band_count)-1, int(ch.comp_dyn_ui_band)))]
             b.update(threshold_db=thr, ratio=float(rat), attack_ms=float(atk), release_ms=float(rls), makeup=float(mk), enabled=True)
         ch.comp_threshold_db, ch.comp_ratio, ch.comp_attack_ms, ch.comp_release_ms, ch.comp_makeup = thr, rat, atk, rls, mk
+
+    def write_gate_dynamics(self, ch: ChannelState, thr: float, rat: float, atk: float, rls: float, mk: float) -> None:
+        thr = float(np.clip(thr, POL_LEVEL_DB_AXIS_OUTER, POL_LEVEL_DB_AXIS_INNER))
+        if getattr(ch, "gate_band_enabled", False):
+            b = ch.gate_dyn_bands[max(0, min(int(ch.gate_dyn_band_count)-1, int(ch.gate_dyn_ui_band)))]
+            b.update(threshold_db=thr, ratio=float(rat), attack_ms=float(atk), release_ms=float(rls), makeup=float(mk), enabled=True)
+        ch.gate_threshold_db, ch.gate_ratio, ch.gate_attack_ms, ch.gate_release_ms, ch.gate_makeup = thr, rat, atk, rls, mk
 
     def _mono_for_dynamics_detector(self, ch: ChannelState, block: np.ndarray, *, kind: str) -> np.ndarray:
         m_full = np.mean(block, axis=1).astype(np.float32)

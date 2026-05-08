@@ -19,7 +19,7 @@ _log = logging.getLogger("console")
 
 # --- Constants ---
 SYSTEM_Q_BUILD_ID = "gen-pink-pulse-white-hot-20260503"
-DISCRETE_TWIST_MIN = 0.35
+DISCRETE_TWIST_MIN = 0.12
 SAMPLE_RATE = 48000
 BLOCK_SIZE = 1024
 POL_BANDS = 36
@@ -132,6 +132,8 @@ class ChannelState:
     solo: bool = False
     record_armed: bool = False
     pre_enabled: bool = False
+    pre_gain_db: float = 0.0
+    pre_squeeze: float = 1.0
     phantom: bool = False
     phase: bool = False
     tube: bool = False

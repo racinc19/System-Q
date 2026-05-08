@@ -1,0 +1,2412 @@
+{
+  "run_dir": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442",
+  "total": 104,
+  "passed": 14,
+  "failed": 90,
+  "results": [
+    {
+      "id": "editor-pre-header-click",
+      "area": "Editor Grid",
+      "stage": "pre",
+      "label": "PRE",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "pre_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        0,
+        0,
+        2070,
+        1067
+      ],
+      "hitbox_tag": [
+        "stage_hdr",
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_header\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_header\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-pre-tbe-click",
+      "area": "Editor Grid",
+      "stage": "pre",
+      "label": "TBE",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tube",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        0,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_TBE_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_TBE_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-pre-lpf-click",
+      "area": "Editor Grid",
+      "stage": "pre",
+      "label": "LPF",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "lpf_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        0,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_LPF_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_LPF_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-pre-lpf-rotate",
+      "area": "Editor Grid",
+      "stage": "pre",
+      "label": "LPF",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "lpf_hz",
+      "before_value": 5000.0,
+      "after_value": 5244.044240850758,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        0,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_LPF_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_LPF_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-pre-48v-click",
+      "area": "Editor Grid",
+      "stage": "pre",
+      "label": "48V",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "phantom",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        562,
+        1278,
+        588,
+        1289
+      ],
+      "hitbox_tag": [
+        "stage_param",
+        0,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_48V_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_48V_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-pre-phs-click",
+      "area": "Editor Grid",
+      "stage": "pre",
+      "label": "PHS",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "phase",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        653,
+        1280,
+        665,
+        1290
+      ],
+      "hitbox_tag": [
+        "stage_param",
+        0,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_PHS_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_PHS_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-pre-hpf-click",
+      "area": "Editor Grid",
+      "stage": "pre",
+      "label": "HPF",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "hpf_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        0,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_HPF_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_HPF_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-pre-hpf-rotate",
+      "area": "Editor Grid",
+      "stage": "pre",
+      "label": "HPF",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "hpf_hz",
+      "before_value": 200.0,
+      "after_value": 209.76176963403032,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        0,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_HPF_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_pre_HPF_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-harm-header-click",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "HRM",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "harmonics_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        566,
+        1074,
+        666,
+        1091
+      ],
+      "hitbox_tag": [
+        "stage_hdr",
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_header\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_header\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-harm-tbe-click",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "TBE",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "harm_tube",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_TBE_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_TBE_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-harm-h1-click",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H1",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "harm_param_bypass.H1",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H1_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H1_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-harm-h1-rotate",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H1",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "harmonics[0]",
+      "before_value": 0.0,
+      "after_value": 0.05000000074505806,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H1_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H1_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-harm-h2-click",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H2",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "harm_param_bypass.H2",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H2_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H2_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-harm-h2-rotate",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H2",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "harmonics[1]",
+      "before_value": 0.0,
+      "after_value": 0.05000000074505806,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H2_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H2_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-harm-h3-click",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H3",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "harm_param_bypass.H3",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H3_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H3_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-harm-h3-rotate",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H3",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "harmonics[2]",
+      "before_value": 0.0,
+      "after_value": 0.05000000074505806,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H3_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H3_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-harm-h4-click",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H4",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "harm_param_bypass.H4",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H4_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H4_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-harm-h4-rotate",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H4",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "harmonics[3]",
+      "before_value": 0.0,
+      "after_value": 0.05000000074505806,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H4_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H4_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-harm-h5-click",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H5",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "harm_param_bypass.H5",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        5
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H5_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H5_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-harm-h5-rotate",
+      "area": "Editor Grid",
+      "stage": "harm",
+      "label": "H5",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "harmonics[4]",
+      "before_value": 0.0,
+      "after_value": 0.05000000074505806,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        1,
+        5
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H5_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_harm_H5_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-gate-header-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "GTE",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "gate_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        566,
+        1098,
+        666,
+        1115
+      ],
+      "hitbox_tag": [
+        "stage_hdr",
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_header\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_header\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-gate-tbe-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "TBE",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "gate_tube",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_TBE_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_TBE_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-gate-thr-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "THR",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "gate_param_bypass.THR",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_THR_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_THR_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-gate-thr-rotate",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "THR",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "gate_threshold_db",
+      "before_value": -45.0,
+      "after_value": -42.3,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_THR_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_THR_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-gate-rat-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "RAT",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "gate_param_bypass.RAT",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_RAT_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_RAT_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-gate-rat-rotate",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "RAT",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "gate_ratio",
+      "before_value": 8.0,
+      "after_value": 8.7125,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_RAT_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_RAT_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-gate-atk-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "ATK",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "gate_param_bypass.ATK",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_ATK_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_ATK_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-gate-atk-rotate",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "ATK",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "gate_attack_ms",
+      "before_value": 3.0,
+      "after_value": 3.146426544510455,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_ATK_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_ATK_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-gate-rls-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "RLS",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "gate_param_bypass.RLS",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_RLS_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_RLS_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-gate-rls-rotate",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "RLS",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "gate_release_ms",
+      "before_value": 140.0,
+      "after_value": 146.83323874382123,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_RLS_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_RLS_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-gate-gan-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "GAN",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "gate_param_bypass.GAN",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        5
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_GAN_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_GAN_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-gate-gan-rotate",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "GAN",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "gate_makeup",
+      "before_value": 1.0,
+      "after_value": 1.05,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        5
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_GAN_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_GAN_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-gate-frq-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "FRQ",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "gate_param_bypass.FRQ",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        6
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_FRQ_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_FRQ_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-gate-frq-rotate",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "FRQ",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "gate_center_hz",
+      "before_value": 3000.0,
+      "after_value": 3146.4265445104547,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        6
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_FRQ_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_FRQ_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-gate-wdt-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "WDT",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "gate_param_bypass.WDT",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        7
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_WDT_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_WDT_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-gate-wdt-rotate",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "WDT",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "gate_width_oct",
+      "before_value": 4.0,
+      "after_value": 4.07375,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        7
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_WDT_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_WDT_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-gate-bnd-click",
+      "area": "Editor Grid",
+      "stage": "gate",
+      "label": "BND",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "gate_band_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        2,
+        8
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_BND_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_gate_BND_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-header-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "CMP",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "comp_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        566,
+        1122,
+        666,
+        1139
+      ],
+      "hitbox_tag": [
+        "stage_hdr",
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_header\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_header\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-tbe-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "TBE",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "comp_tube",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_TBE_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_TBE_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-thr-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "THR",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "comp_param_bypass.THR",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_THR_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_THR_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-thr-rotate",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "THR",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "comp_threshold_db",
+      "before_value": -18.0,
+      "after_value": -15.3,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_THR_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_THR_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-comp-rat-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "RAT",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "comp_param_bypass.RAT",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_RAT_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_RAT_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-rat-rotate",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "RAT",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "comp_ratio",
+      "before_value": 4.0,
+      "after_value": 4.7125,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_RAT_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_RAT_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-comp-atk-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "ATK",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "comp_param_bypass.ATK",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_ATK_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_ATK_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-atk-rotate",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "ATK",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "comp_attack_ms",
+      "before_value": 8.0,
+      "after_value": 8.390470785361213,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_ATK_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_ATK_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-comp-rls-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "RLS",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "comp_param_bypass.RLS",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_RLS_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_RLS_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-rls-rotate",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "RLS",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "comp_release_ms",
+      "before_value": 120.0,
+      "after_value": 125.85706178041819,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_RLS_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_RLS_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-comp-gan-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "GAN",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "comp_param_bypass.GAN",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        5
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_GAN_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_GAN_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-gan-rotate",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "GAN",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "comp_makeup",
+      "before_value": 1.0,
+      "after_value": 1.05,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        5
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_GAN_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_GAN_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-comp-frq-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "FRQ",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "comp_param_bypass.FRQ",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        6
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_FRQ_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_FRQ_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-frq-rotate",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "FRQ",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "comp_center_hz",
+      "before_value": 3000.0,
+      "after_value": 3146.4265445104547,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        6
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_FRQ_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_FRQ_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-comp-wdt-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "WDT",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "comp_param_bypass.WDT",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        7
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_WDT_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_WDT_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-comp-wdt-rotate",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "WDT",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "comp_width_oct",
+      "before_value": 4.0,
+      "after_value": 4.07375,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        7
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_WDT_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_WDT_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-comp-bnd-click",
+      "area": "Editor Grid",
+      "stage": "comp",
+      "label": "BND",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "comp_band_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        3,
+        8
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_BND_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_comp_BND_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-header-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "EQ",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "eq_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        566,
+        1146,
+        666,
+        1163
+      ],
+      "hitbox_tag": [
+        "stage_hdr",
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_header\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_header\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-tbe-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "TBE",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "eq_tube",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_TBE_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_TBE_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-frq-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "FRQ",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "eq_param_bypass.FRQ",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_FRQ_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_FRQ_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-frq-rotate",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "FRQ",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "eq_freq",
+      "before_value": 2200.0,
+      "after_value": 2307.3794659743335,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_FRQ_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_FRQ_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-eq-gan-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "GAN",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "eq_param_bypass.GAN",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_GAN_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_GAN_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-gan-rotate",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "GAN",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "eq_gain_db",
+      "before_value": 0.0,
+      "after_value": 1.7999999999999998,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_GAN_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_GAN_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-eq-shp-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "SHP",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "eq_param_bypass.SHP",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_SHP_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_SHP_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-bnd-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "BND",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "eq_band_enabled",
+      "before_value": null,
+      "after_value": null,
+      "state_changed": false,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_BND_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_BND_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-bnd-rotate",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "BND",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "eq_width",
+      "before_value": 1.4,
+      "after_value": 1.47375,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_BND_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_BND_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-eq-trn-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "TRN",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "eq_param_bypass.TRN",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        5
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_TRN_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_TRN_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-trn-rotate",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "TRN",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "trn_freq",
+      "before_value": 136.0,
+      "after_value": 142.6380033511406,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        5
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_TRN_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_TRN_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-eq-atk-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "ATK",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "eq_param_bypass.ATK",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        6
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_ATK_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_ATK_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-atk-rotate",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "ATK",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "trn_attack",
+      "before_value": 0.0,
+      "after_value": 0.025,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        6
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_ATK_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_ATK_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-eq-sut-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "SUT",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "eq_param_bypass.SUT",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        7
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_SUT_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_SUT_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-eq-sut-rotate",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "SUT",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "trn_sustain",
+      "before_value": 0.0,
+      "after_value": 0.025,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        7
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_SUT_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_SUT_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-eq-bd2-click",
+      "area": "Editor Grid",
+      "stage": "eq",
+      "label": "BD2",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "limit_band_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        4,
+        8
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_BD2_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_eq_BD2_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-trn-header-click",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "TRN",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "trn_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        566,
+        1170,
+        666,
+        1187
+      ],
+      "hitbox_tag": [
+        "stage_hdr",
+        5
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_header\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_header\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-trn-frq-click",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "FRQ",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tone_param_bypass.FRQ",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        5,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_FRQ_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_FRQ_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-trn-frq-rotate",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "FRQ",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "trn_freq",
+      "before_value": 142.6380033511406,
+      "after_value": 149.60000000000002,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        5,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_FRQ_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_FRQ_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-trn-atk-click",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "ATK",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tone_param_bypass.ATK",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        5,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_ATK_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_ATK_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-trn-atk-rotate",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "ATK",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "trn_attack",
+      "before_value": 0.025,
+      "after_value": 0.05,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        5,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_ATK_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_ATK_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-trn-sut-click",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "SUT",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tone_param_bypass.SUT",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        5,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_SUT_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_SUT_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-trn-sut-rotate",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "SUT",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "trn_sustain",
+      "before_value": 0.025,
+      "after_value": 0.05,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        5,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_SUT_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_SUT_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-trn-drv-click",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "DRV",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tone_param_bypass.DRV",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        5,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_DRV_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_DRV_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-trn-drv-rotate",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "DRV",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "trn_drive",
+      "before_value": 0.0,
+      "after_value": 0.0125,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        5,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_DRV_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_DRV_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-trn-bnd-click",
+      "area": "Editor Grid",
+      "stage": "trn",
+      "label": "BND",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "trn_band_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        5,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_BND_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_trn_BND_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-xct-header-click",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "XCT",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "xct_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        566,
+        1194,
+        666,
+        1211
+      ],
+      "hitbox_tag": [
+        "stage_hdr",
+        6
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_header\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_header\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-xct-frq-click",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "FRQ",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tone_param_bypass.FRQ",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        6,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_FRQ_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_FRQ_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-xct-frq-rotate",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "FRQ",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "xct_freq",
+      "before_value": 7000.0,
+      "after_value": 7341.661937191061,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        6,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_FRQ_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_FRQ_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-xct-atk-click",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "ATK",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tone_param_bypass.ATK",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        6,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_ATK_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_ATK_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-xct-atk-rotate",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "ATK",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "xct_attack",
+      "before_value": 0.0,
+      "after_value": 0.025,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        6,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_ATK_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_ATK_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-xct-sut-click",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "SUT",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tone_param_bypass.SUT",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        6,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_SUT_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_SUT_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-xct-sut-rotate",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "SUT",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "xct_sustain",
+      "before_value": 0.0,
+      "after_value": 0.025,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        6,
+        2
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_SUT_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_SUT_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-xct-drv-click",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "DRV",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tone_param_bypass.DRV",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        6,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_DRV_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_DRV_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-xct-drv-rotate",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "DRV",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "xct_drive",
+      "before_value": 0.0,
+      "after_value": 0.0125,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        6,
+        3
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_DRV_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_DRV_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-xct-bnd-click",
+      "area": "Editor Grid",
+      "stage": "xct",
+      "label": "BND",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "xct_band_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        6,
+        4
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_BND_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_xct_BND_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-tbe-header-click",
+      "area": "Editor Grid",
+      "stage": "tbe",
+      "label": "TBE",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "tbe_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        566,
+        1218,
+        666,
+        1235
+      ],
+      "hitbox_tag": [
+        "stage_hdr",
+        7
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_tbe_header\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_tbe_header\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-tbe-drv-click",
+      "area": "Editor Grid",
+      "stage": "tbe",
+      "label": "DRV",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tone_param_bypass.DRV",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        7,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_tbe_DRV_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_tbe_DRV_click\\after_click.png"
+      }
+    },
+    {
+      "id": "editor-tbe-drv-rotate",
+      "area": "Editor Grid",
+      "stage": "tbe",
+      "label": "DRV",
+      "action": "actual_os_key_rbracket_after_actual_click_focus",
+      "result": "FAIL",
+      "state_attr": "tbe_drive",
+      "before_value": 0.0,
+      "after_value": 0.0125,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        7,
+        0
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_tbe_DRV_rotate\\before_rotate.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_tbe_DRV_rotate\\after_rotate.png"
+      }
+    },
+    {
+      "id": "editor-tbe-bnd-click",
+      "area": "Editor Grid",
+      "stage": "tbe",
+      "label": "BND",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "tbe_band_enabled",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "hitbox_tag": [
+        "stage_param",
+        7,
+        1
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_tbe_BND_click\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\editor_tbe_BND_click\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-play",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "PLY",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "playing",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_play\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_play\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-stop",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "STP",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "channel0_position",
+      "before_value": 26048,
+      "after_value": 0,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        569,
+        245,
+        663,
+        252
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_stop\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_stop\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-rewind",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "REW",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "channel0_position",
+      "before_value": 24000,
+      "after_value": 0,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        569,
+        245,
+        663,
+        251
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_rewind\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_rewind\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-forward",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "FFD",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "channel0_position",
+      "before_value": 0,
+      "after_value": 240000,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        569,
+        245,
+        2175,
+        270
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_forward\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_forward\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-record",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "REC",
+      "action": "actual_os_click",
+      "result": "PASS",
+      "state_attr": "record_armed",
+      "before_value": false,
+      "after_value": true,
+      "state_changed": true,
+      "visual_changed": true,
+      "diff_bbox": [
+        606,
+        987,
+        627,
+        1008
+      ],
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_record\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_record\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-oscillator",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "OSC",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "generator_mode",
+      "before_value": "none",
+      "after_value": "osc",
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_oscillator\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_oscillator\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-pink",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "PNK",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "generator_mode",
+      "before_value": "none",
+      "after_value": "pink",
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_pink\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_pink\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-white",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "WHT",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "generator_mode",
+      "before_value": "none",
+      "after_value": "white",
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_white\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_white\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-pink_pulse",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "PLS",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "generator_mode",
+      "before_value": "none",
+      "after_value": "pink_pulse",
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_pink_pulse\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_pink_pulse\\after_click.png"
+      }
+    },
+    {
+      "id": "transport-white_hot",
+      "area": "Transport Panel",
+      "stage": "transport",
+      "label": "HOT",
+      "action": "actual_os_click",
+      "result": "FAIL",
+      "state_attr": "generator_mode",
+      "before_value": "none",
+      "after_value": "white_hot",
+      "state_changed": true,
+      "visual_changed": false,
+      "diff_bbox": null,
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_white_hot\\before_click.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\actual_ui_20260507_152442\\transport_white_hot\\after_click.png"
+      }
+    }
+  ]
+}

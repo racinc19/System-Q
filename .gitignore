@@ -52,6 +52,7 @@ software/loops/*.wav
 
 # Spreadsheet exports
 *.xlsx
+outputs/**/node_modules/
 
 # Oversized vendor asset (> GitHub limit); keep local-only
 LEWITTxEYESHALFSHUT.zip

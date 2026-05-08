@@ -1,0 +1,61 @@
+{
+  "run_dir": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\nav_rate_limit_20260507_204353",
+  "total": 8,
+  "passed": 8,
+  "results": [
+    {
+      "control": "gate THR responsive fine step",
+      "passed": true,
+      "before": -45.0,
+      "after": -43.164,
+      "delta": 1.8359999999999985
+    },
+    {
+      "control": "immediate rotate repeat is dropped",
+      "passed": true,
+      "first": -43.164,
+      "immediate_second": -43.164
+    },
+    {
+      "control": "rotate accepts after cooldown",
+      "passed": true,
+      "after_cooldown": -41.328,
+      "previous": -43.164
+    },
+    {
+      "control": "small twist still moves threshold",
+      "passed": true,
+      "before": -45.0,
+      "after": -44.541,
+      "delta": 0.4590000000000032
+    },
+    {
+      "control": "immediate nav repeat is dropped",
+      "passed": true,
+      "first_stage": "comp",
+      "immediate_second_stage": "comp"
+    },
+    {
+      "control": "nav accepts after cooldown",
+      "passed": true,
+      "after_cooldown_stage": "eq",
+      "previous": "comp"
+    },
+    {
+      "control": "stale poll keeps twist but drops nav",
+      "passed": true,
+      "axis": 0.35,
+      "directions": []
+    },
+    {
+      "control": "new tilt emits immediate one-step nav",
+      "passed": true,
+      "first_axis": 0.0,
+      "first_dirs": [
+        "right"
+      ],
+      "second_axis": 0.0,
+      "second_dirs": []
+    }
+  ]
+}

@@ -31,6 +31,10 @@ class ConsoleApp(UIMixin):
         self.root.configure(bg="#222831")
         
         self.engine = ConsoleEngine()
+        _log.info(f"--- Audio Load Audit ---")
+        for ch in self.engine.channels:
+            alen = len(ch.audio) if ch.audio is not None else 0
+            _log.info(f"Channel {ch.name}: {alen} samples")
         self.spacemouse = SpaceMouseController()
         
         # State

@@ -1,0 +1,3129 @@
+{
+  "run_dir": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415",
+  "standard": "PASS only when the visible control crop changes after a real OS click/key event.",
+  "total": 104,
+  "passed": 88,
+  "failed": 16,
+  "results": [
+    {
+      "id": "editor-pre-header-click",
+      "stage": "pre",
+      "label": "PRE",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "15fc7c46e7cd242ce1c5c11f742c32ad147be9a24ad65807379db7f672d93bfd",
+      "after_sha256": "15fc7c46e7cd242ce1c5c11f742c32ad147be9a24ad65807379db7f672d93bfd",
+      "before_state": {
+        "stage": "pre",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "pre",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_header\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_header\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-pre-tbe-click",
+      "stage": "pre",
+      "label": "TBE",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "5bda49d8631082f255d415d7c73a1c7b79fe40e4b71d4ce249106eca6629db5e",
+      "after_sha256": "c195134e7bb0149c99a5593a58efd846b81f7585b9abc31d71aeadadd54cd7c8",
+      "before_state": {
+        "stage": "pre",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "pre",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_TBE_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_TBE_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-pre-lpf-click",
+      "stage": "pre",
+      "label": "LPF",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "363131336e635bd82591f82889df00f63c1ed6991a8184a359f9558ee0ad56e9",
+      "after_sha256": "e51e5a4168059b2bd5d8add2f40c1709268bb87e02dac18b9987e5d257536288",
+      "before_state": {
+        "stage": "pre",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "pre",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_LPF_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_LPF_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-pre-lpf-rotate",
+      "stage": "pre",
+      "label": "LPF",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "363131336e635bd82591f82889df00f63c1ed6991a8184a359f9558ee0ad56e9",
+      "after_sha256": "b116674a7ec2fd9c21bc8706ec55e487de21a79125f77b838da2cb378c515d72",
+      "before_state": {
+        "stage": "pre",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "pre",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_LPF_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_LPF_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-pre-48v-click",
+      "stage": "pre",
+      "label": "48V",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "577381c4925d206c497270cd7ba80d3230d780d5161934dd3d7b5ebba3890101",
+      "after_sha256": "fce4d048a050a41268e8429ab382ed425dc88f5532bb0a28ef7bd58fb9ad8252",
+      "before_state": {
+        "stage": "pre",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "pre",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_48V_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_48V_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-pre-phs-click",
+      "stage": "pre",
+      "label": "PHS",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "4b67013d4bed0d246e556c0800c4361ff00bef0fc3e162a425562be93b320d3d",
+      "after_sha256": "b402248e4355634e05be8e3cdd10056a6ca319b7c51ea23758c73890abd1bc6a",
+      "before_state": {
+        "stage": "pre",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "pre",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_PHS_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_PHS_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-pre-hpf-click",
+      "stage": "pre",
+      "label": "HPF",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "56bc9d080fdb935dc2aeb005b36223f8ed7b396138f1f6fee7c51f8e7c398f71",
+      "after_sha256": "e5bbd9a8226c2ad5dfa4505e1f158346f4eb5ee8aa7382e9fd00f32c15b84e40",
+      "before_state": {
+        "stage": "pre",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "pre",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_HPF_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_HPF_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-pre-hpf-rotate",
+      "stage": "pre",
+      "label": "HPF",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "56bc9d080fdb935dc2aeb005b36223f8ed7b396138f1f6fee7c51f8e7c398f71",
+      "after_sha256": "00f0e5987f53a5a6ed86ba9f70dae2a7868f5491c629d3faeaac4fc8c8b3437a",
+      "before_state": {
+        "stage": "pre",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "pre",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_HPF_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_pre_HPF_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-header-click",
+      "stage": "harm",
+      "label": "HRM",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "eb981828ad24b2b9540e09b9b084e478ee5e64fa43697bb19e00681e825fd768",
+      "after_sha256": "eb981828ad24b2b9540e09b9b084e478ee5e64fa43697bb19e00681e825fd768",
+      "before_state": {
+        "stage": "harm",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_header\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_header\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-tbe-click",
+      "stage": "harm",
+      "label": "TBE",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "ddb44ef2059b6a62ba79be3641131d1d8cae2886dae85a5d003f85694292e7be",
+      "after_sha256": "0bdab2f71c23764f93202f95d492ace6969e73fb4f30c01d565496e52452fc58",
+      "before_state": {
+        "stage": "harm",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_TBE_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_TBE_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h1-click",
+      "stage": "harm",
+      "label": "H1",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "100cb5555f975797c19ea8f429545c02dd82883e1f1e02d06a81379cf74fdb8c",
+      "after_sha256": "a3d5beb8abc993796a174ebcb417aee6740c1c2d24d710d669848a3276072031",
+      "before_state": {
+        "stage": "harm",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H1_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H1_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h1-rotate",
+      "stage": "harm",
+      "label": "H1",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "100cb5555f975797c19ea8f429545c02dd82883e1f1e02d06a81379cf74fdb8c",
+      "after_sha256": "a86e4666e9e1d2efff8312eb1759994c9dc5a250a516d9c07009f68f757197c5",
+      "before_state": {
+        "stage": "harm",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H1_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H1_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h2-click",
+      "stage": "harm",
+      "label": "H2",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "fa133c7ddcf17b23955e351948318d0919685606c80ca81da1a52c712a141948",
+      "after_sha256": "1cb8b1ae521c8eee72d34139a45c8ba77442f0af44cf8f22b141d19d8690769c",
+      "before_state": {
+        "stage": "harm",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H2_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H2_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h2-rotate",
+      "stage": "harm",
+      "label": "H2",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "fa133c7ddcf17b23955e351948318d0919685606c80ca81da1a52c712a141948",
+      "after_sha256": "d26ed670ca188015b7f803b3728f6127ff26482eddcc9f3af4e64dcab9c7c2ce",
+      "before_state": {
+        "stage": "harm",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H2_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H2_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h3-click",
+      "stage": "harm",
+      "label": "H3",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "8f6bbfc64ceb0f5d8db9ba457bf0b757ca79e4631d0b4c2733a318170027abea",
+      "after_sha256": "8982dc1a5bde230279bf823a104aec0ab0cd5766f8ee374c5dd863a63ca466d4",
+      "before_state": {
+        "stage": "harm",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H3_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H3_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h3-rotate",
+      "stage": "harm",
+      "label": "H3",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "8f6bbfc64ceb0f5d8db9ba457bf0b757ca79e4631d0b4c2733a318170027abea",
+      "after_sha256": "e4d1e4169bfd53f769b2c336c0e483834bef7c1a6c4c9b057aa1218e6c31e71f",
+      "before_state": {
+        "stage": "harm",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H3_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H3_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h4-click",
+      "stage": "harm",
+      "label": "H4",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "3f4eb7c216d51c7665bee8108101fd3bcee82478bd4d5ec1c7aa1ba171eb6271",
+      "after_sha256": "6005fe29c2d371bcd5aa89b9dd1b15330ffe09c90c95933b2ae0a19bc7d31f79",
+      "before_state": {
+        "stage": "harm",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H4_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H4_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h4-rotate",
+      "stage": "harm",
+      "label": "H4",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "3f4eb7c216d51c7665bee8108101fd3bcee82478bd4d5ec1c7aa1ba171eb6271",
+      "after_sha256": "a315d3de57aec887453f634a5ba98d8605be2cf77a3de51800dc184ff983ed5b",
+      "before_state": {
+        "stage": "harm",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H4_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H4_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h5-click",
+      "stage": "harm",
+      "label": "H5",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b0eed5625ae13a7e83840c4f85514738a02606cbdbf9378b9457f7a905d0970c",
+      "after_sha256": "5fa122cfd9179efabeadffdf73a50db6c5d64eaf4f427d4ffe80ad56c53e8d47",
+      "before_state": {
+        "stage": "harm",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H5_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H5_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-harm-h5-rotate",
+      "stage": "harm",
+      "label": "H5",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b0eed5625ae13a7e83840c4f85514738a02606cbdbf9378b9457f7a905d0970c",
+      "after_sha256": "7171b9dacef742091d84594b1484f99119935964ee5063aa3f19ab055fdb47fa",
+      "before_state": {
+        "stage": "harm",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "harm",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H5_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_harm_H5_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-header-click",
+      "stage": "gate",
+      "label": "GTE",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "39301b8d3ea8f4b97a1486421dc7db7fa64471a6e07542c12bcd93172b4da883",
+      "after_sha256": "39301b8d3ea8f4b97a1486421dc7db7fa64471a6e07542c12bcd93172b4da883",
+      "before_state": {
+        "stage": "gate",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_header\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_header\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-tbe-click",
+      "stage": "gate",
+      "label": "TBE",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "0bea19da6497226134e5f0c71f09afe0baaf69b035e575e0a43753cfe054f9db",
+      "after_sha256": "a3d57655942faf2776dd5c0217bd1b0e6aad9e5f2b0379a39bd6a0d0bbb4016b",
+      "before_state": {
+        "stage": "gate",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_TBE_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_TBE_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-thr-click",
+      "stage": "gate",
+      "label": "THR",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "450bbb092612305602c9e5ab2b2ed076c5a9bcdaf53bbd1df743e404ba764b5b",
+      "after_sha256": "5cb954399a1b932294bb47c14592033b3d40e6642f9c181f324497017366a904",
+      "before_state": {
+        "stage": "gate",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_THR_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_THR_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-thr-rotate",
+      "stage": "gate",
+      "label": "THR",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "450bbb092612305602c9e5ab2b2ed076c5a9bcdaf53bbd1df743e404ba764b5b",
+      "after_sha256": "12a903c8454ad36622b78afb949e0102fe8deda1da8baabf67c4182e9d3434ff",
+      "before_state": {
+        "stage": "gate",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_THR_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_THR_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-rat-click",
+      "stage": "gate",
+      "label": "RAT",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b2b51c4d7d94fda63cea9c7656f572e0152ff64f3a4c559919b87298a18e8e17",
+      "after_sha256": "31536e345dbe6acda31f1449c8b6e960709a2e9ccd9e49948c78c1c579e91a15",
+      "before_state": {
+        "stage": "gate",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_RAT_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_RAT_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-rat-rotate",
+      "stage": "gate",
+      "label": "RAT",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b2b51c4d7d94fda63cea9c7656f572e0152ff64f3a4c559919b87298a18e8e17",
+      "after_sha256": "683b9a9cbbc087875de0888f74538c40d4d39880280b831ffe783c52b535dca4",
+      "before_state": {
+        "stage": "gate",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_RAT_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_RAT_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-atk-click",
+      "stage": "gate",
+      "label": "ATK",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "9cc601d8e2701edbaeba6ad0cd1892f5e9c5eae8913e61b43663d18fa62a1651",
+      "after_sha256": "5013c9c4bc6eace20a8ab8359f018cba270c5cb9ff816b0248d68c77762eb71f",
+      "before_state": {
+        "stage": "gate",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_ATK_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_ATK_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-atk-rotate",
+      "stage": "gate",
+      "label": "ATK",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "9cc601d8e2701edbaeba6ad0cd1892f5e9c5eae8913e61b43663d18fa62a1651",
+      "after_sha256": "61fcff090972699009bb714ef98a07846c62ed97e969308fa0133f39ae11ab1c",
+      "before_state": {
+        "stage": "gate",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_ATK_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_ATK_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-rls-click",
+      "stage": "gate",
+      "label": "RLS",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "837277b70e9721b733cfca1536d93a9ff947a283ea49475f56a5f9d53c2bba1c",
+      "after_sha256": "349523ecc45b33e83f2c4fad0dd41e5709a36f17f5d7f931a341101bddd4a937",
+      "before_state": {
+        "stage": "gate",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_RLS_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_RLS_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-rls-rotate",
+      "stage": "gate",
+      "label": "RLS",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "837277b70e9721b733cfca1536d93a9ff947a283ea49475f56a5f9d53c2bba1c",
+      "after_sha256": "d9c2a9049e7329a3f95b6b30b1e83360ad722e3e9312b8f0e02e8c535ec87363",
+      "before_state": {
+        "stage": "gate",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_RLS_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_RLS_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-gan-click",
+      "stage": "gate",
+      "label": "GAN",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "48ac4b369b4914b88a1e9ae8cf075fc75bee5a580c7b855864a47ebc10fb2108",
+      "after_sha256": "56be191912ae0e5a03a73549189a72b8b44874552e2a20445fdee980a73f9e51",
+      "before_state": {
+        "stage": "gate",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_GAN_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_GAN_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-gan-rotate",
+      "stage": "gate",
+      "label": "GAN",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "48ac4b369b4914b88a1e9ae8cf075fc75bee5a580c7b855864a47ebc10fb2108",
+      "after_sha256": "17607538a700dd9b72718d7b59317ef87f56b078113bf13fef00729479e23965",
+      "before_state": {
+        "stage": "gate",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_GAN_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_GAN_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-frq-click",
+      "stage": "gate",
+      "label": "FRQ",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "3a10341cd917f5aa0f1eb8e41dca688a08e5980280547608fb0a6236b9a18d21",
+      "after_sha256": "b71993ef47439a492484f75feba4c528e5d269354490a900ff987a1c4c0cdb1b",
+      "before_state": {
+        "stage": "gate",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_FRQ_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_FRQ_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-frq-rotate",
+      "stage": "gate",
+      "label": "FRQ",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "3a10341cd917f5aa0f1eb8e41dca688a08e5980280547608fb0a6236b9a18d21",
+      "after_sha256": "171bafa7dbb3b1145584eafb286d353bf79c9601e1a8cbb3c2c002f8237b836c",
+      "before_state": {
+        "stage": "gate",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_FRQ_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_FRQ_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-wdt-click",
+      "stage": "gate",
+      "label": "WDT",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "88d601ab69ead0c4ba123338b0c90e2fb973f26b38107f1e1e2777bf9934ad69",
+      "after_sha256": "952ec53b7c3668f62ebb07859c253181f7c9350d7e04b179c652748322683ce2",
+      "before_state": {
+        "stage": "gate",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_WDT_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_WDT_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-wdt-rotate",
+      "stage": "gate",
+      "label": "WDT",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "88d601ab69ead0c4ba123338b0c90e2fb973f26b38107f1e1e2777bf9934ad69",
+      "after_sha256": "8bcc3073231d17e89ba5ecdc8cecfc7f9a6c5c5492a3f9907cbfd59707042b44",
+      "before_state": {
+        "stage": "gate",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_WDT_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_WDT_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-gate-bnd-click",
+      "stage": "gate",
+      "label": "BND",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "e197f5cab5e43ee620c6c0832997d215468b999a1812b809bd9411f1516f317a",
+      "after_sha256": "e0a0ab3d8e178fcdf744f3c9107feb7a47f54fc3ce9e9612792911eb5e92168b",
+      "before_state": {
+        "stage": "gate",
+        "row": 8,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "gate",
+        "row": 8,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_BND_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_gate_BND_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-header-click",
+      "stage": "comp",
+      "label": "CMP",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "0476f71bd912eaa4508b3f9a403defd6985f62d8680615d645225c73d0bef45f",
+      "after_sha256": "0476f71bd912eaa4508b3f9a403defd6985f62d8680615d645225c73d0bef45f",
+      "before_state": {
+        "stage": "comp",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_header\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_header\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-tbe-click",
+      "stage": "comp",
+      "label": "TBE",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "0bea19da6497226134e5f0c71f09afe0baaf69b035e575e0a43753cfe054f9db",
+      "after_sha256": "fe0fe5626731ffd0efdb139e630992992a4cdd31b228d2ec35ca7b6dea79cf7e",
+      "before_state": {
+        "stage": "comp",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_TBE_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_TBE_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-thr-click",
+      "stage": "comp",
+      "label": "THR",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "bb7f1bc77a79bf1845f6da7ac877381d1b72b58f86d5b32b20b16e50970becba",
+      "after_sha256": "18388b4a42928a28636fb36c8e6242126cbd38544c29739f64a43eacc279aaf9",
+      "before_state": {
+        "stage": "comp",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_THR_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_THR_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-thr-rotate",
+      "stage": "comp",
+      "label": "THR",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "bb7f1bc77a79bf1845f6da7ac877381d1b72b58f86d5b32b20b16e50970becba",
+      "after_sha256": "55bc03c444b1dfb1b7a958b9fad45ce2ef740687c1614dbc77a21d58043f2537",
+      "before_state": {
+        "stage": "comp",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_THR_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_THR_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-rat-click",
+      "stage": "comp",
+      "label": "RAT",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b33f6423554b202b97f14fd47f1c5c30b2af5a40ae4c610c326cc40d165170cf",
+      "after_sha256": "9ebbf1d7d88ebb9a61bea6e55588b4238cc07df2306919a5c67ba2de3fe27666",
+      "before_state": {
+        "stage": "comp",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_RAT_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_RAT_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-rat-rotate",
+      "stage": "comp",
+      "label": "RAT",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b33f6423554b202b97f14fd47f1c5c30b2af5a40ae4c610c326cc40d165170cf",
+      "after_sha256": "ead6e6449c0158a6b1b60410dab4090be12d6bb9372b17f3d25b3b78b8249667",
+      "before_state": {
+        "stage": "comp",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_RAT_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_RAT_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-atk-click",
+      "stage": "comp",
+      "label": "ATK",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "ba35e960355535a895c937825d26d4398203607f5e48ec98781beab7e1ededb3",
+      "after_sha256": "e37a81077efdbfb1c2bc3a04ea1b1aca00403154a2ef0cf32676e9d4c3ce39f7",
+      "before_state": {
+        "stage": "comp",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_ATK_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_ATK_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-atk-rotate",
+      "stage": "comp",
+      "label": "ATK",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "ba35e960355535a895c937825d26d4398203607f5e48ec98781beab7e1ededb3",
+      "after_sha256": "503839a49e9c60348edead097af7a4fca2c9af1d1f3316c2d5bb4428958c01bc",
+      "before_state": {
+        "stage": "comp",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_ATK_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_ATK_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-rls-click",
+      "stage": "comp",
+      "label": "RLS",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "5a97cef2a8b3c091388f7b5905d97957bd911674a6580b59f82d8b7f65f75bb3",
+      "after_sha256": "b097298980e8a060dbaf16947d6b69e3766729451f4d179a25ee5f864057b78d",
+      "before_state": {
+        "stage": "comp",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_RLS_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_RLS_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-rls-rotate",
+      "stage": "comp",
+      "label": "RLS",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "5a97cef2a8b3c091388f7b5905d97957bd911674a6580b59f82d8b7f65f75bb3",
+      "after_sha256": "0c978b447f15277c848883c92661049f13ae063f033eb6f8b14db20e1f26c6cd",
+      "before_state": {
+        "stage": "comp",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_RLS_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_RLS_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-gan-click",
+      "stage": "comp",
+      "label": "GAN",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "a142e9bb7e058470a6e19f0b69d852fb0c13d530eab7770d6073328f8e2ffe20",
+      "after_sha256": "56be191912ae0e5a03a73549189a72b8b44874552e2a20445fdee980a73f9e51",
+      "before_state": {
+        "stage": "comp",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_GAN_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_GAN_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-gan-rotate",
+      "stage": "comp",
+      "label": "GAN",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "a142e9bb7e058470a6e19f0b69d852fb0c13d530eab7770d6073328f8e2ffe20",
+      "after_sha256": "e90d16db23a3dfde20b223f0aa91fe6c10e2ab91fb5c9847442e8f247e11e934",
+      "before_state": {
+        "stage": "comp",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_GAN_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_GAN_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-frq-click",
+      "stage": "comp",
+      "label": "FRQ",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "946af8c12802de7a6556eeff89a3e8b461cbf32f59d191b1f362cf8fea893b0b",
+      "after_sha256": "b71993ef47439a492484f75feba4c528e5d269354490a900ff987a1c4c0cdb1b",
+      "before_state": {
+        "stage": "comp",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_FRQ_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_FRQ_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-frq-rotate",
+      "stage": "comp",
+      "label": "FRQ",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "946af8c12802de7a6556eeff89a3e8b461cbf32f59d191b1f362cf8fea893b0b",
+      "after_sha256": "34644f7d29f74e21ffa550307f60ce7d28b01e9232ccf403959cf96cc9b1253c",
+      "before_state": {
+        "stage": "comp",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_FRQ_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_FRQ_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-wdt-click",
+      "stage": "comp",
+      "label": "WDT",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b730af00945752c7c5950fd545f6d81dfc027a12972db1d8299d1d2406113a50",
+      "after_sha256": "952ec53b7c3668f62ebb07859c253181f7c9350d7e04b179c652748322683ce2",
+      "before_state": {
+        "stage": "comp",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_WDT_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_WDT_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-wdt-rotate",
+      "stage": "comp",
+      "label": "WDT",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b730af00945752c7c5950fd545f6d81dfc027a12972db1d8299d1d2406113a50",
+      "after_sha256": "44a5b76fa7e6bc0018559192cff273ea28e8b4335e5598fd2c7ed06ae1b5f6a3",
+      "before_state": {
+        "stage": "comp",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_WDT_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_WDT_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-comp-bnd-click",
+      "stage": "comp",
+      "label": "BND",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "e197f5cab5e43ee620c6c0832997d215468b999a1812b809bd9411f1516f317a",
+      "after_sha256": "d4fb10ec6cf18a552c9dee86105f7e949e8a4139712e3e828f7b25fc05aab91d",
+      "before_state": {
+        "stage": "comp",
+        "row": 8,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "comp",
+        "row": 8,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_BND_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_comp_BND_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-header-click",
+      "stage": "eq",
+      "label": "EQ",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "04fbd1ea27a06c95b3fdeaea05d6b7b07760ed4698ad774fd5eec900edc2c112",
+      "after_sha256": "04fbd1ea27a06c95b3fdeaea05d6b7b07760ed4698ad774fd5eec900edc2c112",
+      "before_state": {
+        "stage": "eq",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_header\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_header\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-tbe-click",
+      "stage": "eq",
+      "label": "TBE",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "0bea19da6497226134e5f0c71f09afe0baaf69b035e575e0a43753cfe054f9db",
+      "after_sha256": "e0b160f0a628eaf135d67affcb21e6e4093d4355741ae906a3bfe88207ca8e16",
+      "before_state": {
+        "stage": "eq",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_TBE_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_TBE_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-frq-click",
+      "stage": "eq",
+      "label": "FRQ",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "f55f5cf82f0476874fbab3f747d18d072560aed7c15a8c5939d173b4ea48f4b7",
+      "after_sha256": "8b191ce59879fcb6c5bc963371b21755e4bc0fef533ac31eb6662cb057f90f39",
+      "before_state": {
+        "stage": "eq",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_FRQ_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_FRQ_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-frq-rotate",
+      "stage": "eq",
+      "label": "FRQ",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "f55f5cf82f0476874fbab3f747d18d072560aed7c15a8c5939d173b4ea48f4b7",
+      "after_sha256": "b75772cadf41d07303a2f1e7dd73ee30f259db460d73f44ff1d0f9c4a85cb8a9",
+      "before_state": {
+        "stage": "eq",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_FRQ_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_FRQ_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-gan-click",
+      "stage": "eq",
+      "label": "GAN",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "38a51e93d64077f8c10a642123cede4ed9a01d207b1e93ee365992d9e083ede0",
+      "after_sha256": "9dd4a2197419b27a0c989221cebda2076855dac936a68f771d10cedc08cd5dcb",
+      "before_state": {
+        "stage": "eq",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_GAN_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_GAN_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-gan-rotate",
+      "stage": "eq",
+      "label": "GAN",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "38a51e93d64077f8c10a642123cede4ed9a01d207b1e93ee365992d9e083ede0",
+      "after_sha256": "21e5bfd6fb2c8e1301d00af99200b1d9cbe8d7d99fae69a77537c8fbb93b5895",
+      "before_state": {
+        "stage": "eq",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_GAN_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_GAN_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-shp-click",
+      "stage": "eq",
+      "label": "SHP",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "164a609d17cf92e41cbbf3a8c17185f26aa4e322ec37e0b77ddf49e6b68d670c",
+      "after_sha256": "e1e02541e59bd3ff79e07f15a22a5f050835d0de338294dca592924fbdff1723",
+      "before_state": {
+        "stage": "eq",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_SHP_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_SHP_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-bnd-click",
+      "stage": "eq",
+      "label": "BND",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "5cd356cf20cc5fa3311c4d81b2e344d8b48002301dc85f7da0b7a4cc8f3077d9",
+      "after_sha256": "5cd356cf20cc5fa3311c4d81b2e344d8b48002301dc85f7da0b7a4cc8f3077d9",
+      "before_state": {
+        "stage": "eq",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_BND_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_BND_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-bnd-rotate",
+      "stage": "eq",
+      "label": "BND",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "5cd356cf20cc5fa3311c4d81b2e344d8b48002301dc85f7da0b7a4cc8f3077d9",
+      "after_sha256": "5e830efd1a4d0c2ce0f700c3b30b5bd9bf75772a33dd0da0b2bfb106d9114a54",
+      "before_state": {
+        "stage": "eq",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_BND_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_BND_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-trn-click",
+      "stage": "eq",
+      "label": "TRN",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "627e056bbf7df93bf65ab89609df20b2dd2bd971c103fa52219093c669d58d46",
+      "after_sha256": "34670e243b533d9bda1fee04f42d69ae99acfdbc941703927b732c0319c31311",
+      "before_state": {
+        "stage": "eq",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_TRN_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_TRN_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-trn-rotate",
+      "stage": "eq",
+      "label": "TRN",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "627e056bbf7df93bf65ab89609df20b2dd2bd971c103fa52219093c669d58d46",
+      "after_sha256": "8a5e99c2b5f3f2a2d8c116d95c52bdcdeea51473904d9a2ccd5c943e32e34c94",
+      "before_state": {
+        "stage": "eq",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 5,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_TRN_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_TRN_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-atk-click",
+      "stage": "eq",
+      "label": "ATK",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b600ae0b2a62522b5642f9ea0c3f6c2668fdde5bc4315dc4d72d1b98cbadce7b",
+      "after_sha256": "35a4248e95590942f1bbf527857a369ad54145c6449f3c9e17f823b565669f9d",
+      "before_state": {
+        "stage": "eq",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_ATK_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_ATK_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-atk-rotate",
+      "stage": "eq",
+      "label": "ATK",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b600ae0b2a62522b5642f9ea0c3f6c2668fdde5bc4315dc4d72d1b98cbadce7b",
+      "after_sha256": "8a0d74df22037622313b629006bfe1135678d99f6e4afd20f54b1e16b5e67f1a",
+      "before_state": {
+        "stage": "eq",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 6,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_ATK_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_ATK_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-sut-click",
+      "stage": "eq",
+      "label": "SUT",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "a89036d1a76a1fd989728dbee81cbe9beaadbe02bb3f8bebdc9d9de43c6af511",
+      "after_sha256": "ad8ae55396bcd72e3f76ae7758f77a759598db0e58712bc3a9952305a774b9d4",
+      "before_state": {
+        "stage": "eq",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_SUT_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_SUT_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-sut-rotate",
+      "stage": "eq",
+      "label": "SUT",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "a89036d1a76a1fd989728dbee81cbe9beaadbe02bb3f8bebdc9d9de43c6af511",
+      "after_sha256": "7bd4270100d48b4d6499ac615463cfa32806e0e1764bfa7a34a048a664765dda",
+      "before_state": {
+        "stage": "eq",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 7,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_SUT_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_SUT_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-eq-bd2-click",
+      "stage": "eq",
+      "label": "BD2",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "1972f4a78ba78f00cb18a332289ec0bba5d920d62d069be4d3dbe5b3ae5023ac",
+      "after_sha256": "581f20506e86d4dd117993be56dc50e25a107bd4ebe980dd2311f12dc712c301",
+      "before_state": {
+        "stage": "eq",
+        "row": 8,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "eq",
+        "row": 8,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_BD2_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_eq_BD2_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-header-click",
+      "stage": "trn",
+      "label": "TRN",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "2b1b2b5d5f758d01af2979a7312ed7633cef1ae368d0b07a3918bc809ade871f",
+      "after_sha256": "2b1b2b5d5f758d01af2979a7312ed7633cef1ae368d0b07a3918bc809ade871f",
+      "before_state": {
+        "stage": "trn",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_header\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_header\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-frq-click",
+      "stage": "trn",
+      "label": "FRQ",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b899cf2d2906b4cbc2a1869992df829e011ec1babd8386b8f6c867f89a9cb523",
+      "after_sha256": "4393e834bbccb14837ed9ba3704744c87735fdc024d66006127456dacb55d81a",
+      "before_state": {
+        "stage": "trn",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_FRQ_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_FRQ_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-frq-rotate",
+      "stage": "trn",
+      "label": "FRQ",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b899cf2d2906b4cbc2a1869992df829e011ec1babd8386b8f6c867f89a9cb523",
+      "after_sha256": "f0ab8db33dd47d19c95d686c16703db4ef248668b76bd1242e4cbf940dd74940",
+      "before_state": {
+        "stage": "trn",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_FRQ_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_FRQ_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-atk-click",
+      "stage": "trn",
+      "label": "ATK",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "94d9a0006fa6d127ca439fff529c28ff9f21003a4b4c8b11c46111413afae669",
+      "after_sha256": "7769958bf8aec450ddda6ed49cd5b3a9b23caf62a86b13f48f64f6ea3d5b2793",
+      "before_state": {
+        "stage": "trn",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_ATK_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_ATK_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-atk-rotate",
+      "stage": "trn",
+      "label": "ATK",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "94d9a0006fa6d127ca439fff529c28ff9f21003a4b4c8b11c46111413afae669",
+      "after_sha256": "70766342bc2bfae08e6c8c30c14ec4af5bde29e9f7da644ea36207fd13b4d939",
+      "before_state": {
+        "stage": "trn",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_ATK_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_ATK_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-sut-click",
+      "stage": "trn",
+      "label": "SUT",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "24ea8a53851c8cb875ab0d916114b9c7fee1cf2f839f64b9bb3e0fd289af359d",
+      "after_sha256": "0fe76e04cf154982c33f398a38adbcd728b633a9a54a42188083577e6090265f",
+      "before_state": {
+        "stage": "trn",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_SUT_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_SUT_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-sut-rotate",
+      "stage": "trn",
+      "label": "SUT",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "24ea8a53851c8cb875ab0d916114b9c7fee1cf2f839f64b9bb3e0fd289af359d",
+      "after_sha256": "e5a3542c376d7a5d75d0e58e001cabdba5d57a6598e5ae5d7b7c3de8bad576cb",
+      "before_state": {
+        "stage": "trn",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_SUT_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_SUT_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-drv-click",
+      "stage": "trn",
+      "label": "DRV",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b1d9b8d919b309eb9011ef23e552450f4d2936ebfd97d2113b39b99943ee10ac",
+      "after_sha256": "4e2681149a51606f02ab066917121bae6d58b928adcb4f99c30f98f37256865f",
+      "before_state": {
+        "stage": "trn",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_DRV_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_DRV_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-drv-rotate",
+      "stage": "trn",
+      "label": "DRV",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "b1d9b8d919b309eb9011ef23e552450f4d2936ebfd97d2113b39b99943ee10ac",
+      "after_sha256": "ce70469ca02205ac7a283092925c620729972966128de55f6c9e30176748e90d",
+      "before_state": {
+        "stage": "trn",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_DRV_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_DRV_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-trn-bnd-click",
+      "stage": "trn",
+      "label": "BND",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "a154a5baab73e7024a925e1c2617af4d65bf2db479a7e43e483e208055f1a352",
+      "after_sha256": "ff7e037566041ffc1cd2f493623e2d4c8fd7792e9d4ba7c43f08b0425c2f7baf",
+      "before_state": {
+        "stage": "trn",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "trn",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_BND_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_trn_BND_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-header-click",
+      "stage": "xct",
+      "label": "XCT",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "3c87c556728e5b7cce8aa7f99acccfb88c1b1723d47b317f2ec119af1738bad3",
+      "after_sha256": "3c87c556728e5b7cce8aa7f99acccfb88c1b1723d47b317f2ec119af1738bad3",
+      "before_state": {
+        "stage": "xct",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_header\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_header\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-frq-click",
+      "stage": "xct",
+      "label": "FRQ",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "1d1595b77c1d04d3fe9ce0956429b906780e1122ae93834e29086c86c1708b45",
+      "after_sha256": "424bd9aa9b5cd2c9601d172147a4608f338bac46392d81183ab01085e95ca43a",
+      "before_state": {
+        "stage": "xct",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_FRQ_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_FRQ_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-frq-rotate",
+      "stage": "xct",
+      "label": "FRQ",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "1d1595b77c1d04d3fe9ce0956429b906780e1122ae93834e29086c86c1708b45",
+      "after_sha256": "60b9c6a8b169fa9ce2b009977c3856ccfcb0393389c21fde08938dbcd002ab13",
+      "before_state": {
+        "stage": "xct",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_FRQ_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_FRQ_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-atk-click",
+      "stage": "xct",
+      "label": "ATK",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "462085295b0b4d4331c48df0b8f23459a21a26100be2bb827022aa8212eabc85",
+      "after_sha256": "462085295b0b4d4331c48df0b8f23459a21a26100be2bb827022aa8212eabc85",
+      "before_state": {
+        "stage": "xct",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_ATK_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_ATK_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-atk-rotate",
+      "stage": "xct",
+      "label": "ATK",
+      "action": "real_rbracket_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "462085295b0b4d4331c48df0b8f23459a21a26100be2bb827022aa8212eabc85",
+      "after_sha256": "462085295b0b4d4331c48df0b8f23459a21a26100be2bb827022aa8212eabc85",
+      "before_state": {
+        "stage": "xct",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_ATK_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_ATK_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-sut-click",
+      "stage": "xct",
+      "label": "SUT",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "f21ae7310e0c00ee46b876d9c536b04e43fe3fb4349aaf113436c5773340071b",
+      "after_sha256": "f21ae7310e0c00ee46b876d9c536b04e43fe3fb4349aaf113436c5773340071b",
+      "before_state": {
+        "stage": "xct",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_SUT_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_SUT_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-sut-rotate",
+      "stage": "xct",
+      "label": "SUT",
+      "action": "real_rbracket_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "f21ae7310e0c00ee46b876d9c536b04e43fe3fb4349aaf113436c5773340071b",
+      "after_sha256": "f21ae7310e0c00ee46b876d9c536b04e43fe3fb4349aaf113436c5773340071b",
+      "before_state": {
+        "stage": "xct",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 2,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_SUT_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_SUT_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-drv-click",
+      "stage": "xct",
+      "label": "DRV",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "33ade27ba41e049fca93805c0e788aefaf6f515ca8d2a7635f93e1bbbde2ee77",
+      "after_sha256": "4e2681149a51606f02ab066917121bae6d58b928adcb4f99c30f98f37256865f",
+      "before_state": {
+        "stage": "xct",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_DRV_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_DRV_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-drv-rotate",
+      "stage": "xct",
+      "label": "DRV",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "33ade27ba41e049fca93805c0e788aefaf6f515ca8d2a7635f93e1bbbde2ee77",
+      "after_sha256": "aa5b5b2387fe565382674219f5031f77d1e3f6cc8d9ff4bbcf64d836ce9aaa38",
+      "before_state": {
+        "stage": "xct",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 3,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_DRV_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_DRV_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-xct-bnd-click",
+      "stage": "xct",
+      "label": "BND",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "a154a5baab73e7024a925e1c2617af4d65bf2db479a7e43e483e208055f1a352",
+      "after_sha256": "6f7c7e34b2b7b8aaa9ddbf432e2a26ed91186a7f4d4759ba9183fb19ab2eca44",
+      "before_state": {
+        "stage": "xct",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "xct",
+        "row": 4,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_BND_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_xct_BND_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-tbe-header-click",
+      "stage": "tbe",
+      "label": "TBE",
+      "action": "real_click_visible_cell",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "f1b67998959c6351e57e09e54a773d80e5e8af4f9a924c7abf6ade336fede441",
+      "after_sha256": "f1b67998959c6351e57e09e54a773d80e5e8af4f9a924c7abf6ade336fede441",
+      "before_state": {
+        "stage": "tbe",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 0,
+        "header_focus": true,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_tbe_header\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_tbe_header\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-tbe-drv-click",
+      "stage": "tbe",
+      "label": "DRV",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "2ad2a89d0a19e8360d3ca53afe85d9d320231823b8250f9c39b656727785d1f1",
+      "after_sha256": "e5603fcd27908dae3fdb58968ccfcc74c9c0246541128b4b94e745cddf5743c8",
+      "before_state": {
+        "stage": "tbe",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_tbe_DRV_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_tbe_DRV_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-tbe-drv-rotate",
+      "stage": "tbe",
+      "label": "DRV",
+      "action": "real_rbracket_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "2ad2a89d0a19e8360d3ca53afe85d9d320231823b8250f9c39b656727785d1f1",
+      "after_sha256": "a20069693f2b659d3d94db3ad55f88ac43c16f1aa84878856582907862a752c3",
+      "before_state": {
+        "stage": "tbe",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 0,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_tbe_DRV_rotate\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_tbe_DRV_rotate\\visible_after.png"
+      }
+    },
+    {
+      "id": "editor-tbe-bnd-click",
+      "stage": "tbe",
+      "label": "BND",
+      "action": "real_click_visible_cell",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "745a95c1ce673e16ca06734b9bca8841e8d93581063c4f90f955aa9b54495861",
+      "after_sha256": "656a3707bfdb77d0d6a1089c79afdd391dd37b11aa7bd4e406c073ecca74a695",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_tbe_BND_click\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\editor_tbe_BND_click\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-play",
+      "stage": "transport",
+      "label": "PLY",
+      "action": "real_click_visible_button",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "377dff16c3c2852dd483c828ce7cf72f8bce1be94ecfb71d4a7653781d01fbf8",
+      "after_sha256": "5a8aa9eca8cd8fcadfb560aa3b4e4a1c6aaeb4eb295faebae1c39fd8acb42e0b",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": true,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_play\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_play\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-stop",
+      "stage": "transport",
+      "label": "STP",
+      "action": "real_click_visible_button",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "508a8eff40d7f487b605a8253e00e5c3632aa99e33877ed1c31b09a65e2b3def",
+      "after_sha256": "508a8eff40d7f487b605a8253e00e5c3632aa99e33877ed1c31b09a65e2b3def",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": true,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_stop\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_stop\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-rewind",
+      "stage": "transport",
+      "label": "REW",
+      "action": "real_click_visible_button",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "f4e9a2db0995054ccd79c0c2c8b73f6044b37dace9532b27ab1156d36ea08ece",
+      "after_sha256": "f4e9a2db0995054ccd79c0c2c8b73f6044b37dace9532b27ab1156d36ea08ece",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_rewind\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_rewind\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-forward",
+      "stage": "transport",
+      "label": "FFD",
+      "action": "real_click_visible_button",
+      "result": "FAIL",
+      "visible_changed": false,
+      "before_sha256": "70a47a18c0c3e70624628348341b097b54ae828f543ccdc8c67e42af37932a3c",
+      "after_sha256": "70a47a18c0c3e70624628348341b097b54ae828f543ccdc8c67e42af37932a3c",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_forward\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_forward\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-record",
+      "stage": "transport",
+      "label": "REC",
+      "action": "real_click_visible_button",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "faa805d6a98e50f39a419e669a644ebe5b9c0deb927d56990aad14d66eb77111",
+      "after_sha256": "6e7d781d9f3762fd49c5a763ea960e6d9b80813beee010eedb8b286072dc7f69",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": false
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": true
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_record\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_record\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-oscillator",
+      "stage": "transport",
+      "label": "OSC",
+      "action": "real_click_visible_button",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "6425b7316236f5b5af656784a296a94793da18ed15fb78434982e5476f9075f4",
+      "after_sha256": "2c4f9a064610c3f22db70421c01109756cccaa4c0bcf7e364b6f67b244ac5027",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": true
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "osc",
+        "record_armed": true
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_oscillator\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_oscillator\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-pink",
+      "stage": "transport",
+      "label": "PNK",
+      "action": "real_click_visible_button",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "3b2dacc499e31c29405c0e6a23985b65f41daaf3a179a5c101255676e903ded1",
+      "after_sha256": "137dc0eecc18bf98a6f2185326cee7d03bc14acf3e3c23a8765c6db90dcce1b6",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": true
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "pink",
+        "record_armed": true
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_pink\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_pink\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-white",
+      "stage": "transport",
+      "label": "WHT",
+      "action": "real_click_visible_button",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "f249bce2d1c8657164d0c6242b3ccafa1cd6b72ab3c57b0b6929b62ef8681846",
+      "after_sha256": "342044cefe3dffb6af72edd6636b7973ce644185138e5489d33974f47e908f3c",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": true
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "white",
+        "record_armed": true
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_white\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_white\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-pink_pulse",
+      "stage": "transport",
+      "label": "PLS",
+      "action": "real_click_visible_button",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "46f0127cfa7927760af091f6297712f5ba020285dcd7a3e3e2e36573bd6acf70",
+      "after_sha256": "cdba04e5c99d204212a478a9ec2e4aa68860218f568f319a45d50a465e5a9279",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": true
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "pink_pulse",
+        "record_armed": true
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_pink_pulse\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_pink_pulse\\visible_after.png"
+      }
+    },
+    {
+      "id": "transport-white_hot",
+      "stage": "transport",
+      "label": "HOT",
+      "action": "real_click_visible_button",
+      "result": "PASS",
+      "visible_changed": true,
+      "before_sha256": "071d37cef39db1822c0a3e424393bddf6c21a6a4c6d9d379fe1a90645931e702",
+      "after_sha256": "18d71adbc2807ee4045e04e5744a72aaf7f05c8aeda6c2ac5d19c5d219a4011b",
+      "before_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "none",
+        "record_armed": true
+      },
+      "after_state": {
+        "stage": "tbe",
+        "row": 1,
+        "header_focus": false,
+        "playing": false,
+        "generator_mode": "white_hot",
+        "record_armed": true
+      },
+      "screenshots": {
+        "before": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_white_hot\\visible_before.png",
+        "after": "C:\\Users\\racin\\Desktop\\recording-environment\\Development\\software\\SYSTEM_Q_VERIFY_RUNS\\visible_strict_20260507_164415\\transport_white_hot\\visible_after.png"
+      }
+    }
+  ]
+}
