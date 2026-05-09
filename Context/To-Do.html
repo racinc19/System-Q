@@ -123,7 +123,7 @@
     <div class="container">
         <header>
             <h1>System Q To-Do</h1>
-            <span class="subtitle">Recording Environment • Updated May 6, 2026</span>
+            <span class="subtitle">Recording Environment • Updated May 8, 2026</span>
         </header>
 
         <div class="task-card">
@@ -162,10 +162,34 @@
                     </tr>
                     <tr>
                         <td>DSP Bypass Logic</td>
-                        <td><span class="status-pill status-red">STUCK</span></td>
+                        <td><span class="status-pill status-yellow">IN PROGRESS</span></td>
                         <td>
-                            <div class="comments">Ensure GAN and SHP stages are truly bypassed in system_q_console.py.</div>
-                            <div class="next-steps">Verify zero-CPU/silence when stages are disabled.</div>
+                            <div class="comments">Bypass controls have been extended across harmonics, gate, compressor, EQ, transient, exciter, and tube paths.</div>
+                            <div class="next-steps">Run a focused live UI/state proof pass before calling the full matrix complete.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Group Assignment / Routing</td>
+                        <td><span class="status-pill status-yellow">IN PROGRESS</span></td>
+                        <td>
+                            <div class="comments">UI assignment mode exists: <code>GRP + press G#</code> enters <code>ASSIGN G#</code>; channels display <code>G0/G1/G2...</code>.</div>
+                            <div class="next-steps">Confirm live SpaceMouse activation tomorrow, then wire actual audio routing through group buses.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Hardware / Plugin Inserts</td>
+                        <td><span class="status-pill status-yellow">IN PROGRESS</span></td>
+                        <td>
+                            <div class="comments">Visual insert slots exist on strips, editor, and master panel. Editor row now includes a circular <code>INS</code> control.</div>
+                            <div class="next-steps">Define insert browser names and rotation/select behavior before wiring.</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Master Bus</td>
+                        <td><span class="status-pill status-yellow">IN PROGRESS</span></td>
+                        <td>
+                            <div class="comments">Right-side master strip, stereo waveform, red fader, master insert slot, and master DSP access are in place.</div>
+                            <div class="next-steps">Verify master DSP changes audibly and visually on the live stereo bus.</div>
                         </td>
                     </tr>
                     <tr>

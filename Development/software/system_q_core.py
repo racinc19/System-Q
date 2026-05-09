@@ -125,6 +125,7 @@ class ChannelState:
     gain: float = 1.0
     send_slot: int = 1
     send_level: float = 0.0
+    send_levels: list[float] = field(default_factory=lambda: [0.0 for _ in range(8)])
     send_muted: bool = False
     send_prev_level: float = 0.0
     pan: float = 0.0
@@ -206,6 +207,9 @@ class ChannelState:
     comp_param_bypass: dict[str, bool] = field(default_factory=dict)
     harm_param_bypass: dict[str, bool] = field(default_factory=dict)
     tone_param_bypass: dict[str, bool] = field(default_factory=dict)
+    trn_param_bypass: dict[str, bool] = field(default_factory=dict)
+    xct_param_bypass: dict[str, bool] = field(default_factory=dict)
+    tbe_param_bypass: dict[str, bool] = field(default_factory=dict)
     eq_ui_band: int = 0
     trn_enabled: bool = False
     trn_freq: float = 136.0
@@ -214,6 +218,12 @@ class ChannelState:
     trn_sustain: float = 0.0
     trn_drive: float = 0.0
     trn_band_enabled: bool = False
+    trn_band_count: int = 1
+    trn_ui_band: int = 0
+    trn_bands: list[dict] = field(default_factory=lambda: [
+        {"enabled": False, "freq": 136.0, "width": 1.12, "attack": 0.0, "sustain": 0.0, "drive": 0.0}
+        for _ in range(8)
+    ])
     xct_enabled: bool = False
     xct_freq: float = 7000.0
     xct_width: float = 1.20
@@ -221,9 +231,23 @@ class ChannelState:
     xct_sustain: float = 0.0
     xct_drive: float = 0.0
     xct_band_enabled: bool = False
+    xct_band_count: int = 1
+    xct_ui_band: int = 0
+    xct_bands: list[dict] = field(default_factory=lambda: [
+        {"enabled": False, "freq": 7000.0, "width": 1.20, "attack": 0.0, "sustain": 0.0, "drive": 0.0}
+        for _ in range(8)
+    ])
     tbe_enabled: bool = False
+    tbe_freq: float = 2500.0
+    tbe_width: float = 1.40
     tbe_drive: float = 0.0
     tbe_band_enabled: bool = False
+    tbe_band_count: int = 1
+    tbe_ui_band: int = 0
+    tbe_bands: list[dict] = field(default_factory=lambda: [
+        {"enabled": False, "freq": 2500.0, "width": 1.40, "drive": 0.0}
+        for _ in range(8)
+    ])
     level: float = 0.0
     comp_gr_db: float = 0.0
     comp_env: float = 0.0

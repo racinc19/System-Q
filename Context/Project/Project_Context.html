@@ -186,13 +186,19 @@
             <h2>Current System Q Recovery Baseline</h2>
             <div class="info-grid">
                 <div class="label">Active Area</div>
-                <div class="value">Desktop console recovery is currently focused on live SpaceMouse navigation, editor focus, PRE/HRM/GTE wiring, solo/mute, generator display, and gate visualization/DSP.</div>
+                <div class="value">Desktop console recovery is currently focused on finishing assignment/routing and insert behavior after the May 8 editor/master/transport recovery pass.</div>
 
-                <div class="label">Gate State</div>
-                <div class="value">Gate <code>DEP</code> is the user-facing closed-depth control. <code>FRQ</code> toggles frequency-band mode, <code>BND</code> adds/selects independent bands, and band mode must preserve independent <code>FRQ/WDT/THR/DEP/ATK/RLS/GAN</code> values per band.</div>
+                <div class="label">Editor Top Row</div>
+                <div class="value">The editor now uses circular controls for faders/sends/groups/aux/master bank plus circular <code>INS PRE HRM GTE CMP EQ TRN XCT TBE</code> controls above the parameter cells.</div>
 
-                <div class="label">Latest Proof</div>
-                <div class="value">Latest accepted proof on May 7, 2026: gate verifier passed 12/12 at <code>Development/software/SYSTEM_Q_VERIFY_RUNS/gate_visible_20260507_212714</code>; navigation verifier passed 11/11 at <code>Development/software/SYSTEM_Q_VERIFY_RUNS/nav_rate_limit_20260507_212732</code>.</div>
+                <div class="label">Group Assignment</div>
+                <div class="value">In <code>GRP</code> bank, pressing a focused group circle enters <code>ASSIGN G#</code>. Channel circles show <code>GRP</code> plus <code>G0/G1/G2...</code>. Pressing a channel assigns it to the active group or clears it back to <code>G0</code>.</div>
+
+                <div class="label">Master Bus</div>
+                <div class="value">The master bus has a right-side stereo strip, stereo waveform display, red fader, master insert slot, and master DSP blocks. Master bus preamp is not used; filters and downstream processors remain available.</div>
+
+                <div class="label">Latest Handoff</div>
+                <div class="value">Latest daily handoff is <code>Context/Daily/2026-05-08.html</code>. Read it before touching the console tomorrow.</div>
             </div>
         </div>
 

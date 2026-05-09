@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Context - May 8, 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #00d4ff;
+            --gold: #ffd700;
+            --danger: #ff5c7a;
+            --text: #e0e0e0;
+            --muted: #888;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px;
+            background-image: radial-gradient(circle at 50% -20%, #1a0a2e, #050505);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; }
+        header { margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin: 0; color: var(--accent); }
+        .date { color: var(--muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+        .session-block { background: var(--glass); border: 1px solid var(--border); border-radius: 16px; padding: 25px; margin-bottom: 20px; }
+        h2 { font-size: 1rem; color: var(--accent); margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; }
+        ul { padding-left: 20px; margin-bottom: 0; }
+        li { margin-bottom: 10px; }
+        code { background: rgba(0, 212, 255, 0.1); padding: 2px 6px; border-radius: 4px; color: var(--accent); font-family: monospace; }
+        .warning { border-color: rgba(255, 92, 122, 0.5); }
+        .warning h2 { color: var(--danger); }
+        .token-savings { font-size: 0.8rem; color: #7bf0aa; font-style: italic; margin-top: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <span class="date">May 8, 2026</span>
+            <h1>Daily Progress: System Q Console Recovery</h1>
+        </header>
+
+        <div class="session-block warning">
+            <h2>Source of Truth for Tomorrow</h2>
+            <ul>
+                <li>Use <code>Context/Project/Project_Context.html</code> as the Master context.</li>
+                <li>Use this file, <code>Context/Daily/2026-05-08.html</code>, as the current Daily context.</li>
+                <li>Start from the committed Python files in <code>Development/software</code>. Do not infer behavior from old chat claims.</li>
+                <li>Verification standard remains live UI behavior plus state checks. Screenshot-only claims are not sufficient.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Major Work Completed Today</h2>
+            <ul>
+                <li>Compressor, limiter, EQ, transient, exciter, tube, transport, editor, master bus, and group/aux/mixer routing UI were advanced substantially in <code>system_q_ui.py</code> and <code>system_q_dsp.py</code>.</li>
+                <li>Editor top controls now support channel, group, aux, master volume, and bank controls.</li>
+                <li>Master bus now has a dedicated right-side strip, stereo waveform display, red master fader, and master insert/DSP access.</li>
+                <li>Timeline/editor work now includes marker movement, region selection, copy/cut/paste/cancel/undo controls, zoom, scrub/shuttle toggle, and stereo timeline drawing for the master bus.</li>
+                <li>Transport layout was reorganized to <code>PLY/SPT ADV REC CYC PRE/POST SOL MTE REC PAN OSC</code> with editor row <code>UND CUT PST CPY CNL ZM SRB</code>.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Current Group Assignment Behavior</h2>
+            <ul>
+                <li>Enter the group bank with the bank control until the top row shows <code>GRP</code>.</li>
+                <li>Focus a group circle such as <code>G1</code> and press with the SpaceMouse. Because the SpaceMouse emits press after its own hold/release threshold, assignment mode is triggered from the actual top-control press path.</li>
+                <li>Assignment mode shows <code>ASSIGN G#</code>. Channel circles display <code>GRP</code> with lower labels <code>G0</code>, <code>G1</code>, <code>G2</code>, etc.</li>
+                <li>Pressing a channel while assigning <code>G1</code> changes that channel to <code>G1</code>; pressing it again clears it to <code>G0</code>. A channel is currently single-group routed, not multi-group stacked.</li>
+                <li>The <code>DONE / G#</code> bank circle exits assignment mode.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Insert Slot State</h2>
+            <ul>
+                <li>Hardware/plugin insert slots now exist visually as actual UI controls, not only text labels.</li>
+                <li>The editor row now has circular controls: <code>INS PRE HRM GTE CMP EQ TRN XCT TBE</code>.</li>
+                <li>Channel/aux/group strip grids include an <code>INS</code> row above the DSP blocks.</li>
+                <li>Master panel includes an insert slot above <code>MASTER DSP</code>.</li>
+                <li>Insert selection/rotation is not wired yet. Tomorrow should decide the insert browser model before wiring behavior.</li>
+            </ul>
+        </div>
+
+        <div class="session-block">
+            <h2>Verified Checks from End of Session</h2>
+            <ul>
+                <li><code>python -m py_compile Development/software/system_q_ui.py Development/software/system_q_console.py Development/software/system_q_dsp.py</code> passed.</li>
+                <li>Object-level tests confirmed group assignment activation from <code>GRP + press G3</code>, channel assignment to <code>G3</code>, and <code>G0/G1/G2</code> display state.</li>
+                <li>Object-level canvas checks confirmed insert and DSP circle rendering.</li>
+                <li>Visible console was restarted after the last change as <code>System Q Console - gen-pink-pulse-white-hot-20260503</code>.</li>
+            </ul>
+        </div>
+
+        <div class="session-block warning">
+            <h2>Open Risks / Tomorrow First Checks</h2>
+            <ul>
+                <li>First manual check tomorrow: confirm SpaceMouse can enter <code>ASSIGN G#</code> from the actual live UI, not only object tests.</li>
+                <li>Group assignment is UI-state only right now. Audio routing through group buses still needs to be designed and wired.</li>
+                <li>Insert slot UI exists, but insert selection, hardware insert names, plugin insert names, and bypass/engage behavior are not wired.</li>
+                <li>Generated verification folders under <code>Development/software/SYSTEM_Q_VERIFY_RUNS</code> are large and should remain local unless a specific proof set is selected for commit.</li>
+            </ul>
+        </div>
+
+        <p class="token-savings">Handoff prepared so tomorrow can resume from the committed UI/audio state without replaying chat history.</p>
+    </div>
+</body>
+</html>

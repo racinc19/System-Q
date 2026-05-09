@@ -1,6 +1,7 @@
 import math
 from pathlib import Path
 import threading
+import time
 import numpy as np
 import sounddevice as sd
 import soundfile as sf
@@ -20,7 +21,17 @@ class ConsoleEngine:
         self.master_channel.pre_enabled = False
         self.stream = None
         self.playing = False
-        self.loop = True
+        self.loop = False
+        self.recording = False
+        self.punch_recording = False
+        self.automation_mode = "read"
+        self.pre_roll_seconds = 2.0
+        self.post_roll_seconds = 2.0
+        self.markers: list[float] = []
+        self.timeline_zoom = 1.0
+        self.ignore_marker_cycle_until = 0.0
+        self.scrub_audition_until = 0.0
+        self.scrub_audition_freeze = False
         self.master_gain = 0.82
         self.master_level = 0.0
         self._lock = threading.Lock()
@@ -55,7 +66,15 @@ class ConsoleEngine:
             ch.eq_freq, ch.eq_gain_db, ch.eq_width, ch.eq_type = 2200.0, 0.0, 1.4, "BELL"
             for b in ch.eq_bands: b.update(enabled=False, freq=2200.0, gain_db=0.0, width=1.4, type="BELL", band_enabled=False)
             ch.eq_param_bypass.clear(); ch.gate_param_bypass.clear(); ch.comp_param_bypass.clear(); ch.harm_param_bypass.clear()
+            ch.tone_param_bypass.clear(); ch.trn_param_bypass.clear(); ch.xct_param_bypass.clear(); ch.tbe_param_bypass.clear()
             ch.trn_enabled = ch.xct_enabled = ch.tbe_enabled = ch.trn_band_enabled = ch.xct_band_enabled = ch.tbe_band_enabled = False
+            ch.trn_band_count, ch.trn_ui_band = 1, 0
+            for b in ch.trn_bands: b.update(enabled=False, freq=136.0, width=1.12, attack=0.0, sustain=0.0, drive=0.0)
+            ch.xct_band_count, ch.xct_ui_band = 1, 0
+            for b in ch.xct_bands: b.update(enabled=False, freq=7000.0, width=1.20, attack=0.0, sustain=0.0, drive=0.0)
+            ch.tbe_band_count, ch.tbe_ui_band = 1, 0
+            ch.tbe_freq, ch.tbe_width = 2500.0, 1.40
+            for b in ch.tbe_bands: b.update(enabled=False, freq=2500.0, width=1.40, drive=0.0)
             ch.trn_attack = ch.trn_sustain = ch.trn_drive = ch.xct_attack = ch.xct_sustain = ch.xct_drive = ch.tbe_drive = 0.0
             ch.position = 0
         if getattr(self, "master_channel", None):
@@ -94,16 +113,34 @@ class ConsoleEngine:
 
     def stop(self) -> None:
         self.playing = False
+        self.recording = False
+        self.punch_recording = False
         with self._lock:
             for ch in self.channels: ch.position = 0
 
     def toggle_play(self) -> None:
         if not self.playing and self.stream is None: self.start(); return
         self.playing = not self.playing
+        if not self.playing:
+            self.recording = False
+            self.punch_recording = False
+
+    def toggle_record(self) -> None:
+        if not self.playing and self.stream is None:
+            self.start()
+        else:
+            self.playing = True
+        self.recording = not bool(getattr(self, "recording", False))
+        self.punch_recording = bool(self.recording and self.loop)
 
     def rewind(self) -> None:
         with self._lock:
             for ch in self.channels: ch.position = 0
+
+    def jump_end(self) -> None:
+        with self._lock:
+            for ch in self.channels:
+                ch.position = max(0, len(ch.audio) - 1)
 
     def jump_forward(self, seconds: float = 5.0) -> None:
         s = int(seconds * SAMPLE_RATE)
@@ -129,6 +166,25 @@ class ConsoleEngine:
         return float(len(self.channels[0].audio)) / SAMPLE_RATE if self.channels else 1.0
 
     def toggle_loop(self) -> None: self.loop = not self.loop
+
+    def add_marker(self) -> None:
+        t = self.playhead_seconds
+        self.markers.append(t)
+
+    def active_marker_range_samples(self) -> tuple[int, int] | None:
+        if len(getattr(self, "markers", [])) < 2 or not self.channels:
+            return None
+        duration = self.timeline_duration_seconds()
+        markers = sorted(float(np.clip(m, 0.0, duration)) for m in self.markers)
+        playhead = self.playhead_seconds
+        pairs = list(zip(markers[:-1], markers[1:]))
+        active = next(((a, b) for a, b in pairs if a <= playhead <= b), None)
+        if active is None:
+            return None
+        start_s, end_s = active
+        start = int(np.clip(start_s * SAMPLE_RATE, 0, max(0, len(self.channels[0].audio) - 1)))
+        end = int(np.clip(end_s * SAMPLE_RATE, start + 1, max(1, len(self.channels[0].audio))))
+        return start, end
     def close(self) -> None:
         if self.stream: self.stream.stop(); self.stream.close(); self.stream = None
 
@@ -167,7 +223,11 @@ class ConsoleEngine:
             gen_out = None
             with self._lock:
                 if self.generator_mode != "none": gen_out = self._synthesize_generator(frames)
-                if not self.playing:
+                scrub_active = time.monotonic() < float(getattr(self, "scrub_audition_until", 0.0))
+                if not self.playing and scrub_active and bool(getattr(self, "scrub_audition_freeze", False)):
+                    states = [{"ch": ch, "gain": ch.gain, "pan": ch.pan, "mute": ch.mute, "solo": ch.solo, "pos": ch.position} for ch in self.channels]
+                    any_solo = any(ch.solo for ch in self.channels)
+                elif not self.playing and not scrub_active:
                     if gen_out is not None:
                         pk = float(np.max(np.abs(gen_out)))
                         if pk > 0.98: gen_out *= 0.98/pk
@@ -179,11 +239,17 @@ class ConsoleEngine:
                         for ch in self.channels: ch.level *= 0.92; ch.comp_gr_db *= 0.75; ch.band_levels *= 0.90
                         self.master_channel.level *= 0.92; self.master_channel.comp_gr_db *= 0.75; self.master_channel.band_levels *= 0.90; self.master_level *= 0.9
                     return
-                any_solo = any(ch.solo for ch in self.channels)
-                states = [{"ch": ch, "gain": ch.gain, "pan": ch.pan, "mute": ch.mute, "solo": ch.solo, "pos": ch.position} for ch in self.channels]
+                else:
+                    any_solo = any(ch.solo for ch in self.channels)
+                    states = [{"ch": ch, "gain": ch.gain, "pan": ch.pan, "mute": ch.mute, "solo": ch.solo, "pos": ch.position} for ch in self.channels]
             mix = np.zeros((frames, 2), dtype=np.float32)
             for s in states:
-                ch = s["ch"]; block = self._next_block(ch, frames); processed = self._process_channel(ch, block)
+                ch = s["ch"]
+                if scrub_active and not self.playing and bool(getattr(self, "scrub_audition_freeze", False)):
+                    block = self._peek_block(ch, frames)
+                else:
+                    block = self._next_block(ch, frames)
+                processed = self._process_channel(ch, block)
                 in_mix = (not s["mute"]) and (not any_solo or s["solo"])
                 self._analyze_channel(ch, processed if in_mix else np.zeros_like(processed))
                 if not in_mix: processed *= 0.0
@@ -197,12 +263,46 @@ class ConsoleEngine:
             if pk > 0.98: m_proc *= 0.98/pk
             outdata[:] = m_proc.astype(np.float32)
             self.master_level = float(np.sqrt(np.mean(np.square(m_proc))) * 2.8)
+            scope = getattr(self, "master_scope_audio", None)
+            if scope is None or len(scope) != SAMPLE_RATE:
+                scope = np.zeros((SAMPLE_RATE, 2), dtype=np.float32)
+            n = min(len(m_proc), len(scope))
+            if n > 0:
+                scope = np.vstack([scope[n:], m_proc[-n:].astype(np.float32)])
+            self.master_scope_audio = scope
+            self.master_channel.audio = scope
+            self.master_channel.wave_preview = self._build_wave_preview(scope, buckets=512)
             self._analyze_channel(self.master_channel, m_proc.astype(np.float32))
             if status: _log.debug(f"Status: {status}")
         except Exception as e:
             _log.error(f"Callback error: {e}"); outdata[:] = 0.0
 
+    def _peek_block(self, ch: ChannelState, frames: int) -> np.ndarray:
+        pos = int(np.clip(getattr(ch, "position", 0), 0, max(0, len(ch.audio) - 1)))
+        end = min(len(ch.audio), pos + frames)
+        head = ch.audio[pos:end] if end > pos else np.zeros((0, 2), dtype=np.float32)
+        if len(head) >= frames:
+            return head.copy()
+        return np.vstack([head, np.zeros((frames - len(head), 2), dtype=np.float32)]).astype(np.float32)
+
     def _next_block(self, ch: ChannelState, frames: int) -> np.ndarray:
+        marker_range = self.active_marker_range_samples() if self.loop and time.monotonic() >= float(getattr(self, "ignore_marker_cycle_until", 0.0)) else None
+        if marker_range is not None:
+            loop_start, loop_end = marker_range
+            loop_end = min(loop_end, len(ch.audio))
+            if loop_end > loop_start:
+                if ch.position < loop_start or ch.position >= loop_end:
+                    ch.position = loop_start
+                chunks = []
+                tail = frames
+                while tail > 0:
+                    take = min(loop_end - ch.position, tail)
+                    chunks.append(ch.audio[ch.position:ch.position + take])
+                    ch.position += take
+                    tail -= take
+                    if ch.position >= loop_end:
+                        ch.position = loop_start
+                return np.vstack(chunks).astype(np.float32)
         pos = ch.position; end = pos + frames
         if end <= len(ch.audio):
             ch.position = end; return ch.audio[pos:end].copy()
@@ -235,24 +335,35 @@ class ConsoleEngine:
         if ch.comp_tube: x = np.tanh(x * 1.18).astype(np.float32)
         if ch.eq_enabled:
             bp = getattr(ch, "eq_param_bypass", {})
-            if ch.eq_band_enabled:
+            if any(bp.get(k, False) for k in ("FRQ", "GAN", "SHP")):
+                pass
+            elif ch.eq_band_enabled:
                 nb = max(1, min(8, int(ch.eq_band_count))); sel = int(np.clip(getattr(ch, "eq_ui_band", 0), 0, nb-1))
                 for i in range(nb):
                     b = ch.eq_bands[i]
                     if not b.get("enabled"): continue
                     g = 0.0 if (i==sel and bp.get("GAN")) else float(b.get("gain_db", 0.0))
-                    if abs(g) > 0.03: x = self._apply_eq(x, float(b.get("freq", ch.eq_freq)), g, float(b.get("width", ch.eq_width)) if not (i==sel and bp.get("SHP")) else 1.4)
+                    width = float(b.get("width", ch.eq_width)) if not (i==sel and bp.get("SHP")) else 1.4
+                    eq_type = str(b.get("type", "SHELF" if width <= 0.1 else "BELL"))
+                    if abs(g) > 0.03: x = self._apply_eq(x, float(b.get("freq", ch.eq_freq)), g, width, eq_type)
             elif not bp.get("FRQ"):
                 g = float(ch.eq_gain_db) if not bp.get("GAN") else 0.0
-                if abs(g) > 0.03: x = self._apply_eq(x, float(ch.eq_freq), g, float(ch.eq_width) if not bp.get("SHP") else 1.4)
+                width = float(ch.eq_width) if not bp.get("SHP") else 1.4
+                eq_type = "SHELF" if width <= 0.1 else "BELL"
+                if abs(g) > 0.03: x = self._apply_eq(x, float(ch.eq_freq), g, width, eq_type)
         if ch.eq_tube: x = np.tanh(x * 1.18).astype(np.float32)
         if ch.trn_enabled: x = self._apply_trn(x, ch)
         if ch.xct_enabled: x = self._apply_xct(x, ch)
         if ch.tbe_enabled: x = self._apply_tbe(x, ch)
-        if ch.pre_enabled:
-            if ch.lpf_enabled: x = self._apply_pre_filter(ch, x, ch.lpf_hz, "lowpass")
-            if ch.hpf_enabled: x = self._apply_pre_filter(ch, x, ch.hpf_hz, "highpass")
+        if ch.lpf_enabled:
+            x = self._apply_pre_filter(ch, x, ch.lpf_hz, "lowpass")
+        if ch.hpf_enabled:
+            x = self._apply_pre_filter(ch, x, ch.hpf_hz, "highpass")
         return np.clip(x, -1.0, 1.0).astype(np.float32)
+
+    @staticmethod
+    def _stage_param_bypassed(bp: dict) -> bool:
+        return any(bool(v) and k not in ("FRQ", "TBE") for k, v in (bp or {}).items())
 
     def _analyze_channel(self, ch: ChannelState, block: np.ndarray) -> None:
         if not hasattr(ch, "_analyze_counter"): ch._analyze_counter = 0
@@ -271,17 +382,23 @@ class ConsoleEngine:
         ch.band_levels = ch.band_levels*0.58 + np.power(np.clip((vals - ch.band_noise_floor*1.25)/8.0, 0.0, 1.0), 0.55).astype(np.float32)*0.42
 
     def _apply_harmonics(self, block: np.ndarray, weights: np.ndarray, makeup: float, bp: dict) -> np.ndarray:
+        if self._stage_param_bypassed(bp):
+            return block
         out = np.zeros_like(block)
         for i in range(block.shape[1]):
             x = np.clip(block[:, i], -0.999, 0.999); rms = np.sqrt(np.mean(x**2)) + 1e-7; theta = np.arccos(x); enh = x.copy()
             for j, w in enumerate(weights):
-                if not bp.get(f"H{j+1}") and w > 0.001: enh += np.cos((j+2)*theta) * w * (0.54 - j*0.05)
+                if w > 0.001: enh += np.cos((j+2)*theta) * w * (0.54 - j*0.05)
             mix = x*0.94 + (np.tanh(enh*1.4) - np.tanh(x*1.4))*0.68
             out[:, i] = np.tanh(mix * (min(2.1, max(0.9, rms/(np.sqrt(np.mean(mix**2))+1e-7)))) * makeup)
         return out.astype(np.float32)
 
     def _apply_gate(self, ch: ChannelState, block: np.ndarray) -> np.ndarray:
         self._hydrate_gate_dyn_to_scalars(ch)
+        bp = getattr(ch, "gate_param_bypass", {})
+        if self._stage_param_bypassed(bp):
+            ch.gate_gr_db = 0.0
+            return block
         if ch.gate_band_enabled:
             b = ch.gate_dyn_bands[max(0, min(int(ch.gate_dyn_band_count)-1, int(ch.gate_dyn_ui_band)))]
             if not b.get("enabled"):
@@ -301,15 +418,15 @@ class ConsoleEngine:
             if ch.gate_makeup <= 0.001: return block
             atk, rls, thr, rat, mk = ch.gate_attack_ms, ch.gate_release_ms, ch.gate_threshold_db, ch.gate_ratio, ch.gate_makeup
         else: return block
-        mono = self._mono_for_dynamics_detector(ch, block, kind="gate"); bp = getattr(ch, "gate_param_bypass", {})
-        a_env = math.exp(-1.0 / max(1.0, ((0.05 if bp.get("ATK") else atk)/1000.0)*SAMPLE_RATE))
-        r_env = math.exp(-1.0 / max(1.0, ((0.05 if bp.get("RLS") else rls)/1000.0)*SAMPLE_RATE))
+        mono = self._mono_for_dynamics_detector(ch, block, kind="gate")
+        a_env = math.exp(-1.0 / max(1.0, (atk/1000.0)*SAMPLE_RATE))
+        r_env = math.exp(-1.0 / max(1.0, (rls/1000.0)*SAMPLE_RATE))
         ag, rg = math.exp(-1.0 / max(1.0, (atk*0.25/1000.0)*SAMPLE_RATE)), math.exp(-1.0 / max(1.0, (rls*0.3/1000.0)*SAMPLE_RATE))
-        thr_db = -168.0 if bp.get("THR") else thr
+        thr_db = thr
         # Gate RAT is depth, not a compressor-style bleed ratio. 8:1 is about
         # -32 dB closed; 20:1 is about -80 dB, effectively shut.
-        floor = 1.0 if bp.get("RAT") else 10.0 ** (-float(np.clip(rat, 1.0, 20.0)) * 4.0 / 20.0)
-        mkup = 1.0 if bp.get("GAN") else max(0.001, mk)
+        floor = 10.0 ** (-float(np.clip(rat, 1.0, 20.0)) * 4.0 / 20.0)
+        mkup = max(0.001, mk)
         env, sm = float(ch.gate_env), float(ch.gate_gain_smooth); gs = np.empty(len(mono), dtype=np.float32)
         for i, s in enumerate(mono):
             env = (a_env if abs(s)>env else r_env)*env + (1.0-(a_env if abs(s)>env else r_env))*abs(s)
@@ -321,6 +438,10 @@ class ConsoleEngine:
 
     def _apply_compressor(self, ch: ChannelState, block: np.ndarray) -> np.ndarray:
         self._hydrate_comp_dyn_to_scalars(ch)
+        bp = getattr(ch, "comp_param_bypass", {})
+        if self._stage_param_bypassed(bp):
+            ch.comp_gr_db = 0.0
+            return block
         if ch.comp_band_enabled:
             b = ch.comp_dyn_bands[max(0, min(int(ch.comp_dyn_band_count)-1, int(ch.comp_dyn_ui_band)))]
             if not b.get("enabled") or b.get("makeup", 1.0) <= 0.001: return block
@@ -329,56 +450,136 @@ class ConsoleEngine:
             if ch.comp_makeup <= 0.001: return block
             atk, rls, rat, thr, mk = ch.comp_attack_ms, ch.comp_release_ms, ch.comp_ratio, ch.comp_threshold_db, ch.comp_makeup
         else: return block
-        bp = getattr(ch, "comp_param_bypass", {})
-        if bp.get("THR"): ch.comp_gr_db = 0.0; return block
         mono = self._mono_for_dynamics_detector(ch, block, kind="comp"); env = float(ch.comp_env)
-        a_c = math.exp(-1.0 / max(1.0, ((0.05 if bp.get("ATK") else atk)/1000.0)*SAMPLE_RATE))
-        r_c = math.exp(-1.0 / max(1.0, ((0.05 if bp.get("RLS") else rls)/1000.0)*SAMPLE_RATE))
-        rat, mkup = (1.0 if bp.get("RAT") else max(1.0, rat)), (1.0 if bp.get("GAN") else mk)
+        a_c = math.exp(-1.0 / max(1.0, (atk/1000.0)*SAMPLE_RATE))
+        r_c = math.exp(-1.0 / max(1.0, (rls/1000.0)*SAMPLE_RATE))
+        rat, mkup = max(1.0, rat), mk
+        limiter = rat >= 19.95
         gs = np.empty(len(mono), dtype=np.float32); last_gr = 0.0
         for i, s in enumerate(mono):
             env = (a_c if abs(s)>env else r_c)*env + (1.0-(a_c if abs(s)>env else r_c))*abs(s)
-            odb = max(0.0, 20*math.log10(max(env, 1e-7)) - thr); gdb = odb - (odb/rat if odb>0 else 0.0)
+            odb = max(0.0, 20*math.log10(max(env, 1e-7)) - thr)
+            gdb = odb if limiter else odb - (odb/rat if odb>0 else 0.0)
             gs[i] = 10**(-gdb/20.0) * mkup; last_gr = gdb
         ch.comp_env, ch.comp_gr_db = env, last_gr
-        return block * gs[:, None]
+        out = block * gs[:, None]
+        if limiter:
+            ceiling = float((10.0 ** (thr / 20.0)) * mkup)
+            out = np.clip(out, -ceiling, ceiling)
+        return out.astype(np.float32)
 
-    def _apply_eq(self, block: np.ndarray, freq: float, gain: float, width: float) -> np.ndarray:
+    def _apply_eq(self, block: np.ndarray, freq: float, gain: float, width: float, eq_type: str = "BELL") -> np.ndarray:
         fs = np.fft.rfftfreq(len(block), d=1.0/SAMPLE_RATE); v = fs>0; lfs = np.zeros_like(fs); lfs[v] = np.log2(np.maximum(fs[v], 1.0))
-        scale = np.power(10.0, (gain * np.exp(-0.5 * ((lfs - math.log2(float(np.clip(freq, POL_LOW_HZ, POL_HIGH_HZ)))) / max(0.08, width/2.355))**2)) / 20.0).astype(np.float32)
+        center = math.log2(float(np.clip(freq, POL_LOW_HZ, POL_HIGH_HZ)))
+        if str(eq_type).upper() == "SHELF" or width <= 0.1:
+            slope = 8.0
+            if freq < 1000.0:
+                curve = 1.0 / (1.0 + np.exp((lfs - center) * slope))
+            else:
+                curve = 1.0 / (1.0 + np.exp((center - lfs) * slope))
+        else:
+            curve = np.exp(-0.5 * ((lfs - center) / max(0.08, width/2.355))**2)
+        scale = np.power(10.0, (gain * curve) / 20.0).astype(np.float32)
         return np.column_stack([np.fft.irfft(np.fft.rfft(block[:, i]) * scale, n=len(block)) for i in range(block.shape[1])]).astype(np.float32)
 
     def _apply_trn(self, block: np.ndarray, ch: ChannelState) -> np.ndarray:
-        bp = getattr(ch, "tone_param_bypass", {})
+        bp = getattr(ch, "trn_param_bypass", {})
         if bp.get("TRN"): return block
-        ta, ts, dr = [(0.0 if bp.get(k) else v) for k, v in [("ATK", ch.trn_attack), ("SUT", ch.trn_sustain), ("DRV", ch.trn_drive)]]
-        if all(abs(v)<0.01 for v in (ta, ts, dr)): return block
-        if ch.trn_band_enabled and not bp.get("BND"):
-            lo, hi = ch.trn_freq / (2.0**(ch.trn_width/2.0)), ch.trn_freq * (2.0**(ch.trn_width/2.0))
-            band = self._apply_simple_filter(self._apply_simple_filter(block, lo, "highpass"), hi, "lowpass")
-            return (block - band) + self._apply_transient_processor(band, ta, ts, dr)
-        return self._apply_transient_processor(block, ta, ts, dr)
+        if any(bp.get(k, False) for k in ("FRQ", "ATK", "SUT", "DRV")):
+            return block
+        bands = []
+        if ch.trn_band_enabled:
+            count = max(1, min(8, int(getattr(ch, "trn_band_count", 1))))
+            for i in range(count):
+                b = ch.trn_bands[i]
+                if b.get("enabled", False):
+                    bands.append((float(b.get("freq", ch.trn_freq)), float(b.get("width", ch.trn_width)), float(b.get("attack", ch.trn_attack)), float(b.get("sustain", ch.trn_sustain)), float(b.get("drive", ch.trn_drive))))
+        else:
+            bands.append((float(ch.trn_freq), 1.0, float(ch.trn_attack), float(ch.trn_sustain), float(ch.trn_drive)))
+        out = block.copy()
+        full_rms = float(np.sqrt(np.mean(block.astype(np.float64) ** 2))) + 1e-9
+        changed = False
+        for freq, width, ta, ts, dr in bands:
+            if all(abs(v)<0.01 for v in (ta, ts, dr)):
+                continue
+            band = self._apply_bandpass_filter(out, freq, width)
+            band_rms = float(np.sqrt(np.mean(band.astype(np.float64) ** 2)))
+            if band_rms < max(1e-5, full_rms * 0.015):
+                continue
+            out = (out - band) + self._apply_transient_processor(band, ta, ts, dr)
+            changed = True
+        return out if changed else block
 
     def _apply_xct(self, block: np.ndarray, ch: ChannelState) -> np.ndarray:
-        bp = getattr(ch, "tone_param_bypass", {})
-        if bp.get("XCT") or abs(ch.xct_drive)<0.01: return block
-        hp = float(ch.xct_freq) if (ch.xct_band_enabled and not bp.get("BND")) else 4000.0
-        hi = self._apply_simple_filter(block, hp, "highpass")
-        ex = np.tanh(hi * (1.0 + ch.xct_drive*6.0)) - np.tanh(hi*0.8)
-        return np.clip(block + ex*0.9, -1.0, 1.0).astype(np.float32)
+        bp = getattr(ch, "xct_param_bypass", {})
+        if bp.get("XCT") or any(bp.get(k, False) for k in ("FRQ", "ATK", "SUT", "DRV")):
+            return block
+        bands = []
+        if ch.xct_band_enabled:
+            count = max(1, min(8, int(getattr(ch, "xct_band_count", 1))))
+            for i in range(count):
+                b = ch.xct_bands[i]
+                if b.get("enabled", False):
+                    bands.append((float(b.get("freq", ch.xct_freq)), float(b.get("width", ch.xct_width)), float(b.get("attack", ch.xct_attack)), float(b.get("sustain", ch.xct_sustain)), float(b.get("drive", ch.xct_drive))))
+        else:
+            bands.append((float(ch.xct_freq), 1.0, float(ch.xct_attack), float(ch.xct_sustain), float(ch.xct_drive)))
+        out = block.copy()
+        full_rms = float(np.sqrt(np.mean(block.astype(np.float64) ** 2))) + 1e-9
+        changed = False
+        for freq, width, atk, sus, drv in bands:
+            if abs(drv) < 0.01:
+                continue
+            band = self._apply_bandpass_filter(out, freq, width)
+            band_rms = float(np.sqrt(np.mean(band.astype(np.float64) ** 2)))
+            if band_rms < max(1e-5, full_rms * 0.01):
+                continue
+            excited = self._apply_exciter_processor(band, atk, sus, drv)
+            out = np.clip(out + excited, -1.0, 1.0).astype(np.float32)
+            changed = True
+        return out if changed else block
 
     def _apply_tbe(self, block: np.ndarray, ch: ChannelState) -> np.ndarray:
-        bp = getattr(ch, "tone_param_bypass", {})
-        if abs(ch.tbe_drive)<0.01: return block
-        drv = 1.0 + ch.tbe_drive*5.0
-        if ch.tbe_band_enabled and not bp.get("BND"):
-            band = self._apply_simple_filter(block, 2500.0, "lowpass")
-            return (block-band) + np.tanh(band*drv).astype(np.float32)
-        return np.tanh(block*drv).astype(np.float32)
+        bp = getattr(ch, "tbe_param_bypass", {})
+        if bp.get("DRV"):
+            return block
+        bands = []
+        if ch.tbe_band_enabled:
+            count = max(1, min(8, int(getattr(ch, "tbe_band_count", 1))))
+            for i in range(count):
+                b = ch.tbe_bands[i]
+                if b.get("enabled", False):
+                    bands.append((float(b.get("freq", ch.tbe_freq)), float(b.get("width", ch.tbe_width)), float(b.get("drive", ch.tbe_drive))))
+        else:
+            bands.append((float(ch.tbe_freq), 1.4, float(ch.tbe_drive)))
+        out = block.copy()
+        changed = False
+        for freq, width, drive in bands:
+            if abs(drive) < 0.01:
+                continue
+            drv = 1.0 + float(np.clip(drive, 0.0, 1.0)) * 8.0
+            active_width = width if ch.tbe_band_enabled else 2.4
+            band = self._apply_bandpass_filter(out, freq, active_width)
+            saturated = np.tanh(band * drv).astype(np.float32)
+            out = (out - band) + saturated
+            changed = True
+        return out if changed else block
 
     def _apply_transient_processor(self, b: np.ndarray, a: float, s: float, d: float) -> np.ndarray:
         x = self._apply_transient(b, a, s)
         return np.tanh(x * (1.0 + d*4.0)).astype(np.float32) if abs(d)>0.01 else x
+
+    def _apply_exciter_processor(self, band: np.ndarray, attack_amt: float, sustain_amt: float, drive: float) -> np.ndarray:
+        shaped = self._apply_transient(band, attack_amt * 1.25, sustain_amt * 0.90)
+        drive = float(np.clip(drive, 0.0, 1.0))
+        gain = 2.0 + drive * 22.0
+        saturated = np.tanh(shaped * gain)
+        odd = saturated - shaped * 0.35
+        even = (np.abs(shaped) - np.mean(np.abs(shaped), axis=0, keepdims=True)) * np.sign(shaped)
+        edge = shaped - np.vstack([np.zeros((1, shaped.shape[1]), dtype=np.float32), shaped[:-1]]) * 0.55
+        harmonics = odd * 1.35 + even * (0.85 + drive * 1.80) + edge * (0.35 + max(0.0, attack_amt) * 1.35)
+        air = self._apply_simple_filter(harmonics.astype(np.float32), 1600.0, "highpass")
+        presence = band * (0.45 + drive * 1.85)
+        return (presence + air * (1.35 + drive * 3.25)).astype(np.float32)
 
     def _apply_transient(self, block: np.ndarray, attack_amt: float, sustain_amt: float) -> np.ndarray:
         if abs(attack_amt)<=0.01 and abs(sustain_amt)<=0.01: return block
@@ -403,6 +604,17 @@ class ConsoleEngine:
         fs = np.fft.rfftfreq(len(block), d=1.0/SAMPLE_RATE); c = float(np.clip(hz, POL_LOW_HZ, SAMPLE_RATE*0.45))
         s = (1.0/np.sqrt(1+(fs/max(c,1.0))**4)) if mode=="lowpass" else np.where(fs<=0, 0, (fs/max(c,1.0))**2/np.sqrt(1+(fs/max(c,1.0))**4))
         return np.column_stack([np.fft.irfft(np.fft.rfft(block[:, i])*s, n=len(block)) for i in range(block.shape[1])]).astype(np.float32)
+
+    def _apply_bandpass_filter(self, block: np.ndarray, hz: float, width_oct: float) -> np.ndarray:
+        fs = np.fft.rfftfreq(len(block), d=1.0 / SAMPLE_RATE)
+        center = math.log2(float(np.clip(hz, POL_LOW_HZ, POL_HIGH_HZ)))
+        lfs = np.zeros_like(fs)
+        valid = fs > 0.0
+        lfs[valid] = np.log2(np.maximum(fs[valid], 1.0))
+        sigma = max(0.035, float(np.clip(width_oct, 0.1, 6.0)) / 3.2)
+        mask = np.exp(-0.5 * ((lfs - center) / sigma) ** 2).astype(np.float32)
+        mask[~valid] = 0.0
+        return np.column_stack([np.fft.irfft(np.fft.rfft(block[:, i]) * mask, n=len(block)) for i in range(block.shape[1])]).astype(np.float32)
 
     def _butter_sos(self, hz: float, mode: str, order: int = 4) -> np.ndarray:
         if not hasattr(self, "_butter_sos_cache"): self._butter_sos_cache = {}
@@ -490,14 +702,10 @@ class ConsoleEngine:
         m_full = np.mean(block, axis=1).astype(np.float32)
         if kind == "gate":
             if not getattr(ch, "gate_band_enabled", False): return m_full
-            gb = getattr(ch, "gate_param_bypass", {})
-            if gb.get("FRQ") or gb.get("WDT"): return m_full
             b = ch.gate_dyn_bands[max(0, min(int(getattr(ch, "gate_dyn_band_count", 1))-1, int(getattr(ch, "gate_dyn_ui_band", 0))))]
             return self._bandpass_mono(block, float(b["freq"]), float(b["width_oct"]), m_full)
         if kind == "comp":
             if not getattr(ch, "comp_band_enabled", False): return m_full
-            cb = getattr(ch, "comp_param_bypass", {})
-            if cb.get("FRQ") or cb.get("WDT"): return m_full
             b = ch.comp_dyn_bands[max(0, min(int(getattr(ch, "comp_dyn_band_count", 1))-1, int(getattr(ch, "comp_dyn_ui_band", 0))))]
             return self._bandpass_mono(block, float(b["freq"]), float(b["width_oct"]), m_full)
         return m_full
