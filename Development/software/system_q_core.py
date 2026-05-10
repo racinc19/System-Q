@@ -126,12 +126,32 @@ class ChannelState:
     send_slot: int = 1
     send_level: float = 0.0
     send_levels: list[float] = field(default_factory=lambda: [0.0 for _ in range(8)])
+    send_destinations: list[int] = field(default_factory=lambda: [-1 for _ in range(8)])
     send_muted: bool = False
     send_prev_level: float = 0.0
     pan: float = 0.0
     mute: bool = False
     solo: bool = False
     record_armed: bool = False
+    rvb_enabled: bool = False
+    rvb_time_s: float = 2.4
+    rvb_ref_ms: float = 55.0
+    rvb_mix: float = 0.22
+    rvb_damp: float = 0.35
+    rvb_width: float = 0.75
+    rvb_predelay_ms: float = 18.0
+    rvb_reverse: bool = False
+    dly_enabled: bool = False
+    dly_time_ms: float = 360.0
+    dly_feedback: float = 0.32
+    dly_mix: float = 0.75
+    dly_width: float = 0.65
+    dly_damp: float = 0.35
+    dly_pingpong: bool = False
+    mod_enabled: bool = False
+    mod_rate_hz: float = 0.42
+    mod_depth: float = 0.55
+    mod_mix: float = 0.65
     pre_enabled: bool = False
     pre_gain_db: float = 0.0
     pre_squeeze: float = 1.0

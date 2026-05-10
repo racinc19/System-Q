@@ -1,4 +1,5 @@
 import math
+import os
 from pathlib import Path
 import threading
 import time
@@ -34,6 +35,9 @@ class ConsoleEngine:
         self.scrub_audition_freeze = False
         self.master_gain = 0.82
         self.master_level = 0.0
+        self.output_device = self._select_output_device()
+        self.output_device_name = self._output_device_name(self.output_device)
+        self.output_peak = 0.0
         self._lock = threading.Lock()
         self.generator_mode = "none"
         self.osc_hz = 440.0
@@ -101,15 +105,62 @@ class ConsoleEngine:
 
     def start(self) -> None:
         if self.stream is None:
-            self.stream = sd.OutputStream(samplerate=SAMPLE_RATE, channels=2, dtype="float32", blocksize=BLOCK_SIZE, callback=self._callback)
+            _log.info(f"AUDIO_OUTPUT_START: device={self.output_device} name={self.output_device_name}")
+            self.stream = sd.OutputStream(samplerate=SAMPLE_RATE, channels=2, dtype="float32", blocksize=BLOCK_SIZE, callback=self._callback, device=self.output_device)
             self.stream.start()
         self.playing = True
 
     def prime_stream(self) -> None:
         if self.stream is None:
-            self.stream = sd.OutputStream(samplerate=SAMPLE_RATE, channels=2, dtype="float32", blocksize=BLOCK_SIZE, callback=self._callback)
+            _log.info(f"AUDIO_OUTPUT_PRIME: device={self.output_device} name={self.output_device_name}")
+            self.stream = sd.OutputStream(samplerate=SAMPLE_RATE, channels=2, dtype="float32", blocksize=BLOCK_SIZE, callback=self._callback, device=self.output_device)
             self.stream.start()
         self.playing = False
+
+    def _select_output_device(self) -> int | None:
+        requested = os.environ.get("SYSTEM_Q_OUTPUT_DEVICE", "").strip()
+        devices = sd.query_devices()
+        if requested:
+            for i, dev in enumerate(devices):
+                if dev.get("max_output_channels", 0) > 0 and requested.lower() in str(dev.get("name", "")).lower():
+                    return i
+            try:
+                return int(requested)
+            except ValueError:
+                _log.warning(f"AUDIO_OUTPUT_DEVICE_NOT_FOUND: {requested}")
+        default_out = sd.default.device[1] if isinstance(sd.default.device, (list, tuple)) else sd.default.device
+        try:
+            default_name = str(sd.query_devices(int(default_out)).get("name", ""))
+        except Exception:
+            default_name = ""
+        for i, dev in enumerate(devices):
+            name = str(dev.get("name", ""))
+            hostapi = sd.query_hostapis(int(dev.get("hostapi", -1))).get("name", "") if int(dev.get("hostapi", -1)) >= 0 else ""
+            if dev.get("max_output_channels", 0) >= 2 and "WASAPI" in str(hostapi):
+                if default_name and default_name.split(",")[0].lower() in name.lower():
+                    return i
+        for preferred in ("Realtek", "Primary Sound"):
+            for i, dev in enumerate(devices):
+                name = str(dev.get("name", ""))
+                hostapi = sd.query_hostapis(int(dev.get("hostapi", -1))).get("name", "") if int(dev.get("hostapi", -1)) >= 0 else ""
+                if dev.get("max_output_channels", 0) >= 2 and "WASAPI" in str(hostapi) and preferred.lower() in name.lower():
+                    return i
+        for i, dev in enumerate(devices):
+            hostapi = sd.query_hostapis(int(dev.get("hostapi", -1))).get("name", "") if int(dev.get("hostapi", -1)) >= 0 else ""
+            if dev.get("max_output_channels", 0) >= 2 and "WASAPI" in str(hostapi):
+                return i
+        try:
+            return int(default_out)
+        except Exception:
+            return None
+
+    def _output_device_name(self, device: int | None) -> str:
+        try:
+            if device is None:
+                return "system default"
+            return str(sd.query_devices(device).get("name", f"device {device}"))
+        except Exception:
+            return f"device {device}"
 
     def stop(self) -> None:
         self.playing = False
@@ -223,10 +274,14 @@ class ConsoleEngine:
             gen_out = None
             with self._lock:
                 if self.generator_mode != "none": gen_out = self._synthesize_generator(frames)
+                aux_returns = list(getattr(self, "aux_return_states", []))
+                efx_returns = []
                 scrub_active = time.monotonic() < float(getattr(self, "scrub_audition_until", 0.0))
                 if not self.playing and scrub_active and bool(getattr(self, "scrub_audition_freeze", False)):
                     states = [{"ch": ch, "gain": ch.gain, "pan": ch.pan, "mute": ch.mute, "solo": ch.solo, "pos": ch.position} for ch in self.channels]
-                    any_solo = any(ch.solo for ch in self.channels)
+                    source_any_solo = any(ch.solo for ch in self.channels)
+                    return_any_solo = any(getattr(ch, "solo", False) for ch in aux_returns)
+                    any_solo = source_any_solo or return_any_solo
                 elif not self.playing and not scrub_active:
                     if gen_out is not None:
                         pk = float(np.max(np.abs(gen_out)))
@@ -240,9 +295,14 @@ class ConsoleEngine:
                         self.master_channel.level *= 0.92; self.master_channel.comp_gr_db *= 0.75; self.master_channel.band_levels *= 0.90; self.master_level *= 0.9
                     return
                 else:
-                    any_solo = any(ch.solo for ch in self.channels)
+                    source_any_solo = any(ch.solo for ch in self.channels)
+                    return_any_solo = any(getattr(ch, "solo", False) for ch in aux_returns)
+                    any_solo = source_any_solo or return_any_solo
                     states = [{"ch": ch, "gain": ch.gain, "pan": ch.pan, "mute": ch.mute, "solo": ch.solo, "pos": ch.position} for ch in self.channels]
             mix = np.zeros((frames, 2), dtype=np.float32)
+            aux_inputs = [np.zeros((frames, 2), dtype=np.float32) for _ in aux_returns]
+            aux_receives_soloed_source = [False for _ in aux_returns]
+            efx_inputs = []
             for s in states:
                 ch = s["ch"]
                 if scrub_active and not self.playing and bool(getattr(self, "scrub_audition_freeze", False)):
@@ -250,11 +310,50 @@ class ConsoleEngine:
                 else:
                     block = self._next_block(ch, frames)
                 processed = self._process_channel(ch, block)
-                in_mix = (not s["mute"]) and (not any_solo or s["solo"])
-                self._analyze_channel(ch, processed if in_mix else np.zeros_like(processed))
-                if not in_mix: processed *= 0.0
-                mix += self._apply_pan(processed, s["pan"]) * s["gain"]
-                ch.level = float(np.sqrt(np.mean(np.square(processed))) * 3.4)
+                source_for_dry = (not s["mute"]) and (not any_solo or s["solo"])
+                source_for_send = (not s["mute"]) and (not source_any_solo or s["solo"] or return_any_solo)
+                self._analyze_channel(ch, processed if source_for_dry or source_for_send else np.zeros_like(processed))
+                if source_for_dry:
+                    mix += self._apply_pan(processed, s["pan"]) * s["gain"]
+                send_levels = getattr(ch, "send_levels", [])
+                if source_for_send and isinstance(send_levels, list):
+                    for slot, level in enumerate(send_levels):
+                        send_gain = float(np.clip(level, 0.0, 1.0))
+                        if send_gain <= 0.0001:
+                            continue
+                        if slot < len(aux_inputs):
+                            aux_inputs[slot] += processed * send_gain
+                            if s["solo"]:
+                                aux_receives_soloed_source[slot] = True
+                ch.level = float(np.sqrt(np.mean(np.square(processed if source_for_dry or source_for_send else np.zeros_like(processed)))) * 3.4)
+            for aux_idx, (aux_ch, aux_block) in enumerate(zip(aux_returns, aux_inputs)):
+                has_aux_input = np.max(np.abs(aux_block)) > 0.000001
+                has_fx_tail = (
+                    (bool(getattr(aux_ch, "rvb_enabled", False)) and isinstance(getattr(aux_ch, "_rvb_state", None), dict))
+                    or (bool(getattr(aux_ch, "dly_enabled", False)) and isinstance(getattr(aux_ch, "_dly_state", None), dict))
+                )
+                if not has_aux_input and not has_fx_tail:
+                    aux_ch.level *= 0.92
+                    continue
+                aux_processed = self._process_channel(aux_ch, aux_block)
+                if not has_aux_input and np.max(np.abs(aux_processed)) <= 0.000001:
+                    aux_ch.level *= 0.92
+                    aux_ch.audio = aux_processed.astype(np.float32)
+                    aux_ch.wave_preview = self._build_wave_preview(aux_processed.astype(np.float32), buckets=512)
+                    continue
+                self._analyze_channel(aux_ch, aux_processed)
+                # A soloed source channel must carry its active effects returns
+                # with it, matching normal console solo-in-place behavior.
+                aux_in_mix = (not getattr(aux_ch, "mute", False)) and (
+                    not any_solo
+                    or getattr(aux_ch, "solo", False)
+                    or (source_any_solo and aux_idx < len(aux_receives_soloed_source) and aux_receives_soloed_source[aux_idx])
+                )
+                if aux_in_mix:
+                    mix += self._apply_pan(aux_processed, getattr(aux_ch, "pan", 0.0)) * float(getattr(aux_ch, "gain", 1.0))
+                aux_ch.level = float(np.sqrt(np.mean(np.square(aux_processed))) * 3.4)
+                aux_ch.audio = aux_processed.astype(np.float32)
+                aux_ch.wave_preview = self._build_wave_preview(aux_processed.astype(np.float32), buckets=512)
             mix *= self.master_gain
             if gen_out is not None: mix = (mix.astype(np.float64) + gen_out.astype(np.float64)).astype(np.float32)
             m_proc = self._process_channel(self.master_channel, mix)
@@ -262,6 +361,7 @@ class ConsoleEngine:
             pk = float(np.max(np.abs(m_proc)))
             if pk > 0.98: m_proc *= 0.98/pk
             outdata[:] = m_proc.astype(np.float32)
+            self.output_peak = float(np.max(np.abs(outdata)))
             self.master_level = float(np.sqrt(np.mean(np.square(m_proc))) * 2.8)
             scope = getattr(self, "master_scope_audio", None)
             if scope is None or len(scope) != SAMPLE_RATE:
@@ -355,11 +455,151 @@ class ConsoleEngine:
         if ch.trn_enabled: x = self._apply_trn(x, ch)
         if ch.xct_enabled: x = self._apply_xct(x, ch)
         if ch.tbe_enabled: x = self._apply_tbe(x, ch)
+        if getattr(ch, "rvb_enabled", False): x = self._apply_reverb(x, ch)
+        if getattr(ch, "dly_enabled", False): x = self._apply_delay(x, ch)
+        if getattr(ch, "mod_enabled", False): x = self._apply_modulation(x, ch)
         if ch.lpf_enabled:
             x = self._apply_pre_filter(ch, x, ch.lpf_hz, "lowpass")
         if ch.hpf_enabled:
             x = self._apply_pre_filter(ch, x, ch.hpf_hz, "highpass")
         return np.clip(x, -1.0, 1.0).astype(np.float32)
+
+    def _apply_reverb(self, block: np.ndarray, ch: ChannelState) -> np.ndarray:
+        mix = float(np.clip(getattr(ch, "rvb_mix", 0.22), 0.0, 1.0))
+        if mix <= 0.001:
+            return block
+        time_s = float(np.clip(getattr(ch, "rvb_time_s", 2.4), 0.1, 12.0))
+        ref_ms = float(np.clip(getattr(ch, "rvb_ref_ms", 55.0), 5.0, 240.0))
+        damp = float(np.clip(getattr(ch, "rvb_damp", 0.35), 0.0, 1.0))
+        width = float(np.clip(getattr(ch, "rvb_width", 0.75), 0.0, 1.0))
+        predelay_ms = float(np.clip(getattr(ch, "rvb_predelay_ms", 18.0), 0.0, 180.0))
+        reverse = bool(getattr(ch, "rvb_reverse", False))
+        tail_ms = min(1200.0, 130.0 + time_s * 95.0)
+        delays_ms = [
+            predelay_ms + ref_ms * 0.67,
+            predelay_ms + ref_ms * 1.13,
+            predelay_ms + ref_ms * 1.79,
+            predelay_ms + ref_ms * 2.71,
+            predelay_ms + tail_ms * 0.48,
+            predelay_ms + tail_ms * 0.82,
+        ]
+        delay_samples = [max(8, int(SAMPLE_RATE * d / 1000.0)) for d in delays_ms]
+        max_delay = max(delay_samples) + 2
+        frames = block.shape[0]
+        state = getattr(ch, "_rvb_state", None)
+        if not isinstance(state, dict) or state.get("max_delay") != max_delay:
+            state = {
+                "max_delay": max_delay,
+                "hist": np.zeros((max_delay, 2), dtype=np.float32),
+                "lp": np.zeros((2,), dtype=np.float32),
+            }
+            ch._rvb_state = state
+        hist = state["hist"]
+        combined = np.vstack([hist, block]).astype(np.float32)
+        wet = np.zeros_like(block, dtype=np.float32)
+        taps = len(delay_samples)
+        damp_keep = 1.0 - damp * 0.72
+        for t, delay in enumerate(delay_samples):
+            delayed = combined[-delay - frames:-delay]
+            if delayed.shape[0] != frames:
+                continue
+            spread = (t / max(1, taps - 1) - 0.5) * width
+            tap = delayed.copy()
+            tap[:, 0] = delayed[:, 0] * (1.0 - spread) + delayed[:, 1] * spread * 0.35
+            tap[:, 1] = delayed[:, 1] * (1.0 + spread) - delayed[:, 0] * spread * 0.35
+            if reverse:
+                tap = tap[::-1]
+            tap_gain = damp_keep * max(0.22, 1.0 - t * 0.105)
+            wet += tap * tap_gain
+        wet /= max(1, taps)
+        if reverse and frames > 1:
+            ramp_len = max(64, int(SAMPLE_RATE * np.clip((predelay_ms + ref_ms * 2.0) / 1000.0, 0.08, 0.9)))
+            rev_phase = int(state.get("rev_phase", 0)) % ramp_len
+            ramp = ((np.arange(frames, dtype=np.float32) + rev_phase) % ramp_len) / float(ramp_len)
+            state["rev_phase"] = int((rev_phase + frames) % ramp_len)
+            swell = (0.18 + 1.22 * np.power(ramp, 1.7))[:, None]
+            wet = wet * swell
+        feedback = float(np.clip(0.24 + math.log10(time_s + 1.0) * 0.36, 0.18, 0.78))
+        tail_feed = np.clip(block + wet * feedback, -1.0, 1.0)
+        state["hist"] = np.vstack([hist, tail_feed])[-max_delay:].astype(np.float32)
+        path = str(getattr(ch, "path", ""))
+        name = str(getattr(ch, "name", ""))
+        is_aux_return = path.startswith("aux_return") or name.lower().startswith("aux ")
+        if is_aux_return:
+            # Sends already keep the dry source in the main mix; the return
+            # should carry the effect, otherwise the wet signal disappears
+            # behind another copy of dry audio.
+            return np.clip(wet * (0.85 + mix * 2.65), -1.0, 1.0).astype(np.float32)
+        return (block * (1.0 - mix) + wet * mix * 2.1).astype(np.float32)
+
+    def _apply_delay(self, block: np.ndarray, ch: ChannelState) -> np.ndarray:
+        mix = float(np.clip(getattr(ch, "dly_mix", 0.75), 0.0, 1.0))
+        if mix <= 0.001:
+            return block
+        delay_ms = float(np.clip(getattr(ch, "dly_time_ms", 360.0), 40.0, 1200.0))
+        feedback = float(np.clip(getattr(ch, "dly_feedback", 0.32), 0.0, 0.82))
+        width = float(np.clip(getattr(ch, "dly_width", 0.65), 0.0, 1.0))
+        damp = float(np.clip(getattr(ch, "dly_damp", 0.35), 0.0, 1.0))
+        pingpong = bool(getattr(ch, "dly_pingpong", False))
+        delay_samples = max(16, int(SAMPLE_RATE * delay_ms / 1000.0))
+        frames = block.shape[0]
+        state = getattr(ch, "_dly_state", None)
+        if not isinstance(state, dict) or state.get("delay_samples") != delay_samples:
+            state = {
+                "delay_samples": delay_samples,
+                "hist": np.zeros((delay_samples + frames + 2, 2), dtype=np.float32),
+                "lp": np.zeros((2,), dtype=np.float32),
+            }
+            ch._dly_state = state
+        hist = state["hist"]
+        combined = np.vstack([hist, block]).astype(np.float32)
+        delayed = combined[-delay_samples - frames:-delay_samples]
+        if delayed.shape[0] != frames:
+            delayed = np.zeros_like(block)
+        wet = delayed.copy()
+        if pingpong:
+            wet = np.column_stack((delayed[:, 1], delayed[:, 0])).astype(np.float32)
+        side = (wet[:, 0] - wet[:, 1]) * (0.20 + width * 0.80)
+        mid = (wet[:, 0] + wet[:, 1]) * 0.5
+        wet[:, 0] = mid + side * 0.5
+        wet[:, 1] = mid - side * 0.5
+        damp_keep = 1.0 - damp * 0.72
+        lp = np.asarray(state.get("lp", np.zeros((2,), dtype=np.float32)), dtype=np.float32)
+        smoothed = np.empty_like(wet)
+        for i in range(frames):
+            lp = lp * damp + wet[i] * damp_keep
+            smoothed[i] = lp
+        state["lp"] = lp.astype(np.float32)
+        wet = smoothed
+        state["hist"] = np.vstack([hist, np.clip(block + wet * feedback, -1.0, 1.0)])[-(delay_samples + frames + 2):].astype(np.float32)
+        path = str(getattr(ch, "path", ""))
+        is_aux_return = path.startswith("aux_return") or str(getattr(ch, "name", "")).lower().startswith("aux ")
+        if is_aux_return:
+            return np.clip(wet * (0.75 + mix * 1.55), -1.0, 1.0).astype(np.float32)
+        return (block * (1.0 - mix) + wet * mix).astype(np.float32)
+
+    def _apply_modulation(self, block: np.ndarray, ch: ChannelState) -> np.ndarray:
+        mix = float(np.clip(getattr(ch, "mod_mix", 0.65), 0.0, 1.0))
+        if mix <= 0.001:
+            return block
+        rate = float(np.clip(getattr(ch, "mod_rate_hz", 0.42), 0.05, 8.0))
+        depth = float(np.clip(getattr(ch, "mod_depth", 0.55), 0.0, 1.0))
+        frames = block.shape[0]
+        phase = float(getattr(ch, "_mod_phase", 0.0))
+        t = phase + np.arange(frames, dtype=np.float32) * (2.0 * math.pi * rate / SAMPLE_RATE)
+        ch._mod_phase = float((phase + frames * (2.0 * math.pi * rate / SAMPLE_RATE)) % (2.0 * math.pi))
+        left_lfo = np.sin(t)
+        right_lfo = np.sin(t + math.pi * 0.64)
+        wet = block.copy()
+        wet[:, 0] *= (0.72 + 0.38 * depth * left_lfo)
+        wet[:, 1] *= (0.72 + 0.38 * depth * right_lfo)
+        cross = np.column_stack((wet[:, 1], wet[:, 0])).astype(np.float32) * (0.18 + depth * 0.18)
+        wet = np.clip(wet + cross, -1.0, 1.0)
+        path = str(getattr(ch, "path", ""))
+        is_aux_return = path.startswith("aux_return") or str(getattr(ch, "name", "")).lower().startswith("aux ")
+        if is_aux_return:
+            return np.clip(wet * (0.55 + mix * 1.15), -1.0, 1.0).astype(np.float32)
+        return (block * (1.0 - mix) + wet * mix).astype(np.float32)
 
     @staticmethod
     def _stage_param_bypassed(bp: dict) -> bool:
