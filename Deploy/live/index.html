@@ -596,7 +596,7 @@
         <a href="#cards">Cards</a>
         <a href="#cubes">Cubes</a>
         <a href="#console">Console</a>
-        <a href="#software">Jimmy</a>
+        <a href="#software">Software</a>
         <a href="#personal">Rig</a>
         <a href="#venue">Venue</a>
       </nav>
@@ -871,51 +871,51 @@
 
   <div class="divider"><hr></div>
 
-  <!-- ════════════════ SOFTWARE / JIMMY ════════════════ -->
+  <!-- ════════════════ SOFTWARE / SYSTEM Q ════════════════ -->
   <div class="section" id="software">
     <p class="section-label">04 &mdash; Software</p>
-    <h2>Jimmy &mdash; the live prototype <span class="live-badge">Live in browser</span></h2>
+    <h2>System Q Console &mdash; working software prototype <span class="live-badge">Active desktop build</span></h2>
     <p>
-      Jimmy is the in-browser prototype of the GIG software layer. It mirrors the rack and Console language &mdash;
-      channel stages, POL-style visual editing, parameter focus, and recall &mdash; so the same operating model holds
-      across analog cards, digital paths, and the surface.
+      System Q Console is the current GIG software layer: a desktop recording and mix environment built around one
+      navigation model, one polar editor, and one visual language for channels, sends, aux returns, inserts, transport,
+      timeline editing, and the master bus.
     </p>
     <p>
-      It sketches the whole flow: musicians on personal Rigs, a 12-channel input strip with polar mic-pre / harmonics /
-      compressor / EQ / tone stages per channel, and the Console surface with faders, encoders, and 6-DOF focus. It is
-      where the operating model becomes <em>visible</em>.
+      The software is no longer just a browser sketch. The active build combines channel faders and send banking,
+      solo / mute / record-arm, group and aux selection, hardware insert slots, stereo master metering, timeline markers,
+      cut / copy / paste / undo, scrub / shuttle, and SpaceMouse-style directional control.
     </p>
     <p style="margin-top: 1.25rem;">
-      Alongside Jimmy is <strong>System Q Console</strong> &mdash; the desktop application with a working audio engine.
-      A 12-channel rehearsal / recording console with armed channel strips, per-channel mic pre with polar focus,
-      harmonics, compressor, EQ, FX, sends, transport, and master &mdash; the same operating model from the racks
-      and Console surface, running as real software today.
+      Each selected channel, aux return, or master bus uses the polar editor to expose the processing chain: filters,
+      mic pre where applicable, harmonics, gate, compressor / limiter, EQ, transient shaping, exciter, tube saturation,
+      reverb, delay, and modulation. The point is not a generic DAW skin; it is a console workflow where routing,
+      sound shaping, and editing stay in one tactile operating system.
     </p>
   </div>
 
   <div class="media-grid" style="padding-top: 0;">
     <div class="media wide">
-      <img src="Image/system_q_console.png" alt="System Q Console desktop application: 12-channel strip with mic pre / polar focus on Kick channel" loading="lazy">
-      <div class="cap">System Q Console &mdash; desktop app, 12-channel strip with armed channels, VU meters, EQ, FX, and per-channel mic pre with polar focus on the Kick.</div>
+      <img src="Image/system_q_console.png" alt="System Q Console desktop application with channel strips, polar editor, transport, timeline, aux returns, and stereo master bus" loading="lazy">
+      <div class="cap">System Q Console &mdash; desktop app with channel strips, send banking, polar DSP editing, transport, timeline, aux returns, and stereo master bus.</div>
     </div>
   </div>
 
   <div class="media-grid split" style="padding-top: 0;">
     <div class="media">
       <img src="Image/download.png" alt="Channel strip sections: mic pre, harmonics, compressor, EQ, effects" loading="lazy">
-      <div class="cap">One strip model across 12 channels &mdash; each section is a dedicated stage in Jimmy.</div>
+      <div class="cap">One strip model across channels, aux returns, groups, and master &mdash; each visible section is a controllable stage in System Q.</div>
     </div>
     <div class="media">
-      <h3 style="margin: 0 0 .65rem;">Sections (per channel in Jimmy)</h3>
+      <h3 style="margin: 0 0 .65rem;">Current software sections</h3>
       <p style="margin: 0 0 .75rem;">
-        Each stage uses POL (polar) editing: the mic pre and dynamics close in on the polar graph. Ring radius maps frequency
-        (bigger = low, smaller = high).
+        Each stage uses polar editing where the display changes to the selected processor: frequency bands, threshold,
+        width, gain, reflections, delay time, modulation, saturation, and level are shown as rings, arcs, color, and brightness.
       </p>
-      <p style="margin: 0 0 .55rem;"><strong>Mic pre</strong> &mdash; input gain, HPF, phantom, phase and the polar focus view.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Mic pre / filters</strong> &mdash; input gain, LPF, HPF, phantom, phase and polar level control.</p>
       <p style="margin: 0 0 .55rem;"><strong>Harmonics</strong> &mdash; a unique 5-band harmonic processor (H1&ndash;H5) for controlled character.</p>
-      <p style="margin: 0 0 .55rem;"><strong>Compressor</strong> &mdash; frequency-focused dynamics (with gate/limiter behavior in the same model).</p>
-      <p style="margin: 0 0 .55rem;"><strong>EQ</strong> &mdash; band shaping that follows the same ring-driven frequency targeting.</p>
-      <p style="margin: 0;"><strong>Effects processor</strong> &mdash; transient designer + saturation/exciter as a single stage.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Gate / compressor / limiter</strong> &mdash; visual threshold, depth or ratio, attack, release, frequency and width.</p>
+      <p style="margin: 0 0 .55rem;"><strong>EQ / transient</strong> &mdash; multi-band frequency, gain, shape, attack, sustain, and band selection.</p>
+      <p style="margin: 0;"><strong>Aux effects</strong> &mdash; reverb, delay, and modulation on aux returns, with sends feeding the active return.</p>
     </div>
   </div>
 
