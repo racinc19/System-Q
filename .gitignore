@@ -60,3 +60,15 @@ LEWITTxEYESHALFSHUT/
 
 # Automated GUI evidence captures (regenerate via software/capture_*_evidence.py)
 Evidence/
+
+# System Q generated verification/evidence captures
+Development/software/SYSTEM_Q_VERIFY_RUNS/
+Development/software/*.log
+Development/software/agent_desktop_capture.png
+Development/software/SYSTEM_Q_proof_*.png
+Development/software/SYSTEM_Q_proof_*.gif
+Development/software/SYSTEM_Q_polar_proof_*.png
+Development/software/VISIBLE_NAV_PROOF_*.png
+Development/software/eq_*proof*.png
+Development/software/*_proof*.png
+Development/software/*_proof*.gif

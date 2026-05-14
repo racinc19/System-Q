@@ -584,17 +584,59 @@ class ConsoleEngine:
             return block
         rate = float(np.clip(getattr(ch, "mod_rate_hz", 0.42), 0.05, 8.0))
         depth = float(np.clip(getattr(ch, "mod_depth", 0.55), 0.0, 1.0))
+        feedback = float(np.clip(getattr(ch, "mod_feedback", 0.0), 0.0, 0.85))
+        width = float(np.clip(getattr(ch, "mod_width", 0.75), 0.0, 1.0))
+        mod_type = str(getattr(ch, "mod_type", "CHR") or "CHR").upper()
         frames = block.shape[0]
         phase = float(getattr(ch, "_mod_phase", 0.0))
         t = phase + np.arange(frames, dtype=np.float32) * (2.0 * math.pi * rate / SAMPLE_RATE)
         ch._mod_phase = float((phase + frames * (2.0 * math.pi * rate / SAMPLE_RATE)) % (2.0 * math.pi))
         left_lfo = np.sin(t)
         right_lfo = np.sin(t + math.pi * 0.64)
-        wet = block.copy()
-        wet[:, 0] *= (0.72 + 0.38 * depth * left_lfo)
-        wet[:, 1] *= (0.72 + 0.38 * depth * right_lfo)
-        cross = np.column_stack((wet[:, 1], wet[:, 0])).astype(np.float32) * (0.18 + depth * 0.18)
-        wet = np.clip(wet + cross, -1.0, 1.0)
+
+        if mod_type in ("CHR", "FLG", "VIB"):
+            base_ms = 18.0 if mod_type == "CHR" else 3.0 if mod_type == "FLG" else 6.0
+            sweep_ms = (16.0 if mod_type == "CHR" else 2.6 if mod_type == "FLG" else 5.0) * depth
+            max_delay = max(32, int(SAMPLE_RATE * (base_ms + sweep_ms + 8.0) / 1000.0))
+            state = getattr(ch, "_mod_state", None)
+            if not isinstance(state, dict) or state.get("type") != mod_type or state.get("max_delay") != max_delay:
+                state = {"type": mod_type, "max_delay": max_delay, "hist": np.zeros((max_delay + frames + 2, 2), dtype=np.float32)}
+                ch._mod_state = state
+            hist = state["hist"]
+            combined = np.vstack([hist, block]).astype(np.float32)
+            wet = np.zeros_like(block, dtype=np.float32)
+            for chan, lfo in enumerate((left_lfo, right_lfo)):
+                delay_samples = (base_ms + sweep_ms * (0.5 + 0.5 * lfo)) * SAMPLE_RATE / 1000.0
+                idx_float = np.arange(frames, dtype=np.float32) + hist.shape[0] - delay_samples
+                idx0 = np.clip(np.floor(idx_float).astype(np.intp), 0, combined.shape[0] - 2)
+                frac = (idx_float - idx0).astype(np.float32)
+                wet[:, chan] = combined[idx0, chan] * (1.0 - frac) + combined[idx0 + 1, chan] * frac
+            if mod_type == "FLG":
+                wet = np.clip(wet + block * (0.35 + feedback * 0.55), -1.0, 1.0)
+            if mod_type != "VIB":
+                side = (wet[:, 0] - wet[:, 1]) * width
+                mid = (wet[:, 0] + wet[:, 1]) * 0.5
+                wet[:, 0] = mid + side * 0.5
+                wet[:, 1] = mid - side * 0.5
+            state["hist"] = np.vstack([hist, np.clip(block + wet * feedback, -1.0, 1.0)])[-(max_delay + frames + 2):].astype(np.float32)
+        elif mod_type == "PHS":
+            mono_lfo = (left_lfo + 1.0) * 0.5
+            notched = block.copy()
+            notched[:, 0] *= 1.0 - depth * (0.25 + 0.35 * mono_lfo)
+            notched[:, 1] *= 1.0 - depth * (0.25 + 0.35 * (1.0 - mono_lfo))
+            cross = np.column_stack((notched[:, 1], notched[:, 0])).astype(np.float32) * (0.10 + feedback * 0.30)
+            wet = np.clip(notched + cross, -1.0, 1.0)
+        elif mod_type == "ROT":
+            pan = np.sin(t) * depth
+            wet = block.copy()
+            wet[:, 0] *= np.sqrt(np.clip(0.5 - pan * 0.5 * width, 0.0, 1.0)) * 1.35
+            wet[:, 1] *= np.sqrt(np.clip(0.5 + pan * 0.5 * width, 0.0, 1.0)) * 1.35
+        else:
+            wet = block.copy()
+            wet[:, 0] *= (0.72 + 0.38 * depth * left_lfo)
+            wet[:, 1] *= (0.72 + 0.38 * depth * right_lfo)
+            wet = np.clip(wet + np.column_stack((wet[:, 1], wet[:, 0])).astype(np.float32) * (0.18 + depth * 0.18), -1.0, 1.0)
+
         path = str(getattr(ch, "path", ""))
         is_aux_return = path.startswith("aux_return") or str(getattr(ch, "name", "")).lower().startswith("aux ")
         if is_aux_return:

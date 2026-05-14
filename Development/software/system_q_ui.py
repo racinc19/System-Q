@@ -32,6 +32,20 @@ from system_q_core import (
     TONE_HEX_CLR,
     DISCRETE_TWIST_MIN
 )
+from system_q_stages import (
+    STAGE_COLOR,
+    aux_stage_grid,
+    base_stage_grid,
+    master_stage_grid,
+    stage_title,
+)
+from system_q_transport import (
+    TRANSPORT_BUTTON_GRID,
+    TRANSPORT_COLS as TRANSPORT_COL_COUNT,
+    TRANSPORT_ROWS as TRANSPORT_ROW_COUNT,
+    transport_button_at,
+    transport_cols_for_row,
+)
 
 _log = logging.getLogger("system_q.ui")
 
@@ -54,8 +68,8 @@ def polar_edit_overlay_hex(
 
 class UIMixin:
     # --- UI Constants ---
-    TRANSPORT_ROWS = 2
-    TRANSPORT_COLS = 13
+    TRANSPORT_ROWS = TRANSPORT_ROW_COUNT
+    TRANSPORT_COLS = TRANSPORT_COL_COUNT
     TOP_CHANNEL_CONTROL_COUNT = 12
     TOP_MASTER_VOL_INDEX = 12
     TOP_BANK_INDEX = 13
@@ -65,45 +79,10 @@ class UIMixin:
     GRID_CELL_H_NORMAL = 52
     STRIP_WIDTH = 76
 
-    _STAGE_GRID = [
-        ("pre",  "PRE", ["TBE", "LPF", "48V", "PHS", "HPF"]),
-        ("harm", "HRM", ["TBE", "H1", "H2", "H3", "H4", "H5"]),
-        ("gate", "GTE", ["TBE", "THR", "DEP", "ATK", "RLS", "GAN", "FRQ", "WDT", "BND"]),
-        ("comp", "CMP", ["TBE", "THR", "RAT", "ATK", "RLS", "GAN", "FRQ", "WDT", "BND"]),
-        ("eq",   "EQ",  ["TBE", "FRQ", "GAN", "SHP", "BND"]),
-        ("trn",  "TRN", ["FRQ", "ATK", "SUT", "DRV", "BND"]),
-        ("xct",  "XCT", ["FRQ", "ATK", "SUT", "DRV", "BND"]),
-        ("tbe",  "TBE", ["FRQ", "DRV", "BND"]),
-    ]
+    _STAGE_GRID = base_stage_grid()
+    STAGE_COLOR = STAGE_COLOR
 
-    STAGE_COLOR = {
-        "pre": "#77f0c6", "harm": "#ffb757", "gate": "#ddc270", "comp": "#ff6a53",
-        "eq": "#75baff", "trn": "#36e0dc", "xct": "#c06cff", "tbe": "#ff8f3a", "rvb": "#53d6ff", "dly": "#fcd34d"
-    }
-
-    _TRANSPORT_BUTTONS = [
-        (0, 0, "play_stop", "PLY/SPT", "#6ff0c1", "▶"),
-        (0, 1, "advance", "ADV", "#89a0b6", "↔"),
-        (0, 2, "record", "REC", "#ff3b30", "●"),
-        (0, 3, "cycle", "CYC", "#fbbf24", "↻"),
-        (0, 4, "prepost", "PRE/POST", "#e5e7eb", "⏱"),
-        (0, 6, "channel_solo", "SOL", "#ffd166", "S"),
-        (0, 7, "channel_mute", "MTE", "#ff6a53", "M"),
-        (0, 8, "channel_arm", "REC", "#ff8fa3", "●"),
-        (0, 9, "channel_pan", "PAN", "#75baff", "◉"),
-        (0, 12, "oscillator", "OSC", "#fbbf24", "∿"),
-        (1, 0, "undo", "UND", "#e5e7eb", "↶"),
-        (1, 1, "cut", "CUT", "#fb7185", "✂"),
-        (1, 2, "paste", "PST", "#86efac", "▣"),
-        (1, 3, "copy", "CPY", "#93c5fd", "⧉"),
-        (1, 4, "cancel_edit", "CNL", "#fca5a5", "×"),
-        (1, 5, "zoom", "ZM", "#fcd34d", "⌕"),
-        (1, 6, "shuttle_scrub", "SRB", "#9ca3af", "»"),
-        (1, 8, "auto_read", "RED", "#7dd3fc", "R"),
-        (1, 9, "auto_write", "WRT", "#f87171", "W"),
-        (1, 10, "auto_trim", "TRM", "#fbbf24", "T"),
-        (1, 11, "auto_latch", "LTC", "#c084fc", "L"),
-    ]
+    _TRANSPORT_BUTTONS = TRANSPORT_BUTTON_GRID
 
     # --- Initialization & State ---
     def _init_editor_state_vars(self) -> None:
@@ -164,6 +143,7 @@ class UIMixin:
         self._edit_undo_state: dict[str, Any] | None = None
         self._edit_undo_stack: list[dict[str, Any]] = []
         self._edit_redo_stack: list[dict[str, Any]] = []
+        self._last_editor_focus_target: tuple[str, int, str] | None = None
         self._edit_preview_region: tuple[float, float, str] | None = None
         self._edit_preview_audio: list[np.ndarray] | None = None
         self._shuttle_scrub_mode = "scrub"
@@ -480,8 +460,11 @@ class UIMixin:
                 ch.dly_damp = max(float(getattr(ch, "dly_damp", 0.0)), 0.35)
             elif kind == "mod":
                 ch.mod_enabled = True
+                ch.mod_type = str(getattr(ch, "mod_type", "CHR") or "CHR").upper()
+                ch.mod_rate_hz = max(float(getattr(ch, "mod_rate_hz", 0.0)), 0.35)
                 ch.mod_mix = max(float(getattr(ch, "mod_mix", 0.0)), 0.65)
-                ch.mod_depth = max(float(getattr(ch, "mod_depth", 0.0)), 0.55)
+                ch.mod_depth = max(float(getattr(ch, "mod_depth", 0.0)), 0.35)
+                ch.mod_width = max(float(getattr(ch, "mod_width", 0.0)), 0.75)
 
     def _bus_channel_at(self, store: list[ChannelState], name_prefix: str, path_prefix: str, idx: int) -> ChannelState:
         idx = max(0, int(idx))
@@ -586,18 +569,47 @@ class UIMixin:
 
     def _console_stage_keys(self, channel_index: Optional[int] = None) -> List[str]:
         idx = self._active_channel_index() if channel_index is None else channel_index
-        if self._is_master_nav_index(idx):
-            return ["pre", "harm", "gate", "comp", "eq", "trn", "xct", "tbe"]
-        return ["pre", "harm", "gate", "comp", "eq", "trn", "xct", "tbe"]
+        mode = getattr(self, "target_bank_mode", "ch")
+        ch = self.engine.master_channel if mode == "mst" or self._is_master_nav_index(idx) else self._target_at(mode, idx)
+        return [row[0] for row in self._stage_grid_for_channel(ch)]
 
     def _stage_grid_for_channel(self, ch: ChannelState) -> list[tuple[str, str, list[str]]]:
-        if getattr(self, "target_bank_mode", "ch") == "aux" and bool(getattr(ch, "rvb_enabled", False)):
-            return [("rvb", "RVB", ["TIME", "REF", "MIX", "DMP", "WID", "PRE", "REV"])] + self._STAGE_GRID
-        if getattr(self, "target_bank_mode", "ch") == "aux" and bool(getattr(ch, "dly_enabled", False)):
-            return [("dly", "DLY", ["TIME", "FDB", "MIX", "WID", "DMP", "PNG"])] + self._STAGE_GRID
+        if getattr(self, "target_bank_mode", "ch") == "aux":
+            return aux_stage_grid(self._active_aux_insert_stage(ch))
         if ch is self.engine.master_channel:
-            return [("pre", "FLT", ["LPF", "HPF"])] + [(key, lbl, params) for key, lbl, params in self._STAGE_GRID if key != "pre"]
-        return self._STAGE_GRID
+            return master_stage_grid()
+        return base_stage_grid()
+
+    def _active_aux_insert_stage(self, ch: ChannelState) -> str:
+        name = str(getattr(ch, "name", "")).lower()
+        if "delay" in name and bool(getattr(ch, "dly_enabled", False)):
+            return "dly"
+        if "mod" in name and bool(getattr(ch, "mod_enabled", False)):
+            return "mod"
+        if "reverb" in name and bool(getattr(ch, "rvb_enabled", False)):
+            return "rvb"
+        if bool(getattr(ch, "rvb_enabled", False)):
+            return "rvb"
+        if bool(getattr(ch, "dly_enabled", False)):
+            return "dly"
+        if bool(getattr(ch, "mod_enabled", False)):
+            return "mod"
+        return "pre"
+
+    def _focus_active_aux_insert_if_target_changed(self, ch: ChannelState, stage_grid: list[tuple[str, str, list[str]]]) -> None:
+        mode = getattr(self, "target_bank_mode", "ch")
+        idx = int(self._active_channel_index())
+        active_insert = self._active_aux_insert_stage(ch) if mode == "aux" else ""
+        token = (mode, idx, active_insert)
+        if token == getattr(self, "_last_editor_focus_target", None):
+            return
+        self._last_editor_focus_target = token
+        if mode != "aux" or active_insert not in [row[0] for row in stage_grid]:
+            return
+        self.selected_stage_key = active_insert
+        self.editor_stage_col = next((i for i, row in enumerate(stage_grid) if row[0] == active_insert), 0)
+        self.editor_param_row = 0
+        self.editor_unified_header_focus = True
 
     def _channel_nav_span(self) -> int:
         return max(len(self.engine.channels), 96) + 1
@@ -644,6 +656,7 @@ class UIMixin:
             ch = self._current_channel()
             mode = getattr(self, "target_bank_mode", "ch")
             stage_grid = self._stage_grid_for_channel(ch)
+            self._focus_active_aux_insert_if_target_changed(ch, stage_grid)
             valid_stage_keys = [row[0] for row in stage_grid]
             if self.selected_stage_key not in valid_stage_keys:
                 self.selected_stage_key = valid_stage_keys[0] if valid_stage_keys else "pre"
@@ -945,8 +958,40 @@ class UIMixin:
         elif sk == "dly":
             self._draw_focus_delay_shells(c, ch, cx, cy, orx, ory, irx, iry)
             c.create_text(cx, 30, text="DELAY", fill=self.STAGE_COLOR.get(sk, "#fcd34d"), font=("Segoe UI", 10, "bold"))
+        elif sk == "mod":
+            self._draw_focus_mod_shells(c, ch, cx, cy, orx, ory, irx, iry)
+            c.create_text(cx, 30, text="MODULATION", fill=self.STAGE_COLOR.get(sk, "#a78bfa"), font=("Segoe UI", 10, "bold"))
         else:
             c.create_text(cx, 30, text=sk.upper(), fill=self.STAGE_COLOR.get(sk, "#fff"), font=("Segoe UI", 10, "bold"))
+
+    def _draw_focus_mod_shells(self, c: tk.Canvas, ch: ChannelState, cx: float, cy: float, orx: float, ory: float, irx: float, iry: float) -> None:
+        enabled = bool(getattr(ch, "mod_enabled", False))
+        mod_type = str(getattr(ch, "mod_type", "CHR") or "CHR").upper()
+        rate = float(np.clip(getattr(ch, "mod_rate_hz", 0.42), 0.05, 8.0))
+        depth = float(np.clip(getattr(ch, "mod_depth", 0.55), 0.0, 1.0))
+        mix = float(np.clip(getattr(ch, "mod_mix", 0.65), 0.0, 1.0))
+        feedback = float(np.clip(getattr(ch, "mod_feedback", 0.0), 0.0, 0.85))
+        width = float(np.clip(getattr(ch, "mod_width", 0.75), 0.0, 1.0))
+        pulse = getattr(self, "_pol_pulse_cached", 0.0)
+        rate_t = float(np.clip((math.log10(rate) - math.log10(0.05)) / (math.log10(8.0) - math.log10(0.05)), 0.0, 1.0))
+        rings = 4 + int(rate_t * 8)
+        palette = {"CHR": "#a78bfa", "FLG": "#22d3ee", "PHS": "#a3e635", "ROT": "#f59e0b", "VIB": "#f472b6"}
+        color = palette.get(mod_type, "#a78bfa") if enabled else "#4c3d68"
+        for i in range(rings):
+            t = i / max(1, rings - 1)
+            wobble = math.sin(pulse * 3.0 + i * 0.8) * depth * 0.08
+            rx = irx + (orx - irx) * (0.18 + t * 0.72)
+            ry = iry + (ory - iry) * (0.18 + t * 0.72)
+            if mod_type == "ROT":
+                offset = math.sin(pulse * (1.0 + rate_t * 4.0) + i) * width * 18.0
+                c.create_oval(cx - rx + offset, cy - ry, cx + rx + offset, cy + ry, outline=color, width=2 + int(mix * 3))
+            elif mod_type == "PHS":
+                c.create_oval(cx - rx, cy - ry, cx + rx, cy + ry, outline=color, width=2 + int(mix * 2), dash=(2 + int(feedback * 8), 5))
+            elif mod_type == "FLG":
+                c.create_oval(cx - rx * (1.0 + wobble), cy - ry * (1.0 - wobble), cx + rx * (1.0 + wobble), cy + ry * (1.0 - wobble), outline=color, width=1 + int(2 + feedback * 4), dash=(10, 2))
+            else:
+                c.create_oval(cx - rx * (1.0 + wobble), cy - ry * (1.0 - wobble), cx + rx * (1.0 + wobble), cy + ry * (1.0 - wobble), outline=color, width=2 + int(mix * 3), dash=(6, 5))
+        c.create_text(cx, cy + ory + 18, text=f"{mod_type}  RATE {rate:.2f}Hz  DEP {depth:.2f}  MIX {mix:.2f}  FDB {feedback:.2f}  WID {width:.2f}", fill=color, font=("Consolas", 9, "bold"))
 
     def _draw_focus_delay_shells(self, c: tk.Canvas, ch: ChannelState, cx: float, cy: float, orx: float, ory: float, irx: float, iry: float) -> None:
         enabled = bool(getattr(ch, "dly_enabled", False))
@@ -1879,7 +1924,7 @@ class UIMixin:
         c.create_text(22, dsp_y0 + 35, anchor="w", text="INS", fill="#ff9aaa", font=("Segoe UI", 7, "bold"))
         c.create_text(w - 22, dsp_y0 + 35, anchor="e", text="off", fill="#6f4a54", font=("Consolas", 7, "bold"))
         c.create_text(18, dsp_y0 + 56, anchor="w", text="MASTER DSP", fill="#ff8fa3", font=("Segoe UI", 8, "bold"))
-        master_stages = [("pre", "FLT")] + [(key, lbl) for key, lbl, _params in self._STAGE_GRID if key != "pre"]
+        master_stages = [(key, lbl) for key, lbl, _params in master_stage_grid()]
         for r, (key, lbl) in enumerate(master_stages):
             cy = dsp_y0 + 72 + r * 16
             en = self._stage_enabled(ch, key)
@@ -2579,7 +2624,8 @@ class UIMixin:
         self.selected_channel = self.editor_channel = idx
         self.selected_stage_key, self.nav_scope = key, "editor"
         self.editor_top_focus = False
-        self.editor_stage_col = next((i for i, r in enumerate(self._STAGE_GRID) if r[0]==key), 0)
+        stage_grid = self._stage_grid_for_channel(self._current_channel())
+        self.editor_stage_col = next((i for i, r in enumerate(stage_grid) if r[0]==key), 0)
         self.editor_param_row, self.editor_unified_header_focus = 0, True
         self._autosize_editor_canvas_height()
         self._sync_from_engine(); self.root.focus_set()
@@ -3057,7 +3103,7 @@ class UIMixin:
         self.editor_top_focus = True
         self.editor_insert_focus = False
         self.editor_unified_header_focus = True
-        self.selected_stage_key = "rvb"
+        self.selected_stage_key = self._active_aux_insert_stage(self._target_at("aux", aux_idx))
         self.editor_stage_col = 0
         self.editor_param_row = 0
         self._sync_from_engine()
@@ -3074,12 +3120,16 @@ class UIMixin:
         aux_ch = self._target_at("aux", aux_idx)
         with self.engine._lock:
             if int(plugin_idx) == 0:
+                aux_ch.dly_enabled = False
+                aux_ch.mod_enabled = False
                 aux_ch.rvb_enabled = True
                 aux_ch.name = f"Aux {aux_idx + 1:02d} Reverb"
                 aux_ch.rvb_mix = max(float(getattr(aux_ch, "rvb_mix", 0.0)), 0.65)
                 aux_ch.rvb_time_s = max(float(getattr(aux_ch, "rvb_time_s", 0.0)), 3.2)
                 aux_ch.rvb_ref_ms = max(float(getattr(aux_ch, "rvb_ref_ms", 0.0)), 72.0)
             elif int(plugin_idx) == 1:
+                aux_ch.rvb_enabled = False
+                aux_ch.mod_enabled = False
                 aux_ch.dly_enabled = True
                 aux_ch.name = f"Aux {aux_idx + 1:02d} Delay"
                 aux_ch.dly_mix = max(float(getattr(aux_ch, "dly_mix", 0.0)), 0.75)
@@ -3088,8 +3138,15 @@ class UIMixin:
                 aux_ch.dly_width = max(float(getattr(aux_ch, "dly_width", 0.0)), 0.65)
                 aux_ch.dly_damp = max(float(getattr(aux_ch, "dly_damp", 0.0)), 0.35)
             elif int(plugin_idx) == 2:
+                aux_ch.rvb_enabled = False
+                aux_ch.dly_enabled = False
                 aux_ch.mod_enabled = True
                 aux_ch.name = f"Aux {aux_idx + 1:02d} Mod"
+                aux_ch.mod_type = str(getattr(aux_ch, "mod_type", "CHR") or "CHR").upper()
+                aux_ch.mod_rate_hz = max(float(getattr(aux_ch, "mod_rate_hz", 0.0)), 0.35)
+                aux_ch.mod_depth = max(float(getattr(aux_ch, "mod_depth", 0.0)), 0.35)
+                aux_ch.mod_mix = max(float(getattr(aux_ch, "mod_mix", 0.0)), 0.65)
+                aux_ch.mod_width = max(float(getattr(aux_ch, "mod_width", 0.0)), 0.75)
         self.plugin_pick_mode = False
         self.plugin_pick_return = None
         self.target_bank_mode = "aux"
@@ -3097,7 +3154,7 @@ class UIMixin:
         self.editor_top_focus = False
         self.editor_insert_focus = False
         self.editor_unified_header_focus = True
-        self.selected_stage_key = "rvb" if int(plugin_idx) == 0 else "pre"
+        self.selected_stage_key = self._active_aux_insert_stage(aux_ch)
         self.editor_stage_col = 0
         self.editor_param_row = 0
         self._sync_from_engine()
@@ -3196,6 +3253,15 @@ class UIMixin:
                     self._hydrate_tbe_band_to_scalars(ch)
             self._sync_from_engine()
             return
+        if sk == "mod" and label == "TYPE":
+            types = ["CHR", "FLG", "PHS", "ROT", "VIB"]
+            with self.engine._lock:
+                cur = str(getattr(ch, "mod_type", "CHR") or "CHR").upper()
+                idx = types.index(cur) if cur in types else 0
+                ch.mod_type = types[(idx + (1 if axis_value > 0 else -1)) % len(types)]
+                ch._mod_state = None
+            self._sync_from_engine()
+            return
         
         spec_table = {
             ("pre",  "LPF"): ("lpf_hz", "log", 200.0, 22000.0, 0.1),
@@ -3244,6 +3310,11 @@ class UIMixin:
             ("dly",  "MIX"): ("dly_mix", "lin", 0.0, 1.0, 0.1),
             ("dly",  "WID"): ("dly_width", "lin", 0.0, 1.0, 0.1),
             ("dly",  "DMP"): ("dly_damp", "lin", 0.0, 1.0, 0.1),
+            ("mod",  "RATE"): ("mod_rate_hz", "log", 0.05, 8.0, 0.12),
+            ("mod",  "DEP"): ("mod_depth", "lin", 0.0, 1.0, 0.1),
+            ("mod",  "MIX"): ("mod_mix", "lin", 0.0, 1.0, 0.1),
+            ("mod",  "FDB"): ("mod_feedback", "lin", 0.0, 0.85, 0.1),
+            ("mod",  "WID"): ("mod_width", "lin", 0.0, 1.0, 0.1),
         }
         spec = spec_table.get((sk, label))
         if not spec: return
@@ -3630,9 +3701,7 @@ class UIMixin:
         self._sync_from_engine()
 
     def _stage_label(self, key: str, ch: Optional[ChannelState] = None) -> str:
-        if key == "pre" and ch is self.engine.master_channel:
-            return "Filters"
-        return {"pre": "Mic Pre", "harm": "Harmonics", "gate": "Gate", "comp": "Compressor", "eq": "EQ", "trn": "Transient", "xct": "Exciter", "tbe": "Tube", "rvb": "Reverb"}.get(key, key.upper())
+        return stage_title(key, master=(ch is self.engine.master_channel))
 
     def _stage_cell_value(self, ch: ChannelState, stage_key: str, label: str) -> Tuple[str, bool]:
         sk_en = f"{stage_key}_enabled"
@@ -3669,6 +3738,16 @@ class UIMixin:
             if label == "WID": return (f"{getattr(ch, 'dly_width', 0.65):.2f}", active)
             if label == "DMP": return (f"{getattr(ch, 'dly_damp', 0.35):.2f}", active)
             if label == "PNG": return ("ON" if bool(getattr(ch, "dly_pingpong", False)) else "off", bool(getattr(ch, "dly_pingpong", False)) and active)
+            return ("-", False)
+
+        if stage_key == "mod":
+            active = bool(getattr(ch, "mod_enabled", False))
+            if label == "TYPE": return (str(getattr(ch, "mod_type", "CHR") or "CHR").upper(), active)
+            if label == "RATE": return (f"{getattr(ch, 'mod_rate_hz', 0.42):.2f}", active)
+            if label == "DEP": return (f"{getattr(ch, 'mod_depth', 0.55):.2f}", active)
+            if label == "MIX": return (f"{getattr(ch, 'mod_mix', 0.65):.2f}", active)
+            if label == "FDB": return (f"{getattr(ch, 'mod_feedback', 0.0):.2f}", active)
+            if label == "WID": return (f"{getattr(ch, 'mod_width', 0.75):.2f}", active)
             return ("-", False)
 
         if stage_key in ("gate", "comp"):
@@ -3755,11 +3834,10 @@ class UIMixin:
         self.editor_canvas.config(height=int(need))
 
     def _transport_button_at(self, r: int, c: int) -> Optional[Tuple[str, str, str, str]]:
-        return next(((k, l, clr, glyph) for row, col, k, l, clr, glyph in self._TRANSPORT_BUTTONS if row==r and col==c), None)
+        return transport_button_at(r, c)
 
     def _transport_cols_for_row(self, r: int) -> List[int]:
-        cols = [col for row, col, *_ in self._TRANSPORT_BUTTONS if row == r]
-        return sorted(cols) if cols else [0]
+        return transport_cols_for_row(r)
 
     def _timeline_channel_for_display(self) -> ChannelState:
         mode = getattr(self, "target_bank_mode", "ch")
@@ -4154,5 +4232,6 @@ class UIMixin:
             "tbe": "tbe_enabled",
             "rvb": "rvb_enabled",
             "dly": "dly_enabled",
+            "mod": "mod_enabled",
         }
         return bool(getattr(ch, m.get(key, "eq_enabled"), False))

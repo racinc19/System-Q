@@ -1,5 +1,6 @@
 import math
 import logging
+from logging.handlers import RotatingFileHandler
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -8,11 +9,11 @@ import soundfile as sf
 
 # Global logging setup for all modules
 _log_path = Path(__file__).resolve().parent / "console_debug.log"
+_log_handler = RotatingFileHandler(_log_path, maxBytes=2_000_000, backupCount=3, encoding="utf-8")
+_log_handler.setFormatter(logging.Formatter("%(asctime)s.%(msecs)03d %(message)s", datefmt="%H:%M:%S"))
 logging.basicConfig(
-    filename=str(_log_path),
     level=logging.DEBUG,
-    format="%(asctime)s.%(msecs)03d %(message)s",
-    datefmt="%H:%M:%S",
+    handlers=[_log_handler],
     force=True,
 )
 _log = logging.getLogger("console")
@@ -149,9 +150,12 @@ class ChannelState:
     dly_damp: float = 0.35
     dly_pingpong: bool = False
     mod_enabled: bool = False
+    mod_type: str = "CHR"
     mod_rate_hz: float = 0.42
     mod_depth: float = 0.55
     mod_mix: float = 0.65
+    mod_feedback: float = 0.0
+    mod_width: float = 0.75
     pre_enabled: bool = False
     pre_gain_db: float = 0.0
     pre_squeeze: float = 1.0
