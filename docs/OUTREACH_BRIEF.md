@@ -2,15 +2,19 @@
 
 ## Objective
 
-This brief is meant for early outreach to a potential buyer, strategic partner, or product executive.
+This brief is meant for early outreach to Bob Clearmountain or another path into Apogee.
 
 It is not a full pitch deck.
 
-Its job is to make the concept understandable quickly and establish why a conversation is worth having.
+Its job is to make the concept understandable quickly and establish why a serious Apogee conversation may be worth having.
+
+For the send-ready first message, use `BOB_CLEARMOUNTAIN_REVIEW_REQUEST.md`.
+
+For the analog hardware pressure-test path, use `PAUL_WOLFF_TECHNICAL_REVIEW_REQUEST.md`.
 
 ## Short framing
 
-I have been developing a concept called `Recording Environment`, a unified ecosystem for musicians that connects rehearsal, recording, mixing, monitoring, playback, and venue deployment into one operating model.
+I have been developing `System Q / GIG`, a unified ecosystem for musicians that connects rehearsal, recording, mixing, monitoring, playback, and venue deployment into one operating model.
 
 The core idea is simple:
 
@@ -26,45 +30,40 @@ The value is not just in any single product. The value is in the continuity acro
 
 Most musician workflows are still fragmented across disconnected devices, software environments, monitoring setups, and live playback systems.
 
-This concept is meant to unify those stages into one coherent ecosystem.
+System Q is meant to unify those stages into one coherent ecosystem.
 
-I believe that kind of system may be more valuable inside an established hardware/software company than as a standalone founder-operated build, because the concept is inherently cross-category.
+For Apogee, the strategic question is whether Apogee's trust in conversion, interfaces, and professional recording workflow could become the spine of a fuller musician environment.
 
 ## Why I am reaching out
 
-I am not approaching this only as a product-in-search-of-a-market.
+I am not looking for encouragement, endorsement, funding, or a generic opinion.
 
-I believe this may be a strong fit for a company that already understands:
+I am looking for a serious read on whether this ecosystem architecture is credible enough to deserve the right Apogee conversation.
 
-- Hardware product families
-- Audio workflows
-- Category integration
-- The value of platform thinking over isolated SKUs
-
-What I am looking for initially is not a commitment, but a serious look at whether this ecosystem architecture could make strategic sense inside the right organization.
+Bob Clearmountain is the current access path because he can judge whether the recording and workflow story feels real to serious audio people, and because he may know whether this should reach Apogee leadership.
 
 ## Main system elements
 
 - Personal Station: musician endpoint for monitoring, playback, processing, and session participation
 - Cube: simpler, lower-friction entry path into the ecosystem
-- Racks: premium analog recording and processing core
+- Racks: premium analog recording and print core with historic input cards, historic output cards, and Tape Cylinder routing
 - Software: shared DSP and visual/control language
 - Controller: central tactile command surface
 - Venue: playback, room translation, and live output layer
 
-## Why a broad buyer may fit best
+## Why Apogee may fit
 
-This concept likely works best for a company that can connect multiple product categories rather than only absorb one piece of the system.
+System Q likely works best if the first strategic audience already has trust in recording quality.
 
-Its value increases when the same company can think across:
+For Apogee, the relevant expansion path is:
 
-- Musician endpoints
-- Recording hardware
-- Analog processing
-- DSP/software
-- Control surfaces
-- Monitoring
-- Live output
+- From elite interfaces and conversion
+- To a connected musician endpoint
+- To a unified recording/control environment
+- To historic analog capture and print cards
+- To a Tape Cylinder magnetic buffer on input, output, or both
+- To recallable software and tactile control
+- To live playback and room translation
 
 ## What exists now
 
@@ -75,9 +74,12 @@ The concept currently exists as:
 - Naming and system framing
 - Visual/site expression
 - Hardware and software concept direction
+- A working System Q console prototype and visual proof assets
 
 The project is still best understood as an ecosystem architecture rather than a finished market-ready product line.
 
 ## Suggested close
 
 If this sounds potentially relevant, I would be glad to share a concise architecture overview and walk through how the system fits together from Personal Station to Venue.
+
+For Bob specifically, the ask is direct: I want your blunt read on whether this is credible enough for Apogee, what would block it, and whether there is a right way to put it in front of Apogee if the architecture lands.

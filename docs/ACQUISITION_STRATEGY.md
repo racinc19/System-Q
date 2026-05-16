@@ -4,19 +4,19 @@
 
 The goal is not simply to launch and operate the recording environment as a standalone company.
 
-The current preferred path is to shape it into an acquirable concept and ecosystem for a buyer with broad hardware, software, and manufacturing reach.
+The current preferred path is to shape it into an acquirable concept and ecosystem for a buyer with enough audio credibility, product judgment, and platform ambition to understand the system.
 
 ## Priority buyer profile
 
-The clearest current buyer profile is:
+The clearest current primary target is:
 
-- Uli Behringer / Music Tribe
-- Behringer
-- Midas
+- Apogee
 
-This buyer profile makes sense because the concept is not a single narrow product. It is a system-level idea that spans musician workflow, hardware, software, monitoring, recording, and live deployment.
+The current strategic access path is Bob Clearmountain. Bob matters because he can judge the recording/workflow credibility of System Q and may be able to help the idea reach the right Apogee conversation.
 
-A company with range across those categories is a better fit than a company focused on only one slice of the chain.
+Apogee makes sense because the concept starts from trust in recording quality, conversion, musician workflow, and professional audio judgment. System Q should read as a possible expansion of Apogee's recording trust into a connected musician ecosystem.
+
+Music Tribe / Behringer remains useful as a secondary broad-platform buyer profile, but it is no longer the active primary target.
 
 ## Working definition of the asset being sold
 
@@ -97,7 +97,7 @@ The current best guess is that "enough proof" looks like this:
 - A visible workflow from rehearsal to recording to live playback
 - UI mockups or software prototypes that show the operating style
 - Hardware concepts or renders that make the physical system legible
-- A concise argument for why this belongs inside a company like Music Tribe
+- A concise argument for why this belongs inside Apogee
 
 ## Suggested materials to develop
 
@@ -136,7 +136,7 @@ A short deck or document explaining:
 - What problem this solves for musicians
 - Why current solutions are fragmented
 - Why this ecosystem is more valuable than disconnected products
-- Why a company like Music Tribe is positioned to execute it
+- Why Apogee is positioned to judge and potentially extend it
 
 This is not yet the final buyer pitch. It is the structured narrative behind one.
 
@@ -159,11 +159,12 @@ The goal is not full engineering validation yet. The goal is to help a buyer see
 
 ### 6. Buyer-fit memo
 
-A short document mapping the concept specifically to Music Tribe or another target:
+A short document mapping the concept specifically to Apogee:
 
-- Which existing categories they already cover
-- What gaps this fills
-- Why they are more suitable than other buyers
+- Why Apogee's credibility in conversion and premium recording matters
+- How System Q extends Apogee from interface/conversion into musician ecosystem
+- Why Bob Clearmountain is the correct access and pressure-test path
+- What would need to be true for Apogee to take it seriously
 
 This makes outreach more disciplined.
 

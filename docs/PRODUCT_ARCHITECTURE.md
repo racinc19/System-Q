@@ -78,10 +78,10 @@ The Racks are the premium analog core of the ecosystem.
 
 ### Core functions
 
-- Preamplification
-- Dynamics
-- EQ
-- Harmonic processing
+- Historic input/capture cards
+- Historic output/print cards
+- Preamplification, dynamics, EQ, and harmonic processing
+- Optional clock-locked Tape Cylinder stage on input, output, or both
 - Conversion
 - Routing
 - Monitoring
@@ -92,6 +92,25 @@ The Racks are the premium analog core of the ecosystem.
 The Racks represent the highest-end recording path.
 
 They are where the system delivers its strongest analog identity and its most pristine or character-rich capture path. The system promise is that users can dial in serious sounds within the ecosystem itself without being forced to assemble a separate wall of hardware or plugin stack.
+
+The card system should be understood as a modular analog library of recording history, not only as utility processing. Input cards recreate capture identities: the front end, gain staging, transformer behavior, console response, and saturation culture of historic recording environments. Output cards recreate print identities: bus compression, master tone, summing behavior, room/output weight, and final record polish.
+
+The Tape Cylinder concept belongs in this layer as a prototype thesis: a clock-locked analog cylinder stage that could add physical saturation and repro behavior while remaining integrated with System Q transport and recall. It can sit on the input path, output path, or both.
+
+Working topology:
+
+```text
+Input path:
+Mic / instrument -> historic input card -> Tape Cylinder -> A/D -> DAW
+
+Output path:
+DAW / stems -> historic output card -> Tape Cylinder -> print / monitor / Venue
+
+Double-tape path:
+Input card -> Tape Cylinder -> DAW -> output card -> Tape Cylinder
+```
+
+In this model, the Tape Cylinder is also a magnetic overload buffer. Hot analog-card output can saturate physically before conversion, turning overload into compression and harmonic density rather than hard digital clipping.
 
 ## 4. Software
 

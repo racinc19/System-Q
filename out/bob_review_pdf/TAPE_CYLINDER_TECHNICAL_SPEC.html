@@ -1,0 +1,89 @@
+<!doctype html><html><head><meta charset="utf-8"><title>TAPE_CYLINDER_TECHNICAL_SPEC</title><style>
+@page { size: Letter; margin: 0.72in; }
+* { box-sizing: border-box; }
+body { font-family: Arial, Helvetica, sans-serif; color: #111827; line-height: 1.45; font-size: 10.8pt; }
+h1 { font-size: 23pt; margin: 0 0 18px; color: #0f172a; }
+h2 { font-size: 15pt; margin: 24px 0 8px; color: #0f172a; border-bottom: 1px solid #d7dee8; padding-bottom: 4px; }
+h3 { font-size: 12.5pt; margin: 18px 0 6px; color: #172033; }
+p { margin: 0 0 9px; }
+ul, ol { margin: 0 0 10px 22px; padding: 0; }
+li { margin: 0 0 4px; }
+blockquote { margin: 12px 0; padding: 10px 14px; border-left: 4px solid #0ea5e9; background: #f3f7fb; }
+code { font-family: Consolas, monospace; background: #eef2f7; padding: 1px 3px; border-radius: 3px; }
+.footer { margin-top: 28px; padding-top: 8px; border-top: 1px solid #d7dee8; font-size: 8.5pt; color: #64748b; }
+</style></head><body><h1>System Q: Tape Cylinder Technical Specification</h1>
+<p>This document defines the physical and magnetic parameters for the first prototype thesis of the System Q Tape Cylinder.</p>
+<p>The Tape Cylinder is intended to be evaluated as a premium analog coloration, capture, repro, and print path inside the System Q rack architecture.</p>
+<p>It can serve three roles:</p>
+<ul>
+<li>Input magnetic buffer: historic input card -&gt; Tape Cylinder -&gt; A/D -&gt; DAW</li>
+<li>Output magnetic buffer: DAW / stems -&gt; historic output card -&gt; Tape Cylinder -&gt; print / monitor / Venue</li>
+<li>Double-tape path: input card -&gt; Tape Cylinder -&gt; DAW -&gt; output card -&gt; Tape Cylinder</li>
+</ul>
+<p>The product goal is not only &quot;tape sound.&quot; The product goal is a clip-resistant magnetic buffer that lets hot analog-card output become compression, harmonic density, and saturation before it reaches a hard digital ceiling.</p>
+<h2>1. Drum Dimensions and Physics</h2>
+<p>To target the sonic behavior associated with a 2-inch Studer-style machine, the first prototype uses a large-roll cylinder form factor.</p>
+<p>| Parameter | Specification | Rationale | | --- | --- | --- | | Material | Aircraft-grade 6061 aluminum | High stability and non-magnetic structure. | | Width | 2.0 inches | Matches the 2-inch tape-machine reference width. | | Diameter | 5.0 inches | Provides a 15.7-inch circumference. | | Speed | 114.6 RPM | Required rotational speed for 30 inches per second at 5-inch diameter. | | Motor | High-torque brushless DC | Slaved to DAW sample clock through System Q logic. |</p>
+<h3>Speed calculation</h3>
+<p>```text circumference = pi * diameter circumference = 3.14159 * 5.0 in = 15.708 in</p>
+<p>target tape speed = 30 in/sec = 1800 in/min required RPM = 1800 / 15.708 = 114.6 RPM ```</p>
+<h2>2. The Thick-Wad Magnetic Coating</h2>
+<p>Unlike thin ribbon tape, the cylinder concept uses a permanent, multi-layer magnetic coating.</p>
+<p>| Parameter | Prototype Thesis | | --- | --- | | Composition | Gamma ferric oxide (<code>Fe2O3</code>) with high-density cobalt doping | | Thickness | 1.5 mm | | Intended benefit | Extreme magnetic headroom and low-end stability under high-level input |</p>
+<p>The intended product behavior is that the user can drive the System Q input or output cards hard without the tape stage thinning out or losing low-end detail.</p>
+<h2>3. The 12-Track Head Array</h2>
+<p>The first architecture assumes custom-wound heads designed around high-voltage analog signals.</p>
+<p>| Head | Material | Role | | --- | --- | --- | | Erase head | Ferrite | Clears the cylinder every rotation. | | Record head | Permalloy | Driven by the System Q input cards. | | Repro head | Sendust | Positioned after the record head and wired directly to the integrated A/D converter. |</p>
+<p>The current concept places the repro head 3 inches after the record head.</p>
+<p>At 30ips, a 3-inch record-to-repro spacing produces roughly 100 ms of delay:</p>
+<p>``<code>text delay = spacing / speed delay = 3 in / 30 in/sec = 0.1 sec </code>``</p>
+<p>That delay should be treated as part of the integration design. It may be useful for monitoring character or effect behavior, but it must be compensated when the Tape Cylinder is used as a recording path into the DAW.</p>
+<h2>4. DAW Integration</h2>
+<p>The Tape Cylinder should be controlled through the System Q transport layer.</p>
+<p>The implementation target is currently <code>Development/software/system_q_transport.py</code>.</p>
+<p>| Feature | Behavior | | --- | --- | | Auto-cue | The cylinder spins up when a track is armed for recording. | | Sync-lock | Motor speed adjusts in micro-increments to stay phase-aligned with the DAW clock. | | Recall | Bias and EQ settings are saved as part of the DAW session metadata. |</p>
+<h2>5. Bias Card Behavior</h2>
+<p>The Tape Cylinder should support swappable bias behavior through the System Q frame.</p>
+<p>For example:</p>
+<ul>
+<li>A Zappa-style bias card could emphasize aggressive midrange saturation and fast transient response.</li>
+<li>A Zeppelin-style bias card could emphasize weight, transient bloom, and low-mid thickness.</li>
+</ul>
+<p>The purpose of the bias card is to change how the cylinder reacts to incoming audio without requiring a full mechanical or magnetic assembly swap.</p>
+<h2>6. Historic Card Integration</h2>
+<p>The Tape Cylinder is not isolated from the rack card idea. It is the magnetic stage that historic input and output cards can hit.</p>
+<p>Example input-card families:</p>
+<ul>
+<li>Abbey Road-inspired capture</li>
+<li>Sausalito Record Plant / API-inspired capture</li>
+<li>Zeppelin Mobile / Neve-inspired capture</li>
+<li>Zappa UMRK / Harrison-Trident-inspired capture</li>
+<li>Tom Scholz Basement-inspired capture</li>
+</ul>
+<p>Example output-card families:</p>
+<ul>
+<li>SSL bus-inspired print</li>
+<li>RCA New York Church-inspired output</li>
+<li>Les Paul Studio-inspired overdub/print path</li>
+<li>Bill Putnam / United-inspired print path</li>
+<li>Abbey Road-inspired print</li>
+<li>Power Station-inspired print</li>
+</ul>
+<p>The card references should be treated as voicing references and product-language anchors, not as licensed clones or literal reproductions.</p>
+<h2>7. Engineering Validation Notes</h2>
+<p>The following points are not settled engineering claims yet. They are prototype risks that need specialist validation before buyer-facing technical claims are made.</p>
+<ul>
+<li>A 1.5 mm magnetic coating is far thicker than conventional tape oxide layers and may require custom head-gap geometry, field strength, surface finishing, and wear testing.</li>
+<li>The phrase &quot;2-inch track spacing&quot; should be avoided externally. The accurate reference is 2-inch tape width.</li>
+<li>Thick coating headroom, low-frequency retention, erase behavior, and noise floor must be measured rather than assumed.</li>
+<li>&quot;Cannot clip&quot; should not be used as an engineering claim. The safer claim is magnetic overload buffering: saturation and compression before hard digital clipping.</li>
+<li>The erase/record/repro array needs mechanical tolerance analysis at 114.6 RPM.</li>
+<li>DAW sync-lock needs a defined control loop, encoder feedback path, jitter target, and failure behavior.</li>
+<li>The 100 ms repro delay must be compensated or intentionally exposed as a creative monitoring/effect mode.</li>
+</ul>
+<h2>Current Positioning</h2>
+<p>Externally, this should be described as a premium analog cylinder concept inside System Q, not as proven replacement technology for a Studer machine.</p>
+<p>The useful claim is:</p>
+<blockquote>
+<p>System Q is exploring a clock-locked analog tape-cylinder stage that lets historic input and output cards hit a physical magnetic buffer before conversion, print, monitoring, or Venue playback.</p>
+</blockquote><div class="footer">System Q / GIG review package · TAPE_CYLINDER_TECHNICAL_SPEC.md</div></body></html>

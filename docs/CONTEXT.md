@@ -19,9 +19,11 @@ That matters because it changes how the recording environment should be interpre
 
 The preferred outcome is not necessarily to build and operate this entire recording product as a long-term standalone business.
 
-A preferred outcome is acquisition by an existing industry player with the reach, manufacturing ability, and product appetite to absorb and develop it further.
+A preferred outcome is acquisition by an existing industry player with the audio credibility, product judgment, reach, and appetite to absorb and develop it further.
 
-One example of that acquirer profile is Uli Behringer / Music Tribe, or someone with a similar mindset and capacity.
+The current primary target is Apogee. The current access path is Bob Clearmountain, because he can judge whether the recording/workflow story is credible and may be able to help it reach the right Apogee conversation.
+
+Music Tribe / Behringer remains useful as a secondary broad-platform buyer profile, but it is not the active first target.
 
 Part of the hope is that an acquirer may value not just the recording system itself, but also understand or resonate with the larger AIP motivation behind it.
 

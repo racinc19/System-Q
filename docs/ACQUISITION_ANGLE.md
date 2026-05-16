@@ -4,7 +4,7 @@
 
 This document frames the recording environment as a concept that may be more valuable to an acquirer than as a founder-operated standalone business.
 
-The specific buyer profile in mind is someone like Uli Behringer / Music Tribe, or another buyer with similar manufacturing scale, product breadth, software ambition, and willingness to pursue integrated systems.
+The current primary buyer target is Apogee, with Bob Clearmountain as the strategic access path. Music Tribe / Behringer remains useful secondary context for a broader platform buyer, but it is not the active first target.
 
 ## Core thesis
 
@@ -87,10 +87,10 @@ In other words, the concept may be more valuable in the hands of a company that 
 
 ## Buyer psychology
 
-For a buyer like Uli Behringer / Music Tribe, the concept may be interesting if it reads as:
+For a buyer like Apogee, the concept may be interesting if it reads as:
 
 - A system opportunity rather than a niche invention
-- A way to connect categories already familiar to the buyer
+- A way to extend trusted recording hardware and conversion into a fuller musician workflow
 - A musician-first workflow rather than a purely technical architecture
 - A vision that can be broken into product families and rollout phases
 

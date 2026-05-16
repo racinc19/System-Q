@@ -68,19 +68,20 @@ This concept is likely more valuable as a platform architecture than as a single
 
 Its strongest form is as a connected family of products rather than as a standalone device.
 
-## Why it may fit a buyer like Music Tribe
+## Why it may fit a buyer like Apogee
 
-A company like Music Tribe is a plausible fit because the concept spans multiple categories:
+Apogee is the current primary strategic target because the concept starts from recording trust, conversion quality, professional workflow, and musician confidence.
 
-- Musician control
-- Recording hardware
-- Analog processing
+System Q could let Apogee extend from elite interfaces and conversion into a fuller connected musician ecosystem:
+
+- Personal musician endpoint
+- Recording path
 - Software / DSP
-- Control surfaces
-- Monitoring
-- Live / venue output
+- Tactile control
+- Monitoring and playback
+- Venue output
 
-A broad hardware/software company can extract more value from that ecosystem than a narrow single-category buyer.
+Bob Clearmountain is the current access path because he can pressure-test whether the architecture is credible to serious recording people and may be able to help it reach the right Apogee conversation.
 
 ## Short version
 

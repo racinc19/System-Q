@@ -47,17 +47,22 @@ It is hybrid continuity.
 The current working concept includes:
 
 1. Multiple high-quality analog channel inputs enter the analog rack environment.
-2. Those channels pass through analog front-end processing and/or analog character stages.
-3. Signals are converted into the DAW / digital environment for routing, session management, and broader system flexibility.
-4. The digital environment can handle wider channel counts and flexible assignment structures.
-5. Selected signals return to the analog rack environment for summing and output-stage processing.
-6. A monitor bus processor remains analog.
+2. Those channels pass through historic input/capture cards and/or analog character stages.
+3. Signals may hit the Tape Cylinder as a magnetic overload buffer before conversion.
+4. Signals are converted into the DAW / digital environment for routing, session management, and broader system flexibility.
+5. The digital environment can handle wider channel counts and flexible assignment structures.
+6. Selected signals return to the analog rack environment for historic output/print cards, summing, and output-stage processing.
+7. The output path may hit the Tape Cylinder again before print, monitoring, or Venue.
+8. A monitor bus processor remains analog.
 
 ### Practical meaning
 
 This architecture is intended to allow:
 
 - Analog front-end character
+- Historic input-card capture identity
+- Historic output-card print identity
+- Magnetic overload buffering before conversion or print
 - Digital control and routing
 - Session recall
 - Analog summing path
@@ -90,18 +95,27 @@ The analog rack layer is meant to provide more than utility.
 
 It is intended to provide meaningful sonic identity, including:
 
+- Historic input/capture cards
+- Historic output/print cards
 - Preamplification
 - Dynamics
 - EQ
 - Harmonic shaping
 - Exciter / saturation-related behavior
+- Tape Cylinder magnetic buffering
 - Monitoring and bus processing
 
 The system promise is that users should not need a large separate hardware collection to access a serious range of tone-shaping options.
 
-## Software / DSP model
+The stronger thesis is that System Q can become a modular analog library of recording history:
 
-The software layer is not merely administrative.
+- Input cards define how sources are captured.
+- Output cards define how mixes, stems, or playback are printed.
+- The Tape Cylinder can sit on either side as a magnetic buffer and saturation/repro layer.
+
+## Software / control-surface model
+
+The software layer is not merely administrative and it is not a generic DAW skin.
 
 It is responsible for:
 
@@ -111,8 +125,21 @@ It is responsible for:
 - Parameter visibility
 - Routing/control coordination
 - Shared logic across Cube, Racks, and Controller
+- Target-bank control across channels, groups, aux returns, and master
+- Timeline/transport editing
+- Send layers and group assignment
+- Signal generators and automation modes
 
 The software should mirror the hardware concept closely enough that the system feels singular rather than split.
+
+The current System Q Console prototype is best understood as a hardware-control operating surface. Its active target modes are:
+
+- `CH`: source channels
+- `GRP`: group buses
+- `AUX`: aux returns
+- `MST`: master path
+
+The shared stage grid includes pre/filter, harmonics, gate, compressor, EQ, transient, exciter, and tube behavior. Aux targets add insert stages for reverb, delay, and modulation. The transport layer includes playback, record, pre/post, channel solo/mute/arm/pan, marker, scrub/shuttle, cut/copy/paste, undo/redo, zoom, automation modes, and signal generators.
 
 ## POL editing model
 

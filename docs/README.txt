@@ -43,7 +43,9 @@ Open these in order when returning to the project:
 2. docs/PRODUCT_ARCHITECTURE.md
 3. docs/SYSTEM_TECHNICAL_MODEL.md
 4. docs/ACQUISITION_STRATEGY.md
-5. docs/BUYER_FIT_MUSIC_TRIBE.md
+5. docs/BUYER_FIT_APOGEE.md
+6. docs/TAPE_CYLINDER_TECHNICAL_SPEC.md
+7. docs/BUYER_FIT_MUSIC_TRIBE.md
 
 Public and review pages
 -----------------------
@@ -58,7 +60,8 @@ Public and review pages
   Strategic and acquisition-oriented framing.
 
 - uli-review.html
-  Owner/reviewer-facing page aimed at Uli Behringer / Music Tribe style review.
+  External strategic review page. Current active framing should be Apogee-facing
+  even though the filename has not been changed yet.
 
 - html/
   Browser-open hardware specs, BOM pages, controller/cube/rack visual pages.
@@ -136,11 +139,18 @@ Partner / acquisition package
 - docs/ACQUISITION_STRATEGY.md
   Buyer profile, proof threshold, and preferred package direction.
 
+- docs/BUYER_FIT_APOGEE.md
+  Why Apogee is the current primary target and why Bob Clearmountain is the
+  current access path.
+
 - docs/BUYER_FIT_MUSIC_TRIBE.md
-  Why Music Tribe / Behringer is a plausible buyer profile.
+  Older/secondary broad-platform buyer profile.
 
 - docs/OUTREACH_BRIEF.md
   First-contact framing for a buyer or strategic partner.
+
+- docs/TAPE_CYLINDER_TECHNICAL_SPEC.md
+  Prototype thesis for the System Q clock-locked analog Tape Cylinder.
 
 Deployment
 ----------

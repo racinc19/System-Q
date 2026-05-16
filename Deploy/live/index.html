@@ -252,7 +252,7 @@
       padding: 1rem 1.5rem 3rem;
     }
     @media (min-width: 760px) {
-      .breakthrough-grid { grid-template-columns: repeat(4, 1fr); }
+      .breakthrough-grid { grid-template-columns: repeat(3, 1fr); }
     }
     .breakthrough {
       background: linear-gradient(180deg, rgba(0,212,255,0.08), rgba(255,255,255,0.03));
@@ -624,7 +624,7 @@
 
   <div class="section" id="breakthroughs" style="padding-bottom: 0;">
     <p class="section-label">00 &mdash; Why it matters</p>
-    <h2>Four Product Hooks</h2>
+    <h2>Six Product Hooks</h2>
     <p>GIG is not just another interface or controller. These are the ideas that make it a product family.</p>
   </div>
 
@@ -638,8 +638,16 @@
       <p>A SpaceMouse-style command surface keeps focus, selection, and value changes in one hand position.</p>
     </div>
     <div class="breakthrough">
-      <h3>Swappable Rack Cards</h3>
-      <p>One slot, many voicings. Drop in a Neve-style preamp today, an SSL color tomorrow, or trade an 1176-style FET comp for an LA-2A-style opto &mdash; without touching the rest of the chain.</p>
+      <h3>Historic Input Cards</h3>
+      <p>Record through analog cards voiced after historic capture paths: the front end, console behavior, gain staging, and saturation culture of real record-making worlds.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Historic Output Cards</h3>
+      <p>Print through a different history: SSL bus glue, RCA-style room weight, Les Paul overdub energy, or Bill Putnam-style American polish.</p>
+    </div>
+    <div class="breakthrough">
+      <h3>Tape Buffer</h3>
+      <p>Input or output cards can hit the Tape Cylinder so overload becomes magnetic compression and harmonic density instead of hard digital clipping.</p>
     </div>
     <div class="breakthrough">
       <h3>Venue Translation</h3>
@@ -693,12 +701,12 @@
     <p>
       The racks are the studio-grade analog core, split as <strong>input rack</strong> and <strong>output rack</strong>.
       The signal path stays analog from input through to monitor &mdash; you are <span class="highlight">always hearing analog</span>.
-      The system self-mixes through the physical circuitry, giving you a finished record sound during tracking.
+      The system can record through one historic capture path, then print or play back through another.
     </p>
     <p>
       Both racks are <strong>card frames</strong>: every slot ships with an analog PCB card, and every card pulls and swaps.
-      Where competing systems hand you an empty digitally-controlled path you have to fill with outboard, the GIG racks
-      arrive populated &mdash; pull a card, drop in another voicing, change the chain without rewiring anything.
+      These are not just utility cards. They are physical analog voicings of historic recording environments,
+      session paths, consoles, buses, and print chains.
     </p>
   </div>
 
@@ -713,19 +721,38 @@
     </div>
   </div>
 
-  <!-- ════════════════ SWAPPABLE CARDS ════════════════ -->
+  <!-- ════════════════ HISTORIC ANALOG CARDS ════════════════ -->
   <div class="section" id="cards" style="padding-top: 1rem; padding-bottom: 0.75rem;">
-    <p class="section-label">02a &mdash; Slot &times; Card</p>
-    <h2>Swappable Cards</h2>
+    <p class="section-label">02a &mdash; Historic analog cards</p>
+    <h2>Record through one world. Print through another.</h2>
     <p>
-      Every rack bay is a <strong>slot</strong>. Every slot ships with an analog PCB card. Pull the card, drop in
-      another voicing &mdash; the slot stays the same, the character changes. Input rack shapes each channel on the
-      way in. Output rack glues the mix on the way out.
+      Every rack bay is a <strong>slot</strong>. Every slot ships with an analog PCB card. The input rack shapes how
+      the source is captured. The output rack shapes how the mix, stems, or playback are printed. Either path can hit
+      the Tape Cylinder as a magnetic overload buffer.
     </p>
   </div>
 
+  <div class="card-grid" style="padding-top: 0;">
+    <div class="card">
+      <h3>Input Path</h3>
+      <p>Mic / instrument &rarr; historic input card &rarr; Tape Cylinder &rarr; A/D &rarr; DAW.</p>
+    </div>
+    <div class="card">
+      <h3>Output Path</h3>
+      <p>DAW / stems &rarr; historic output card &rarr; Tape Cylinder &rarr; print, monitor, or Venue.</p>
+    </div>
+    <div class="card">
+      <h3>Double-Tape Path</h3>
+      <p>Capture through tape, then print back through tape again with a different output-card identity.</p>
+    </div>
+    <div class="card">
+      <h3>Magnetic Buffer</h3>
+      <p>Hot analog card output saturates physically before conversion, turning overload into density instead of hard clipping.</p>
+    </div>
+  </div>
+
   <div class="slots-group-label">
-    <span class="label-text">Input Rack &mdash; per channel</span>
+    <span class="label-text">Input Rack &mdash; historic capture cards</span>
     <span class="label-rule"></span>
   </div>
 
@@ -733,14 +760,14 @@
     <div class="slot-row">
       <div class="slot-label">
         <span class="slot-kicker">In &middot; Slot 01</span>
-        <span class="slot-name">Preamp</span>
+        <span class="slot-name">Capture Identity</span>
       </div>
       <div class="slot-cards">
-        <span class="slot-card">Sausalito API-style 312</span>
-        <span class="slot-card">Power Station SSL-style</span>
-        <span class="slot-card">Zeppelin Mobile-style</span>
-        <span class="slot-card">Zappa UMRK-style</span>
-        <span class="slot-card">Tom Scholz Basement-style</span>
+        <span class="slot-card">Abbey Road-inspired capture</span>
+        <span class="slot-card">Sausalito Record Plant / API-inspired</span>
+        <span class="slot-card">Zeppelin Mobile / Neve-inspired</span>
+        <span class="slot-card">Zappa UMRK / Harrison-Trident-inspired</span>
+        <span class="slot-card">Tom Scholz Basement-inspired</span>
         <span class="slot-card">Clean / transparent</span>
       </div>
     </div>
@@ -748,7 +775,7 @@
     <div class="slot-row">
       <div class="slot-label">
         <span class="slot-kicker">In &middot; Slot 02</span>
-        <span class="slot-name">Compressor</span>
+        <span class="slot-name">Dynamics Culture</span>
       </div>
       <div class="slot-cards">
         <span class="slot-card">1176-style FET</span>
@@ -762,7 +789,7 @@
     <div class="slot-row">
       <div class="slot-label">
         <span class="slot-kicker">In &middot; Slot 03</span>
-        <span class="slot-name">EQ</span>
+        <span class="slot-name">Console EQ</span>
       </div>
       <div class="slot-cards">
         <span class="slot-card">Pultec-style EQP-1A</span>
@@ -775,19 +802,20 @@
     <div class="slot-row">
       <div class="slot-label">
         <span class="slot-kicker">In &middot; Slot 04</span>
-        <span class="slot-name">Tone &amp; Tube</span>
+        <span class="slot-name">Tone / Tape Hit</span>
       </div>
       <div class="slot-cards">
         <span class="slot-card">12AX7 tube stage</span>
         <span class="slot-card">Class A solid state</span>
         <span class="slot-card">Transformer color</span>
         <span class="slot-card">Harmonic exciter</span>
+        <span class="slot-card">Tape Cylinder send</span>
       </div>
     </div>
   </div>
 
   <div class="slots-group-label">
-    <span class="label-text">Output Rack &mdash; stereo bus</span>
+    <span class="label-text">Output Rack &mdash; historic print cards</span>
     <span class="label-rule"></span>
   </div>
 
@@ -795,21 +823,21 @@
     <div class="slot-row">
       <div class="slot-label">
         <span class="slot-kicker">Out &middot; Slot 01</span>
-        <span class="slot-name">Bus Compressor</span>
+        <span class="slot-name">Print / Bus Identity</span>
       </div>
       <div class="slot-cards">
-        <span class="slot-card">SSL G-style bus</span>
-        <span class="slot-card">Fairchild-style vari-mu</span>
-        <span class="slot-card">API 2500-style VCA</span>
-        <span class="slot-card">Manley-style tube bus</span>
-        <span class="slot-card">Clean glue</span>
+        <span class="slot-card">SSL bus-inspired</span>
+        <span class="slot-card">RCA New York Church-inspired</span>
+        <span class="slot-card">Les Paul Studio-inspired</span>
+        <span class="slot-card">Bill Putnam / United-inspired</span>
+        <span class="slot-card">Power Station print-inspired</span>
       </div>
     </div>
 
     <div class="slot-row">
       <div class="slot-label">
         <span class="slot-kicker">Out &middot; Slot 02</span>
-        <span class="slot-name">Master EQ</span>
+        <span class="slot-name">Master Tone</span>
       </div>
       <div class="slot-cards">
         <span class="slot-card">Pultec-style master</span>
@@ -822,10 +850,11 @@
     <div class="slot-row">
       <div class="slot-label">
         <span class="slot-kicker">Out &middot; Slot 03</span>
-        <span class="slot-name">Summing Color</span>
+        <span class="slot-name">Tape / Summing Color</span>
       </div>
       <div class="slot-cards">
-        <span class="slot-card">System Q Master Cylinder</span>
+        <span class="slot-card">System Q Tape Cylinder</span>
+        <span class="slot-card">Double-tape print</span>
         <span class="slot-card">Transformer summing</span>
         <span class="slot-card">Tube summing</span>
         <span class="slot-card">Discrete Class A</span>
@@ -847,8 +876,8 @@
   </div>
 
   <p class="slots-note">
-    Card names are illustrative voicings &mdash; references identify the classic units that inspired each card profile,
-    not licensed clones.
+    Card names are illustrative voicings. References identify historic recording worlds and circuit behaviors that
+    inspire each profile, not licensed clones or literal reproductions.
   </p>
 
   <div class="divider"><hr></div>
@@ -875,48 +904,76 @@
   <!-- ════════════════ SOFTWARE / SYSTEM Q ════════════════ -->
   <div class="section" id="software">
     <p class="section-label">04 &mdash; Software</p>
-    <h2>System Q Console &mdash; working software prototype <span class="live-badge">Active desktop build</span></h2>
+    <h2>System Q Console &mdash; hardware-control operating surface <span class="live-badge">Active desktop build</span></h2>
     <p>
-      System Q Console is the current GIG software layer: a desktop recording and mix environment built around one
-      navigation model, one polar editor, and one visual language for channels, sends, aux returns, inserts, transport,
-      timeline editing, and the master bus.
+      System Q Console is the working control surface for the GIG / System Q ecosystem. It is not a DAW skin.
+      It is a console operating layer for channels, groups, aux returns, master bus, transport, timeline editing,
+      sends, automation, generators, and polar-stage editing.
     </p>
     <p>
-      The software is no longer just a browser sketch. The active build combines channel faders and send banking,
-      solo / mute / record-arm, group and aux selection, hardware insert slots, stereo master metering, timeline markers,
-      cut / copy / paste / undo, scrub / shuttle, and SpaceMouse-style directional control.
+      The current build uses target banks for <strong>CH / GRP / AUX / MST</strong>, so the same surface can move
+      between source channels, group buses, aux returns, and the master path. Each target exposes a stage grid:
+      pre/filter, harmonics, gate, compressor, EQ, transient, exciter, tube, plus aux-specific insert stages for
+      reverb, delay, and modulation.
     </p>
     <p style="margin-top: 1.25rem;">
-      Each selected channel, aux return, or master bus uses the polar editor to expose the processing chain: filters,
-      mic pre where applicable, harmonics, gate, compressor / limiter, EQ, transient shaping, exciter, tube saturation,
-      reverb, delay, and modulation. The point is not a generic DAW skin; it is a console workflow where routing,
-      sound shaping, and editing stay in one tactile operating system.
+      The transport is part of the control language: playback, record, pre/post, channel solo/mute/arm/pan, markers,
+      scrub/shuttle, timeline edit commands, zoom, automation modes, and signal generators. The long-term role is to
+      steer software DSP, analog cards, Tape Cylinder routing, sends, groups, aux returns, and master output from one
+      tactile navigation model.
     </p>
+  </div>
+
+  <div class="card-grid" style="padding-top: 0;">
+    <div class="card">
+      <h3>Target Banks</h3>
+      <p>CH / GRP / AUX / MST modes move the same controls across source channels, group buses, aux returns, and master.</p>
+    </div>
+    <div class="card">
+      <h3>Stage Grid</h3>
+      <p>PRE/FLT, HRM, GTE, CMP, EQ, TRN, XCT, and TBE stages expose the active processing path.</p>
+    </div>
+    <div class="card">
+      <h3>Aux Inserts</h3>
+      <p>RVB, DLY, and MOD returns are selectable targets with their own polar edit surfaces.</p>
+    </div>
+    <div class="card">
+      <h3>Timeline</h3>
+      <p>Waveform display, markers, selection, cut/copy/paste, undo/redo, zoom, scrub, and shuttle.</p>
+    </div>
+    <div class="card">
+      <h3>Routing</h3>
+      <p>Send layers, group assignment, aux returns, master scope, and per-target fader control.</p>
+    </div>
+    <div class="card">
+      <h3>6-DOF Control</h3>
+      <p>Keyboard and SpaceMouse-style navigation share the same scope model for strips, editor, transport, and timeline.</p>
+    </div>
   </div>
 
   <div class="media-grid" style="padding-top: 0;">
     <div class="media wide">
-      <img src="Image/system_q_console.png" alt="System Q Console desktop application with channel strips, polar editor, transport, timeline, aux returns, and stereo master bus" loading="lazy">
-      <div class="cap">System Q Console &mdash; desktop app with channel strips, send banking, polar DSP editing, transport, timeline, aux returns, and stereo master bus.</div>
+      <img src="Image/system_q_user_clipboard_20260514.png" alt="System Q Console desktop application with active Tube stage, target banks, stage grid, polar editor, transport, timeline, aux returns, and stereo master bus" loading="lazy">
+      <div class="cap">System Q Console &mdash; active desktop build. The current software model includes target banks, stage grids, transport/timeline editing, sends, groups, aux returns, master, generators, and polar DSP editing.</div>
     </div>
   </div>
 
   <div class="media-grid split" style="padding-top: 0;">
     <div class="media">
-      <img src="Image/download.png" alt="Channel strip sections: mic pre, harmonics, compressor, EQ, effects" loading="lazy">
+      <img src="Image/system_q_user_clipboard_polar_20260514.png" alt="Current System Q polar surface with active Tube stage, target bank, stage grid, transport, and timeline controls" loading="lazy">
       <div class="cap">One strip model across channels, aux returns, groups, and master &mdash; each visible section is a controllable stage in System Q.</div>
     </div>
     <div class="media">
-      <h3 style="margin: 0 0 .65rem;">Current software sections</h3>
+      <h3 style="margin: 0 0 .65rem;">Current software surface</h3>
       <p style="margin: 0 0 .75rem;">
-        Each stage uses polar editing where the display changes to the selected processor: frequency bands, threshold,
-        width, gain, reflections, delay time, modulation, saturation, and level are shown as rings, arcs, color, and brightness.
+        Each target uses a shared polar editing grammar where frequency, threshold, width, gain, dynamics, reflections,
+        delay, modulation, saturation, and level are shown as rings, arcs, color, and brightness.
       </p>
-      <p style="margin: 0 0 .55rem;"><strong>Mic pre / filters</strong> &mdash; input gain, LPF, HPF, phantom, phase and polar level control.</p>
-      <p style="margin: 0 0 .55rem;"><strong>Harmonics</strong> &mdash; a unique 5-band harmonic processor (H1&ndash;H5) for controlled character.</p>
-      <p style="margin: 0 0 .55rem;"><strong>Gate / compressor / limiter</strong> &mdash; visual threshold, depth or ratio, attack, release, frequency and width.</p>
-      <p style="margin: 0 0 .55rem;"><strong>EQ / transient</strong> &mdash; multi-band frequency, gain, shape, attack, sustain, and band selection.</p>
-      <p style="margin: 0;"><strong>Aux effects</strong> &mdash; reverb, delay, and modulation on aux returns, with sends feeding the active return.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Targets</strong> &mdash; channels, groups, aux returns, and master share one control model.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Stages</strong> &mdash; filters/pre, harmonics, gate, compressor, EQ, transient, exciter, and tube behavior.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Aux inserts</strong> &mdash; reverb, delay, and modulation returns with send-layer control.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Transport</strong> &mdash; play, record, pre/post, solo/mute/arm/pan, markers, scrub/shuttle, automation, and generators.</p>
+      <p style="margin: 0;"><strong>Timeline</strong> &mdash; waveform view, markers, selection, cut/copy/paste, undo/redo, and zoom.</p>
     </div>
   </div>
 
