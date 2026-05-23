@@ -381,6 +381,65 @@
       line-height: 1.45;
     }
 
+    .stage-grid {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 840px) {
+      .stage-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .stage-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(0,212,255,0.16);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 18px 44px rgba(0,0,0,0.22);
+    }
+    .stage-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      border-bottom: 1px solid rgba(0,212,255,0.12);
+    }
+    .stage-copy {
+      padding: 1.05rem 1.15rem 1.2rem;
+    }
+    .stage-kicker {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.7rem;
+      color: var(--gold);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .stage-card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.55rem;
+    }
+    .stage-card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.58;
+      margin-bottom: 0.75rem;
+    }
+    .stage-card p:last-child { margin-bottom: 0; }
+    .stage-controls {
+      color: var(--text);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
     /* ── SWAPPABLE CARD SLOTS ── */
     .slots-grid {
       max-width: 980px;
@@ -704,7 +763,7 @@
         <a href="#racks">Racks</a>
         <a href="#cards">Cards</a>
         <a href="#tape">Tape Converter</a>
-        <a href="#software">Software</a>
+        <a href="#software">Console Software</a>
         <a href="#console">Console</a>
         <a href="#venue">Venue</a>
       </nav>
@@ -1118,101 +1177,126 @@
 
   <div class="divider"><hr></div>
 
-  <!-- ════════════════ SOFTWARE / SYSTEM Q ════════════════ -->
+  <!-- ════════════════ CONSOLE SOFTWARE / SYSTEM Q ════════════════ -->
   <div class="section" id="software">
-    <p class="section-label">04 &mdash; Software</p>
-    <h2>System Q software mirrors the hardware path. <span class="live-badge">Active desktop build</span></h2>
+    <p class="section-label">04 &mdash; Console Software</p>
+    <h2>Console software is the operating surface for System Q. <span class="live-badge">Active desktop build</span></h2>
     <p>
-      The software is the matching control language for the musician environment. The same ideas that exist in the
-      rack &mdash; preamp, dynamics, EQ, tube, tape, routing, auxes, groups, and master output &mdash; appear as
-      editable sections on the System Q surface.
+      This is not a separate DAW metaphor sitting beside the hardware. It is the screen version of the System Q
+      console: channel targets, group targets, aux returns, master, preamp, filter, dynamics, EQ, tube, tape, routing,
+      sends, automation, transport, timeline, and monitoring in one shared control language.
     </p>
     <p>
-      A musician can track through Cube or racks, then use the software to edit the sound without changing the mental
-      model. Channels, groups, aux returns, master, transport, timeline, sends, automation, generators, and polar-stage
-      editing are all part of one operating surface.
+      A musician can start in Rig, capture through Cube, or record through the System Q racks, then move into this
+      console surface without changing how the signal path is understood. The software follows the same order as the
+      rack: input, tone, dynamics, EQ, tape/tube color, routing, analog return, two-bus, reference, and Venue playback.
     </p>
     <p style="margin-top: 1.25rem;">
       The current build uses target banks for <strong>CH / GRP / AUX / MST</strong>. Each target exposes the active
-      stage grid, so the operator can move from channel capture to group shaping, aux effects, and master output
-      without leaving the same visual and tactile system.
+      stage grid, so the operator can move from channel capture to group shaping, aux effects, master output, and
+      the 32-to-12 analog return path without leaving the same visual and tactile system.
     </p>
   </div>
 
-  <div class="card-grid" style="padding-top: 0;">
-    <div class="card">
-      <h3>Pre / Filter</h3>
-      <p>Input trim, polarity, high-pass, low-pass, cleanup, and gain staging before the channel hits the rest of the strip.</p>
+  <div class="stage-grid">
+    <div class="stage-card">
+      <img src="Image/console-stage-mic-pre.png" alt="System Q Console Mic Pre stage with polar editor, channel strips, insert matrix, and transport">
+      <div class="stage-copy">
+        <div class="stage-kicker">Stage 01</div>
+        <h3>Mic Pre</h3>
+        <p>The source enters here. Mic Pre handles the first electrical decisions: gain staging, 48V, polarity, high-pass, low-pass, and cleanup before the rest of the strip touches the sound.</p>
+        <p class="stage-controls">TBE · LPF · 48V · PHS · HPF</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>Harmonics</h3>
-      <p>Drive, color, saturation, and profile behavior that can match the analog-card idea in the software layer.</p>
+    <div class="stage-card">
+      <img src="Image/console-stage-harmonics.png" alt="System Q Console Harmonics stage with harmonic controls on the polar editor">
+      <div class="stage-copy">
+        <div class="stage-kicker">Stage 02</div>
+        <h3>Harmonics</h3>
+        <p>Harmonics adds identity after the preamp: second, third, fifth, and higher-order color for density, analog character, saturation, and source-specific tone.</p>
+        <p class="stage-controls">H1 · H2 · H3 · H4 · H5</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>Gate</h3>
-      <p>Threshold, depth, timing, and cleanup for drums, vocals, amps, and sources that need controlled spill.</p>
+    <div class="stage-card">
+      <img src="Image/console-stage-gate.png" alt="System Q Console Gate stage showing threshold, depth, attack, release, gain, frequency, width, and band controls">
+      <div class="stage-copy">
+        <div class="stage-kicker">Stage 03</div>
+        <h3>Gate</h3>
+        <p>The gate stage controls bleed, noise, decay, and spill. It is built for drums, amps, vocals, and any source where the room or noise needs to be shaped before compression.</p>
+        <p class="stage-controls">THR · DEP · ATK · RLS · GAN · FRQ · WDT · BND</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>Compressor</h3>
-      <p>Dynamics control for channel shaping, group glue, vocal leveling, transient control, and mix bus movement.</p>
+    <div class="stage-card">
+      <img src="Image/console-stage-compressor.png" alt="System Q Console Compressor stage with threshold, ratio, attack, release, gain, frequency, width, and band controls">
+      <div class="stage-copy">
+        <div class="stage-kicker">Stage 04</div>
+        <h3>Compressor</h3>
+        <p>Compression is the control and glue stage. It levels vocals, holds bass, pushes drums forward, and gives groups or the mix bus movement without leaving the console view.</p>
+        <p class="stage-controls">THR · RAT · ATK · RLS · GAN · FRQ · WDT · BND</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>EQ</h3>
-      <p>Console-style tonal editing with visual frequency, gain, width, shelf, bell, and filter behavior.</p>
+    <div class="stage-card">
+      <img src="Image/console-stage-eq.png" alt="System Q Console EQ stage with frequency, gain, shape, and band controls">
+      <div class="stage-copy">
+        <div class="stage-kicker">Stage 05</div>
+        <h3>EQ</h3>
+        <p>EQ is the main tone-shaping view. Frequency, gain, shape, and band selection stay inside the same polar editor, so the engineer is not jumping between detached plugin windows.</p>
+        <p class="stage-controls">FRQ · GAN · SHP · BND</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>Transient</h3>
-      <p>Attack and sustain shaping for drums, picks, percussion, room energy, and sources that need front-edge control.</p>
+    <div class="stage-card">
+      <img src="Image/console-stage-transient.png" alt="System Q Console Transient stage with frequency, attack, sustain, drive, and band controls">
+      <div class="stage-copy">
+        <div class="stage-kicker">Stage 06</div>
+        <h3>Transient Designer</h3>
+        <p>Transient shaping controls the front edge and body of the sound. It adds punch, trims sustain, focuses attack, or changes impact without rebuilding the chain.</p>
+        <p class="stage-controls">FRQ · ATK · SUT · DRV · BND</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>Exciter</h3>
-      <p>Presence, air, bite, harmonic lift, and clarity without forcing the user into separate plugin windows.</p>
+    <div class="stage-card">
+      <img src="Image/console-stage-exciter.png" alt="System Q Console Exciter stage with frequency, attack, sustain, drive, and band controls">
+      <div class="stage-copy">
+        <div class="stage-kicker">Stage 07</div>
+        <h3>Exciter</h3>
+        <p>Exciter is the clarity and presence stage. It brings air, bite, lift, and detail forward when the source needs to cut through without just turning it up.</p>
+        <p class="stage-controls">FRQ · ATK · SUT · DRV · BND</p>
+      </div>
     </div>
-    <div class="card">
-      <h3>Tube</h3>
-      <p>Tube-style stage behavior for warmth, density, drive, and output color before the mix moves to print or Venue.</p>
-    </div>
-    <div class="card">
-      <h3>Aux Effects</h3>
-      <p>Reverb, delay, and modulation returns are selectable targets with their own editable surfaces and send layers.</p>
-    </div>
-    <div class="card">
-      <h3>Routing / Groups</h3>
-      <p>Send layers, group assignment, aux returns, master scope, monitor paths, and per-target fader control.</p>
-    </div>
-    <div class="card">
-      <h3>Timeline / Transport</h3>
-      <p>Playback, record, waveform display, markers, selection, cut/copy/paste, undo/redo, zoom, scrub, and shuttle.</p>
-    </div>
-    <div class="card">
-      <h3>6-DOF Control</h3>
-      <p>Keyboard and SpaceMouse-style navigation share the same scope model for strips, editor, transport, and timeline.</p>
+    <div class="stage-card">
+      <img src="Image/console-stage-tube.png" alt="System Q Console Tube stage with tube drive and frequency focus">
+      <div class="stage-copy">
+        <div class="stage-kicker">Stage 08</div>
+        <h3>Tube</h3>
+        <p>Tube is the final analog-color stage inside the software path. It adds drive, density, warmth, and source weight before routing, print, analog return, or Venue playback.</p>
+        <p class="stage-controls">FRQ · DRV · BND</p>
+      </div>
     </div>
   </div>
 
   <div class="media-grid" style="padding-top: 0;">
     <div class="media wide">
       <img src="Image/system_q_user_clipboard_20260514.png" alt="System Q Console desktop application with active Tube stage, target banks, stage grid, polar editor, transport, timeline, aux returns, and stereo master bus" loading="lazy">
-      <div class="cap">System Q Console &mdash; active desktop build. The current software model includes target banks, stage grids, transport/timeline editing, sends, groups, aux returns, master, generators, and polar DSP editing.</div>
+      <div class="cap">System Q Console Software &mdash; active desktop build. The current model includes target banks, stage grids, transport/timeline editing, sends, groups, aux returns, master, generators, and polar DSP editing.</div>
     </div>
   </div>
 
   <div class="media-grid split" style="padding-top: 0;">
     <div class="media">
       <img src="Image/system_q_user_clipboard_polar_20260514.png" alt="Current System Q polar surface with active Tube stage, target bank, stage grid, transport, and timeline controls" loading="lazy">
-      <div class="cap">One strip model across channels, aux returns, groups, and master &mdash; each visible section is a controllable stage in System Q.</div>
+      <div class="cap">One strip model across channels, aux returns, groups, master, and analog return &mdash; each visible section is a controllable stage in System Q.</div>
     </div>
     <div class="media">
-      <h3 style="margin: 0 0 .65rem;">Current software surface</h3>
+      <h3 style="margin: 0 0 .65rem;">Console software flow</h3>
       <p style="margin: 0 0 .75rem;">
-        Each target uses a shared polar editing grammar where frequency, threshold, width, gain, dynamics, reflections,
-        delay, modulation, saturation, and level are shown as rings, arcs, color, and brightness.
+        The workflow is simple enough to explain in the room: pick the target, open the stage, shape the sound, route it,
+        print or monitor it, then play it back through the analog path and Venue.
       </p>
       <p style="margin: 0 0 .55rem;"><strong>Targets</strong> &mdash; channels, groups, aux returns, and master share one control model.</p>
-      <p style="margin: 0 0 .55rem;"><strong>Stages</strong> &mdash; filters/pre, harmonics, gate, compressor, EQ, transient, exciter, and tube behavior.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Stages</strong> &mdash; pre/filter, dynamics, EQ, harmonics, transient, exciter, tube, and tape behavior.</p>
       <p style="margin: 0 0 .55rem;"><strong>Aux inserts</strong> &mdash; reverb, delay, and modulation returns with send-layer control.</p>
+      <p style="margin: 0 0 .55rem;"><strong>Analog return</strong> &mdash; 32-to-12 conversion feeds the 12 analog channels and two-bus for playback.</p>
       <p style="margin: 0 0 .55rem;"><strong>Transport</strong> &mdash; play, record, pre/post, solo/mute/arm/pan, markers, scrub/shuttle, automation, and generators.</p>
-      <p style="margin: 0;"><strong>Timeline</strong> &mdash; waveform view, markers, selection, cut/copy/paste, undo/redo, and zoom.</p>
+      <p style="margin: 0;"><strong>Timeline</strong> &mdash; waveform view, markers, selection, cut/copy/paste, undo/redo, zoom, and reference playback.</p>
     </div>
   </div>
 
