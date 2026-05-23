@@ -483,6 +483,114 @@
     }
     .slots-group-label:first-child { margin-top: 0; }
 
+    .signal-steps {
+      display: grid;
+      gap: 0.7rem;
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 1.5rem 2rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 760px) {
+      .signal-steps { grid-template-columns: repeat(4, 1fr); }
+    }
+    .signal-step {
+      display: grid;
+      grid-template-columns: 2.8rem 1fr;
+      gap: 0.8rem;
+      align-items: start;
+      padding: 0.78rem;
+      border: 1px solid rgba(255,215,0,0.18);
+      border-radius: 12px;
+      background: rgba(5,8,16,0.42);
+    }
+    .signal-step .num {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent);
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
+    }
+    .signal-step strong {
+      display: block;
+      color: var(--text);
+      font-size: 0.93rem;
+      margin-bottom: 0.15rem;
+    }
+    .signal-step span {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.4;
+    }
+    .profile-grid {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0.5rem 1.5rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+    @media (min-width: 620px) {
+      .profile-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 960px) {
+      .profile-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .profile-card {
+      min-height: 178px;
+      border-radius: 14px;
+      border: 2px solid rgba(19, 17, 10, 0.78);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 24%),
+        linear-gradient(155deg, #f5edcb, #d8c483);
+      color: #15120b;
+      box-shadow: inset 0 0 0 4px rgba(0,0,0,0.08), 0 18px 42px rgba(0,0,0,0.18);
+      padding: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .profile-card.dark {
+      background:
+        radial-gradient(circle at 70% 20%, rgba(255,121,180,0.32), transparent 38%),
+        linear-gradient(155deg, #16110f, #2d1b2b);
+      color: #f7eac6;
+      border-color: rgba(246,215,142,0.7);
+    }
+    .profile-card.green {
+      background:
+        linear-gradient(180deg, rgba(255,246,196,0.95), rgba(255,246,196,0.8) 48%, #19422f 49%, #0e281d);
+      color: #142015;
+      border-color: rgba(216,180,74,0.72);
+    }
+    .profile-kicker {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.64rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8a1f18;
+    }
+    .profile-card.dark .profile-kicker { color: #ff9cc8; }
+    .profile-card.green .profile-kicker { color: #255a38; }
+    .profile-name {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 1.42rem;
+      line-height: 0.95;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .profile-type {
+      margin-top: 0.8rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid rgba(0,0,0,0.35);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .profile-card.dark .profile-type { border-color: rgba(247,234,198,0.35); }
+    .profile-card.green .profile-type { color: #f7eac6; border-color: rgba(247,234,198,0.35); }
+
     /* ── CTA BUTTON ── */
     .cta-row {
       display: flex;
@@ -594,6 +702,7 @@
         <a href="#flow">How it works</a>
         <a href="#racks">Racks</a>
         <a href="#cards">Cards</a>
+        <a href="#tape">Tape Converter</a>
         <a href="#cubes">Cubes</a>
         <a href="#console">Console</a>
         <a href="#software">Software</a>
@@ -748,6 +857,114 @@
     <div class="card">
       <h3>Magnetic Buffer</h3>
       <p>Hot analog card output saturates physically before conversion, turning overload into density instead of hard clipping.</p>
+    </div>
+  </div>
+
+  <div class="slots-group-label">
+    <span class="label-text">Input Cards &mdash; capture identities</span>
+    <span class="label-rule"></span>
+  </div>
+
+  <div class="profile-grid">
+    <div class="profile-card">
+      <div>
+        <div class="profile-kicker">Input</div>
+        <div class="profile-name">Tom's<br>Basement</div>
+      </div>
+      <div class="profile-type">DIY rock lab</div>
+    </div>
+    <div class="profile-card">
+      <div>
+        <div class="profile-kicker">Input</div>
+        <div class="profile-name">Abbey Road<br>Inspired</div>
+      </div>
+      <div class="profile-type">Classic British studio</div>
+    </div>
+    <div class="profile-card dark">
+      <div>
+        <div class="profile-kicker">Input</div>
+        <div class="profile-name">Pink<br>Floor</div>
+      </div>
+      <div class="profile-type">Psychedelic prism studio</div>
+    </div>
+    <div class="profile-card green">
+      <div>
+        <div class="profile-kicker">Input</div>
+        <div class="profile-name">Sausalito<br>API-Style</div>
+      </div>
+      <div class="profile-type">West coast console</div>
+    </div>
+  </div>
+
+  <div class="slots-group-label">
+    <span class="label-text">Output Cards &mdash; print identities</span>
+    <span class="label-rule"></span>
+  </div>
+
+  <div class="profile-grid">
+    <div class="profile-card">
+      <div>
+        <div class="profile-kicker">Output</div>
+        <div class="profile-name">Tom's<br>Basement</div>
+      </div>
+      <div class="profile-type">Rock print path</div>
+    </div>
+    <div class="profile-card">
+      <div>
+        <div class="profile-kicker">Output</div>
+        <div class="profile-name">Abbey Road<br>Inspired</div>
+      </div>
+      <div class="profile-type">Classic print chain</div>
+    </div>
+    <div class="profile-card dark">
+      <div>
+        <div class="profile-kicker">Output</div>
+        <div class="profile-name">Pink<br>Floor</div>
+      </div>
+      <div class="profile-type">Wide psychedelic print</div>
+    </div>
+    <div class="profile-card green">
+      <div>
+        <div class="profile-kicker">Output</div>
+        <div class="profile-name">United /<br>Putnam</div>
+      </div>
+      <div class="profile-type">Studio tape bounce</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ TAPE CONVERTER ════════════════ -->
+  <div class="section" id="tape" style="padding-top: 1rem; padding-bottom: 0.75rem;">
+    <p class="section-label">02b &mdash; Tape Converter</p>
+    <h2>Tape before conversion, inside System Q.</h2>
+    <p>
+      The Tape Converter is a rack module in the System Q card frame. Input cards feed bias/profile cards,
+      the magnetic converter stage, repro electronics, and the 12-channel A/D path into Console.
+    </p>
+  </div>
+
+  <div class="media-grid" style="padding-top: 0;">
+    <div class="media wide">
+      <img src="Image/system_q_tape_converter_fusion.png" alt="System Q Tape Converter rack integration model" loading="lazy">
+      <div class="cap">Tape Converter &mdash; System Q backplane, bias/profile cards, magnetic converter bay, and A/D path in the rack.</div>
+    </div>
+  </div>
+
+  <div class="signal-steps">
+    <div class="signal-step">
+      <div class="num">01</div>
+      <div><strong>Input cards</strong><span>Analog capture cards set the source identity before the magnetic stage.</span></div>
+    </div>
+    <div class="signal-step">
+      <div class="num">02</div>
+      <div><strong>Bias cards</strong><span>PCI-style profile cards shape record drive, bias, and magnetic behavior.</span></div>
+    </div>
+    <div class="signal-step">
+      <div class="num">03</div>
+      <div><strong>Magnetic converter</strong><span>The signal hits the head block and magnetic surface before A/D.</span></div>
+    </div>
+    <div class="signal-step">
+      <div class="num">04</div>
+      <div><strong>System Q</strong><span>Repro electronics feed the 12-channel converter into Console and the session.</span></div>
     </div>
   </div>
 
