@@ -831,8 +831,8 @@
     <p>
       Both racks are <strong>card frames</strong>: every slot ships with an analog PCB card, and every card pulls and swaps.
       The input side is the capture chain: preamp cards, dynamics cards, console EQ cards, tone cards, and tape hit.
-      The output side is the print and playback chain: bus identity, master tone, tube or summing color, tape, and
-      Venue output.
+      The output side is the analog playback chain: a 32-to-12 converter returns the mix to 12 analog channels,
+      those channels hit the output cards, and the rack mixes down to the stereo two-bus so monitoring stays analog.
     </p>
   </div>
 
@@ -853,9 +853,9 @@
     <h2>Record through one world. Print through another.</h2>
     <p>
       The input cards are the first serious sound decision after the musician is ready to record: preamp identity,
-      dynamics culture, console EQ, and tone. The output cards are the playback and print decision after the take
-      sounds right: bus identity, master tone, tube or summing color, tape, and Venue handoff. Either path can hit
-      the Tape Converter as a magnetic stage before conversion or print.
+      dynamics culture, console EQ, and tone. The output cards are the analog playback decision after the take
+      sounds right: 32 channels convert back down to 12 analog channels, then those 12 channels pass through bus
+      identity, master tone, tube or summing color, tape, and Venue handoff before the stereo two-bus.
     </p>
   </div>
 
@@ -866,11 +866,11 @@
     </div>
     <div class="card">
       <h3>Output Path</h3>
-      <p>DAW / stems &rarr; historic output card &rarr; Tape Cylinder &rarr; print, monitor, or Venue.</p>
+      <p>32 digital outputs &rarr; 32-to-12 converter &rarr; 12 analog channels &rarr; output cards &rarr; stereo two-bus.</p>
     </div>
     <div class="card">
-      <h3>Double-Tape Path</h3>
-      <p>Capture through tape, then print back through tape again with a different output-card identity.</p>
+      <h3>Always Analog Monitoring</h3>
+      <p>Playback returns through the 12 analog channels before the two-bus, so the reference is heard through hardware, not just software.</p>
     </div>
     <div class="card">
       <h3>Magnetic Buffer</h3>
@@ -956,7 +956,8 @@
     <h2>Tape before conversion, inside System Q.</h2>
     <p>
       The Tape Converter is where the analog-first path becomes the record path. Input cards feed bias/profile
-      cards, the magnetic converter stage, repro electronics, and the 12-channel A/D path into Console.
+      cards, the magnetic converter stage, repro electronics, and the 12-channel A/D path into Console. On playback,
+      the 32-to-12 output converter brings the mix back through 12 analog channels before the stereo two-bus.
     </p>
   </div>
 
@@ -982,7 +983,7 @@
     </div>
     <div class="signal-step">
       <div class="num">04</div>
-      <div><strong>System Q</strong><span>Repro electronics feed the 12-channel converter into Console and the session.</span></div>
+      <div><strong>System Q</strong><span>Record through 12-channel A/D, then play back through 32-to-12 conversion into the analog two-bus.</span></div>
     </div>
   </div>
 
