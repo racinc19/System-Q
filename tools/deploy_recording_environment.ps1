@@ -1,5 +1,5 @@
 param(
-    [string]$VerifyText = "Tape Converter"
+    [string]$VerifyText = "A complete musician environment"
 )
 
 $ErrorActionPreference = "Stop"
@@ -7,7 +7,7 @@ $ErrorActionPreference = "Stop"
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $siteDir = Join-Path $repoRoot "Deploy\live"
 $projectName = "recording-environment"
-$productionBranch = "main"
+$productionBranch = "master"
 $liveUrl = "https://recording-environment.pages.dev/"
 
 if (-not (Test-Path -LiteralPath (Join-Path $siteDir "index.html"))) {
