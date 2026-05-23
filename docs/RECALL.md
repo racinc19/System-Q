@@ -1,16 +1,16 @@
 # Recall (Recording Environment)
 
 ## What this repo is
-A Cloudflare Pages static site deployed from the GitHub repo `racinc19/System-Q`.
+A Cloudflare Pages static site for `racinc19/System-Q`.
 
 - Canonical live site: https://recording-environment.pages.dev/
-- Repo root contains the published site (`index.html`, `uli-review.html`, assets folders).
+- The deployable public site is under `Deploy/live`.
 
 ## Primary files to edit
-- `index.html`
+- `Deploy/live/index.html`
   - Main landing page.
   - Software section uses a 2-column “split” media layout (image left, text right).
-- `uli-review.html`
+- `Deploy/live/uli-review.html`
   - Owner review page.
 
 ## Images / assets
@@ -43,17 +43,15 @@ POL (polar) editing concept:
   - smaller ring = higher frequency
 
 ## Deployment workflow (Cloudflare Pages)
-Cloudflare redeploys automatically when you push to GitHub.
+Do not assume Git push alone updates production.
 
-Typical flow:
+The known-good production deploy path is:
 
-```bash
-git status
-# edit files
-git add -A
-git commit -m "Describe change"
-git push
+```powershell
+.\tools\deploy_recording_environment.ps1
 ```
+
+That script deploys `Deploy/live` to Cloudflare Pages project `recording-environment` using production branch alias `main`, then verifies the live URL contains `Tape Converter`.
 
 To confirm what changed:
 
