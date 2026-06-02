@@ -292,6 +292,10 @@ h2 {
   background: #edf7f3;
 }
 
+.song-card.active {
+  box-shadow: inset 4px 0 0 var(--accent);
+}
+
 .session-card strong,
 .session-card span,
 .session-card small,
@@ -308,6 +312,11 @@ h2 {
 
 .session-card p {
   grid-column: 1 / -1;
+}
+
+.empty-note {
+  color: var(--muted);
+  margin: 0;
 }
 
 .transport button:nth-child(3) {

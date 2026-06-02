@@ -31,6 +31,7 @@ const fallbackState = {
 };
 
 const state = structuredClone(fallbackState);
+const selectedBuildSongIds = new Set();
 
 const els = {
   venueStatus: document.querySelector("#venueStatus"),
@@ -46,15 +47,20 @@ const els = {
   sessionViewButton: document.querySelector("#sessionViewButton"),
   setViewButton: document.querySelector("#setViewButton"),
   sheetsViewButton: document.querySelector("#sheetsViewButton"),
+  buildSetViewButton: document.querySelector("#buildSetViewButton"),
   sessionView: document.querySelector("#sessionView"),
   setView: document.querySelector("#setView"),
+  buildSetView: document.querySelector("#buildSetView"),
   sheetsView: document.querySelector("#sheetsView"),
   closeSessionViewButton: document.querySelector("#closeSessionViewButton"),
   closeSetViewButton: document.querySelector("#closeSetViewButton"),
+  closeBuildSetViewButton: document.querySelector("#closeBuildSetViewButton"),
   closeSheetsViewButton: document.querySelector("#closeSheetsViewButton"),
   sessionList: document.querySelector("#sessionList"),
   setList: document.querySelector("#setList"),
+  buildSongList: document.querySelector("#buildSongList"),
   sheetsList: document.querySelector("#sheetsList"),
+  saveBuiltSetButton: document.querySelector("#saveBuiltSetButton"),
   channelGrid: document.querySelector("#channelGrid"),
   masterFader: document.querySelector("#masterFader"),
   masterMuteButton: document.querySelector("#masterMuteButton"),
@@ -82,6 +88,10 @@ async function sendCommand(command) {
   if (!command.trim() || !state.connected) return;
   const response = await postJson("/api/command", { command });
   applyServerState(response.state);
+}
+
+function songCount(songs) {
+  return Array.isArray(songs) ? songs.length : Number(songs || 0);
 }
 
 function renderStatus() {
@@ -137,7 +147,7 @@ function renderSessionList() {
             <strong>${session.name}</strong>
             <span>${session.type} / ${session.updated}</span>
           </div>
-          <small>${session.songs} songs</small>
+          <small>${songCount(session.songs)} songs</small>
           <p>${session.notes}</p>
         </button>
       `,
@@ -161,7 +171,7 @@ function renderSetList() {
             <strong>${set.name}</strong>
             <span>${set.type} / ${set.updated}</span>
           </div>
-          <small>${set.songs} songs</small>
+          <small>${songCount(set.songs)} songs</small>
           <p>${set.notes}</p>
         </button>
       `,
@@ -172,6 +182,35 @@ function renderSetList() {
     button.addEventListener("click", async () => {
       await sendCommand(`open set ${button.dataset.setId}`);
       closeScreenViews();
+    });
+  });
+}
+
+function renderBuildSongList() {
+  const songs = state.session.songs || [];
+  els.buildSongList.innerHTML = songs.length
+    ? songs
+      .map(
+        (songItem) => `
+          <button class="session-card song-card ${selectedBuildSongIds.has(songItem.id) ? "active" : ""}" type="button" data-build-song-id="${songItem.id}">
+            <div>
+              <strong>${songItem.name}</strong>
+              <span>${songItem.status} / ${songItem.length}</span>
+            </div>
+            <small>${songItem.key} / ${songItem.tempo}</small>
+            <p>Sheets ${songItem.sheets ? "ready" : "missing"} / Click ${songItem.click ? "on" : "off"} / Mix ${songItem.mixSaved ? "saved" : "rough"}</p>
+          </button>
+        `,
+      )
+      .join("")
+    : `<p class="empty-note">No songs in this session yet.</p>`;
+
+  els.buildSongList.querySelectorAll("[data-build-song-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.buildSongId;
+      if (selectedBuildSongIds.has(id)) selectedBuildSongIds.delete(id);
+      else selectedBuildSongIds.add(id);
+      renderBuildSongList();
     });
   });
 }
@@ -232,6 +271,7 @@ function render() {
   renderStatus();
   renderSessionList();
   renderSetList();
+  renderBuildSongList();
   renderSheetsList();
   renderChannels();
 }
@@ -245,6 +285,7 @@ function openScreenView(view) {
 function closeScreenViews() {
   els.sessionView.hidden = true;
   els.setView.hidden = true;
+  els.buildSetView.hidden = true;
   els.sheetsView.hidden = true;
   document.body.classList.remove("screen-open");
 }
@@ -270,9 +311,20 @@ document.querySelectorAll("[data-set-command]").forEach((button) => {
 els.sessionViewButton.addEventListener("click", () => openScreenView(els.sessionView));
 els.setViewButton.addEventListener("click", () => openScreenView(els.setView));
 els.sheetsViewButton.addEventListener("click", () => openScreenView(els.sheetsView));
+els.buildSetViewButton.addEventListener("click", () => {
+  selectedBuildSongIds.clear();
+  (state.session.songs || []).forEach((songItem) => selectedBuildSongIds.add(songItem.id));
+  renderBuildSongList();
+  openScreenView(els.buildSetView);
+});
 els.closeSessionViewButton.addEventListener("click", closeScreenViews);
 els.closeSetViewButton.addEventListener("click", closeScreenViews);
+els.closeBuildSetViewButton.addEventListener("click", closeScreenViews);
 els.closeSheetsViewButton.addEventListener("click", closeScreenViews);
+els.saveBuiltSetButton.addEventListener("click", async () => {
+  await sendCommand(`build set ${[...selectedBuildSongIds].join(",")}`);
+  closeScreenViews();
+});
 
 els.masterFader.addEventListener("change", () => sendCommand(`set master level ${els.masterFader.value}`));
 els.masterMuteButton.addEventListener("click", () => sendCommand(`${state.mix.masterMuted ? "unmute" : "mute"} master`));

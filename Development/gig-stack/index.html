@@ -81,9 +81,23 @@
           <button id="closeSetViewButton" type="button">Done</button>
         </div>
         <div class="session-actions">
-          <button type="button" data-set-command="move this session to set">Build From Session</button>
+          <button id="buildSetViewButton" type="button">Build From Session</button>
         </div>
         <div id="setList" class="session-list"></div>
+      </section>
+
+      <section id="buildSetView" class="screen-view" hidden aria-label="Build set from session">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Set Builder</p>
+            <h2>Build From Session</h2>
+          </div>
+          <button id="closeBuildSetViewButton" type="button">Done</button>
+        </div>
+        <div class="session-actions">
+          <button id="saveBuiltSetButton" type="button">Save Set</button>
+        </div>
+        <div id="buildSongList" class="session-list"></div>
       </section>
 
       <section id="sheetsView" class="screen-view" hidden aria-label="Sheets browser">

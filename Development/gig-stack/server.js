@@ -16,6 +16,38 @@ const DRUM_CHILDREN = [
   channel("room", "Room", "input-8", 38),
 ];
 
+const SESSION_SONGS = {
+  "session-1": [
+    song("new-south", "New South", "G", 92, "ready", "4:12"),
+    song("porch-light", "Porch Light", "D", 76, "mixed", "3:48"),
+    song("river-road", "River Road", "A", 104, "rough", "4:35"),
+  ],
+  "session-friday": [
+    song("new-south", "New South", "G", 92, "ready", "4:12"),
+    song("friday-full-band", "Friday Full Band", "E", 118, "mixed", "5:04"),
+    song("last-call", "Last Call", "Bm", 84, "ready", "3:57"),
+    song("porch-light", "Porch Light", "D", 76, "mixed", "3:48"),
+  ],
+  "session-acoustic": [
+    song("porch-light", "Porch Light", "D", 76, "mixed", "3:48"),
+    song("new-south-acoustic", "New South Acoustic", "G", 88, "ready", "4:08"),
+    song("lantern", "Lantern", "C", 72, "rough", "3:33"),
+    song("sunday-room", "Sunday Room", "Am", 68, "ready", "4:21"),
+  ],
+  "session-writes": [
+    song("river-road", "River Road", "A", 104, "rough", "4:35"),
+    song("half-moon", "Half Moon", "F", 96, "rough", "3:29"),
+    song("window-seat", "Window Seat", "C", 80, "ready", "3:51"),
+  ],
+  "session-rehearsal": [
+    song("friday-full-band", "Friday Full Band", "E", 118, "mixed", "5:04"),
+    song("new-south", "New South", "G", 92, "ready", "4:12"),
+    song("last-call", "Last Call", "Bm", 84, "ready", "3:57"),
+    song("river-road", "River Road", "A", 104, "rough", "4:35"),
+    song("porch-light", "Porch Light", "D", 76, "mixed", "3:48"),
+  ],
+};
+
 const state = {
   transport: "Stopped",
   venue: {
@@ -48,21 +80,22 @@ const state = {
     takes: [
       { id: "take-1", name: "Scratch pass", status: "ready" },
     ],
+    songs: structuredClone(SESSION_SONGS["session-1"]),
   },
   activeSetId: "set-friday",
   activeSheetId: "sheet-friday-chart",
   sessions: [
-    { id: "session-1", name: "Untitled Session", type: "Current", updated: "Now", songs: 1, notes: "Scratch pass ready." },
-    { id: "session-friday", name: "Friday Full Band", type: "Recent", updated: "Yesterday", songs: 4, notes: "Drums, bass, guitar, vocal, acoustic." },
-    { id: "session-acoustic", name: "Acoustic Night", type: "Recent", updated: "May 31", songs: 7, notes: "Vocal, acoustic, room mic, click optional." },
-    { id: "session-writes", name: "Writing Room", type: "Recent", updated: "May 29", songs: 3, notes: "Guitar ideas and vocal roughs." },
-    { id: "session-rehearsal", name: "Sunday Rehearsal", type: "Archive", updated: "May 24", songs: 9, notes: "Saved personal mixes and sheets." },
+    { id: "session-1", name: "Untitled Session", type: "Current", updated: "Now", songs: structuredClone(SESSION_SONGS["session-1"]), notes: "Scratch pass ready." },
+    { id: "session-friday", name: "Friday Full Band", type: "Recent", updated: "Yesterday", songs: structuredClone(SESSION_SONGS["session-friday"]), notes: "Drums, bass, guitar, vocal, acoustic." },
+    { id: "session-acoustic", name: "Acoustic Night", type: "Recent", updated: "May 31", songs: structuredClone(SESSION_SONGS["session-acoustic"]), notes: "Vocal, acoustic, room mic, click optional." },
+    { id: "session-writes", name: "Writing Room", type: "Recent", updated: "May 29", songs: structuredClone(SESSION_SONGS["session-writes"]), notes: "Guitar ideas and vocal roughs." },
+    { id: "session-rehearsal", name: "Sunday Rehearsal", type: "Archive", updated: "May 24", songs: structuredClone(SESSION_SONGS["session-rehearsal"]), notes: "Saved personal mixes and sheets." },
   ],
   sets: [
-    { id: "set-friday", name: "Friday Night Set", type: "Active", updated: "Today", songs: 8, notes: "Full band order with click and sheets ready." },
-    { id: "set-acoustic", name: "Acoustic Porch Set", type: "Recent", updated: "May 31", songs: 6, notes: "Acoustic, vocal, light percussion." },
-    { id: "set-rehearsal", name: "Rehearsal Run", type: "Draft", updated: "May 29", songs: 5, notes: "Working order for new material." },
-    { id: "set-encore", name: "Encore Ideas", type: "Archive", updated: "May 22", songs: 4, notes: "Loose songs with saved musician mixes." },
+    { id: "set-friday", name: "Friday Night Set", type: "Active", updated: "Today", songs: structuredClone(SESSION_SONGS["session-friday"]), notes: "Full band order with click and sheets ready." },
+    { id: "set-acoustic", name: "Acoustic Porch Set", type: "Recent", updated: "May 31", songs: structuredClone(SESSION_SONGS["session-acoustic"]).slice(0, 3), notes: "Acoustic, vocal, light percussion." },
+    { id: "set-rehearsal", name: "Rehearsal Run", type: "Draft", updated: "May 29", songs: structuredClone(SESSION_SONGS["session-rehearsal"]), notes: "Working order for new material." },
+    { id: "set-encore", name: "Encore Ideas", type: "Archive", updated: "May 22", songs: structuredClone(SESSION_SONGS["session-writes"]), notes: "Loose songs with saved musician mixes." },
   ],
   sheets: [
     { id: "sheet-friday-chart", name: "Friday Full Band Chart", type: "Chart", key: "E", updated: "Today", notes: "Verse, chorus, bridge, hits, and ending." },
@@ -95,6 +128,20 @@ function channel(id, name, source, level) {
     armed: true,
     eq: { enabled: false, tone: "flat", lowCut: false },
     comp: { enabled: false, amount: "off" },
+  };
+}
+
+function song(id, name, key, tempo, status, length) {
+  return {
+    id,
+    name,
+    key,
+    tempo,
+    status,
+    length,
+    sheets: true,
+    click: tempo > 0,
+    mixSaved: status !== "rough",
   };
 }
 
@@ -167,6 +214,7 @@ function createSession(name = "Untitled Session") {
     name,
     mixed: false,
     takes: [],
+    songs: [],
   };
   state.channels.forEach((item) => {
     item.muted = false;
@@ -179,7 +227,7 @@ function createSession(name = "Untitled Session") {
   state.mix.assist.mode = "Listening";
   state.mix.assist.detail = "Ready to shape the personal mix without touching the house.";
   state.sessions = [
-    { id: state.session.id, name: state.session.name, type: "Current", updated: "Now", songs: 1, notes: "New session." },
+    { id: state.session.id, name: state.session.name, type: "Current", updated: "Now", songs: [], notes: "New session." },
     ...state.sessions.map((item) => ({ ...item, type: item.type === "Current" ? "Recent" : item.type })),
   ].slice(0, 8);
   return `New session opened. Venue kept the musician mix faders ready.`;
@@ -196,6 +244,7 @@ function openPreviousSession() {
       { id: "take-prev-2", name: "Vocal fix", status: "ready" },
       { id: "take-prev-3", name: "Acoustic overdub", status: "ready" },
     ],
+    songs: structuredClone(SESSION_SONGS["session-rehearsal"]),
   };
   return "Previous session opened. The same musician mix faders are ready.";
 }
@@ -212,6 +261,7 @@ function openSessionById(id) {
       { id: `take-${saved.id}-1`, name: "Band take 1", status: "ready" },
       { id: `take-${saved.id}-2`, name: "Vocal pass", status: "ready" },
     ],
+    songs: structuredClone(saved.songs || []),
   };
   state.sessions = [
     { ...saved, type: "Current", updated: "Now" },
@@ -241,6 +291,30 @@ function openSheetById(id) {
     ...state.sheets.filter((item) => item.id !== id),
   ];
   return `${sheet.name} opened.`;
+}
+
+function buildSetFromSession(songIds) {
+  const requested = new Set(songIds.filter(Boolean));
+  const available = state.session.songs || [];
+  const selected = requested.size ? available.filter((item) => requested.has(item.id)) : available;
+
+  if (!selected.length) return "Pick at least one song from this session.";
+
+  const set = {
+    id: `set-${Date.now()}`,
+    name: `${state.session.name} Set`,
+    type: "Active",
+    updated: "Now",
+    songs: structuredClone(selected),
+    notes: `Built from ${state.session.name}.`,
+  };
+
+  state.activeSetId = set.id;
+  state.sets = [
+    set,
+    ...state.sets.map((item) => ({ ...item, type: item.type === "Active" ? "Recent" : item.type })),
+  ];
+  return `${set.name} built with ${selected.length} songs.`;
 }
 
 function recordAll() {
@@ -328,6 +402,10 @@ function runCommand(rawCommand) {
   } else if (command.startsWith("open sheet ")) {
     snapshotUndo("open sheet");
     result = openSheetById(rawCommand.replace(/open sheet/i, "").trim());
+  } else if (command.startsWith("build set ")) {
+    snapshotUndo("build set");
+    const songIds = rawCommand.replace(/build set/i, "").trim().split(",").map((item) => item.trim());
+    result = buildSetFromSession(songIds);
   } else if (command.includes("new session")) {
     snapshotUndo("new session");
     result = createSession();
@@ -335,7 +413,7 @@ function runCommand(rawCommand) {
     snapshotUndo("name session");
     const name = rawCommand.replace(/name this session/i, "").trim() || "Untitled Session";
     state.session.name = name;
-    state.sessions.unshift({ id: state.session.id, name, type: "Current", updated: "Now", songs: 1, notes: "New session." });
+    state.sessions.unshift({ id: state.session.id, name, type: "Current", updated: "Now", songs: state.session.songs || [], notes: "New session." });
     result = `Session named ${name}.`;
   } else if (command.includes("record all") || command.includes("record everything")) {
     snapshotUndo("record all");
