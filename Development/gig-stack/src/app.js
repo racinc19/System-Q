@@ -15,6 +15,7 @@ const fallbackState = {
     clickOn: false,
     sheetsOpen: false,
     sheetSync: false,
+    talk: { target: "", message: "", at: "" },
     console: "Personal Console",
     consoleOpen: false,
     venueConsoleAssigned: false,
@@ -102,6 +103,12 @@ const els = {
   transposeDownButton: document.querySelector("#transposeDownButton"),
   transposeUpButton: document.querySelector("#transposeUpButton"),
   sheetSyncButton: document.querySelector("#sheetSyncButton"),
+  talkAllButton: document.querySelector("#talkAllButton"),
+  talkPanel: document.querySelector("#talkPanel"),
+  talkTargetLabel: document.querySelector("#talkTargetLabel"),
+  talkMessageInput: document.querySelector("#talkMessageInput"),
+  sendTalkButton: document.querySelector("#sendTalkButton"),
+  cancelTalkButton: document.querySelector("#cancelTalkButton"),
   saveBuiltSetButton: document.querySelector("#saveBuiltSetButton"),
   channelGrid: document.querySelector("#channelGrid"),
   masterFader: document.querySelector("#masterFader"),
@@ -183,6 +190,27 @@ function sheetSections(songItem) {
   ];
 }
 
+function sheetModeForChannel(channelId) {
+  if (channelId === "vocal") return "lyrics";
+  if (channelId === "drums" || channelId === "kick" || channelId === "snare") return "notes";
+  return "chart";
+}
+
+function openChannelSheet(channelId) {
+  sheetMode = sheetModeForChannel(channelId);
+  activeSheetSongId = state.session.song?.id || activeSheetSongId;
+  renderSheetsList();
+  openScreenView(els.sheetsView);
+}
+
+function openTalkPanel(target) {
+  els.talkTargetLabel.textContent = target === "all" ? "Talk All" : `Talk to ${target}`;
+  els.talkPanel.dataset.talkTarget = target;
+  els.talkMessageInput.value = "";
+  els.talkPanel.hidden = false;
+  els.talkMessageInput.focus();
+}
+
 function renderStatus() {
   els.venueStatus.textContent = state.venue.connected ? "Venue connected" : "Venue offline";
   els.consoleStatus.textContent = state.venue.console || "Console idle";
@@ -226,6 +254,8 @@ function channelStrip(item, extraClass = "") {
       <div class="channel-actions">
         <button class="${item.muted ? "active mute-active" : ""}" type="button" data-command="${item.muted ? "unmute" : "mute"} ${item.name}">Mute</button>
         <button class="${item.solo ? "active solo-active" : ""}" type="button" data-command="${item.solo ? "unsolo" : "solo"} ${item.name}">Solo</button>
+        <button type="button" data-sheet-channel-id="${item.id}">Sheet</button>
+        <button type="button" data-talk-target="${item.name}">Talk</button>
       </div>
       <div class="channel-badges">${badges.map((badge) => `<span>${badge}</span>`).join("")}</div>
     </article>
@@ -558,6 +588,14 @@ function renderChannels() {
     button.addEventListener("click", () => sendCommand(button.dataset.command));
   });
 
+  els.channelGrid.querySelectorAll("[data-sheet-channel-id]").forEach((button) => {
+    button.addEventListener("click", () => openChannelSheet(button.dataset.sheetChannelId));
+  });
+
+  els.channelGrid.querySelectorAll("[data-talk-target]").forEach((button) => {
+    button.addEventListener("click", () => openTalkPanel(button.dataset.talkTarget));
+  });
+
   els.channelGrid.querySelectorAll("[data-level-id]").forEach((slider) => {
     slider.addEventListener("change", () => {
       const channel = findChannel(slider.dataset.levelId);
@@ -639,6 +677,23 @@ els.saveSessionNoteButton.addEventListener("click", () => {
 });
 els.sheetSyncButton.addEventListener("click", () => {
   sendCommand(`sheet sync ${state.mix.sheetSync ? "off" : "on"}`);
+});
+els.talkAllButton.addEventListener("click", () => openTalkPanel("all"));
+els.sendTalkButton.addEventListener("click", async () => {
+  const target = els.talkPanel.dataset.talkTarget || "all";
+  const message = els.talkMessageInput.value.trim();
+  if (!message) return;
+  await sendCommand(`talk ${target} :: ${message}`);
+  els.talkMessageInput.value = "";
+  els.talkPanel.hidden = true;
+});
+els.cancelTalkButton.addEventListener("click", () => {
+  els.talkMessageInput.value = "";
+  els.talkPanel.hidden = true;
+});
+els.talkMessageInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") els.sendTalkButton.click();
+  if (event.key === "Escape") els.cancelTalkButton.click();
 });
 els.newSessionButton.addEventListener("click", () => {
   els.editSessionPanel.hidden = true;

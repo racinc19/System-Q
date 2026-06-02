@@ -593,6 +593,17 @@ h2 {
   color: white;
 }
 
+.mix-head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.talk-panel {
+  margin-bottom: 10px;
+}
+
 .channel-grid {
   display: grid;
   gap: 8px;
@@ -635,7 +646,7 @@ h2 {
 
 .channel-strip {
   display: grid;
-  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) 124px minmax(52px, auto);
+  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) minmax(224px, 260px) minmax(52px, auto);
   align-items: center;
   gap: 12px;
   min-width: 0;
@@ -691,7 +702,7 @@ h2 {
 
 .channel-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -746,7 +757,7 @@ h2 {
 }
 
 .drum-child {
-  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) 124px minmax(52px, auto);
+  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) minmax(224px, 260px) minmax(52px, auto);
   background: white;
 }
 

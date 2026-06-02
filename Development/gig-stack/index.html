@@ -186,7 +186,20 @@
               <p class="eyebrow">Mix</p>
               <h2 id="mixName">My Mix</h2>
             </div>
-            <button id="sheetSyncButton" class="sync-button" type="button">Sync</button>
+            <div class="mix-head-actions">
+              <button id="sheetSyncButton" class="sync-button" type="button">Sync</button>
+              <button id="talkAllButton" type="button">Talk All</button>
+            </div>
+          </div>
+          <div id="talkPanel" class="inline-panel talk-panel" hidden>
+            <label class="name-field" for="talkMessageInput">
+              <span id="talkTargetLabel">Talk</span>
+              <input id="talkMessageInput" type="text" autocomplete="off" />
+            </label>
+            <div class="inline-actions">
+              <button id="sendTalkButton" type="button">Send</button>
+              <button id="cancelTalkButton" type="button">Cancel</button>
+            </div>
           </div>
           <section class="master-strip" aria-label="Master volume">
             <div>

@@ -64,6 +64,11 @@ const state = {
     clickOn: false,
     sheetsOpen: false,
     sheetSync: false,
+    talk: {
+      target: "",
+      message: "",
+      at: "",
+    },
     console: "Personal Console",
     consoleOpen: false,
     venueConsoleAssigned: true,
@@ -557,6 +562,14 @@ function runCommand(rawCommand) {
     state.mix.sheetSync = command.includes("off") ? false : command.includes("on") ? true : !state.mix.sheetSync;
     state.mix.sheetsOpen = state.mix.sheetSync ? true : state.mix.sheetsOpen;
     result = `Sheet Sync ${state.mix.sheetSync ? "on" : "off"}.`;
+  } else if (command.startsWith("talk ")) {
+    snapshotUndo("talk");
+    const payload = rawCommand.replace(/talk/i, "").trim();
+    const [targetPart, messagePart] = payload.includes("::") ? payload.split("::") : ["all", payload];
+    const target = targetPart.trim() || "all";
+    const message = messagePart.trim();
+    state.mix.talk = { target, message, at: new Date().toISOString() };
+    result = message ? `Sent to ${target}: ${message}` : `Talk opened for ${target}.`;
   } else if (command.includes("open sheets") || command.includes("show sheets") || command.includes("sheets")) {
     snapshotUndo("open sheets");
     state.mix.sheetsOpen = true;
