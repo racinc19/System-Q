@@ -28,7 +28,7 @@ const state = {
     mixed: false,
     selectedTrackId: "track-1",
     tracks: [
-      makeTrack("track-1", "Vocal", "input-1"),
+      makeTrack("track-1", "Vocal", "input-1", "ready"),
     ],
   },
   sets: [],
@@ -38,11 +38,13 @@ const state = {
 
 const clients = new Set();
 
-function makeTrack(id, name, inputId) {
+function makeTrack(id, name, inputId, status = "ready", note = "") {
   return {
     id,
     name,
     inputId,
+    status,
+    note,
     level: 60,
     muted: false,
     solo: false,
@@ -120,12 +122,62 @@ function createSession(name = "Untitled Session") {
   return `New session opened: ${state.session.name}.`;
 }
 
-function addTrack(name = "Track", inputId = "input-1") {
+function addTrack(name = "Track", inputId = "input-1", status = "ready", note = "") {
   const id = `track-${Date.now()}-${state.session.tracks.length + 1}`;
-  const track = makeTrack(id, name, inputId);
+  const track = makeTrack(id, name, inputId, status, note);
   state.session.tracks.push(track);
   state.session.selectedTrackId = id;
-  return `${name} track created on ${inputId}.`;
+  return status === "waiting"
+    ? `${name} track created and waiting for an input.`
+    : `${name} track created on ${inputId}.`;
+}
+
+function openPreviousSession() {
+  state.session = {
+    id: `session-${Date.now()}`,
+    name: "Previous Session",
+    mixed: false,
+    selectedTrackId: "track-prev-1",
+    tracks: [
+      makeTrack("track-prev-1", "Drums", "input-1", "ready", "Submixed drums on the current four-input rig."),
+      makeTrack("track-prev-2", "Bass", "input-2"),
+      makeTrack("track-prev-3", "Guitar", "input-3"),
+      makeTrack("track-prev-4", "Vocal", "input-4"),
+      makeTrack("track-prev-5", "Acoustic Guitar", "waiting", "waiting", "Needs another input or an overdub pass on the Akai EIE."),
+    ],
+  };
+  return "Previous session opened with the saved band tracks.";
+}
+
+function setupBandTracks() {
+  state.session.tracks = [
+    makeTrack(`track-${Date.now()}-drums`, "Drums", "input-1", "ready", "Submixed drums on Akai input 1."),
+    makeTrack(`track-${Date.now()}-bass`, "Bass", "input-2"),
+    makeTrack(`track-${Date.now()}-guitar`, "Guitar", "input-3"),
+    makeTrack(`track-${Date.now()}-vocal`, "Vocal", "input-4"),
+    makeTrack(
+      `track-${Date.now()}-acoustic`,
+      "Acoustic Guitar",
+      "waiting",
+      "waiting",
+      "Akai EIE has four inputs. Plug acoustic into an open input later or overdub it after the first pass.",
+    ),
+  ];
+  state.session.selectedTrackId = state.session.tracks[0].id;
+  return "Band tracks are ready: drums, bass, guitar, and vocal are on inputs 1-4; acoustic guitar is waiting for an input or overdub.";
+}
+
+function recordAllReadyTracks() {
+  const ready = state.session.tracks.filter((track) => track.status !== "waiting" && track.inputId !== "waiting");
+  for (const track of ready) {
+    track.armed = true;
+    track.takes += 1;
+  }
+  state.transport = "Recording";
+  const waiting = state.session.tracks.filter((track) => track.status === "waiting").map((track) => track.name);
+  return waiting.length
+    ? `Recording ${ready.length} ready tracks. ${waiting.join(", ")} is waiting for an input or overdub.`
+    : `Recording all ${ready.length} tracks.`;
 }
 
 function setInputLevel(input, amount) {
@@ -148,9 +200,15 @@ function runCommand(rawCommand) {
   if (command === "undo" || command.includes("undo")) {
     changed = false;
     result = undoLast();
+  } else if (command.includes("open previous")) {
+    snapshotUndo("open previous session");
+    result = openPreviousSession();
   } else if (command.includes("new session")) {
     snapshotUndo("new session");
     result = createSession();
+  } else if (command.includes("recognize") && command.includes("input")) {
+    changed = false;
+    result = "Venue recognizes Akai EIE inputs input-1 through input-4, plus phones and main outputs.";
   } else if (command.startsWith("name this session")) {
     snapshotUndo("name session");
     const name = rawCommand.replace(/name this session/i, "").trim() || "Untitled Session";
@@ -164,11 +222,21 @@ function runCommand(rawCommand) {
     snapshotUndo("save setup");
     state.venue.setupName = `Akai EIE setup ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
     result = `Saved setup: ${state.venue.setupName}.`;
+  } else if (
+    command.includes("setup band") ||
+    command.includes("set up band") ||
+    command.includes("band tracks") ||
+    command.includes("drums bass guitar vocal") ||
+    command.includes("drums, bass, guitar")
+  ) {
+    snapshotUndo("setup band tracks");
+    result = setupBandTracks();
   } else if (command.includes("create") || command.includes("add track") || command.includes("new track")) {
     snapshotUndo("add track");
     const input = resolveInput(command) || state.venue.inputs[0];
     let name = "Track";
-    if (command.includes("vocal")) name = "Vocal";
+    if (command.includes("acoustic")) name = "Acoustic Guitar";
+    else if (command.includes("vocal")) name = "Vocal";
     else if (command.includes("guitar")) name = "Guitar";
     else if (command.includes("bass")) name = "Bass";
     else if (command.includes("drum")) name = "Drums";
@@ -184,14 +252,22 @@ function runCommand(rawCommand) {
       changed = false;
       result = "Track not found.";
     }
+  } else if (command.includes("record all")) {
+    snapshotUndo("record all tracks");
+    result = recordAllReadyTracks();
   } else if (command.includes("record")) {
     snapshotUndo("record track");
     const track = resolveTrack(command);
     if (track) {
+      if (track.status === "waiting" || track.inputId === "waiting") {
+        changed = false;
+        result = `${track.name} is waiting for an input before recording.`;
+      } else {
       track.armed = true;
       track.takes += 1;
       state.transport = "Recording";
       result = `Recording ${track.name}, take ${track.takes}.`;
+      }
     }
   } else if (command.includes("play")) {
     snapshotUndo("play");

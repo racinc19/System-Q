@@ -26,6 +26,8 @@ const fallbackState = {
         id: "track-1",
         name: "Vocal",
         inputId: "input-1",
+        status: "ready",
+        note: "",
         level: 60,
         muted: false,
         solo: false,
@@ -48,12 +50,14 @@ const els = {
   consoleStatus: document.querySelector("#consoleStatus"),
   transportStatus: document.querySelector("#transportStatus"),
   sessionName: document.querySelector("#sessionName"),
+  bandPlan: document.querySelector("#bandPlan"),
   trackList: document.querySelector("#trackList"),
   setList: document.querySelector("#setList"),
   selectedTrackTitle: document.querySelector("#selectedTrackTitle"),
   akaiStatus: document.querySelector("#akaiStatus"),
   setupStatus: document.querySelector("#setupStatus"),
   outputsStatus: document.querySelector("#outputsStatus"),
+  inputSummary: document.querySelector("#inputSummary"),
   akaiInputs: document.querySelector("#akaiInputs"),
   trackLevel: document.querySelector("#trackLevel"),
   trackLevelOutput: document.querySelector("#trackLevelOutput"),
@@ -107,7 +111,7 @@ function renderTracks() {
       (track) => `
         <button class="track-item ${track.id === state.session.selectedTrackId ? "active" : ""}" type="button" data-track-id="${track.id}">
           <strong>${track.name}</strong>
-          <span>${track.inputId} ${track.armed ? "armed" : ""} ${track.muted ? "muted" : ""}</span>
+          <span>${track.status === "waiting" ? "waiting for input" : track.inputId} ${track.armed ? "armed" : ""} ${track.muted ? "muted" : ""}</span>
         </button>
       `,
     )
@@ -122,12 +126,38 @@ function renderTracks() {
     : `<p class="empty-note">Mixed sessions land here as sets.</p>`;
 }
 
+function renderBandPlan() {
+  const desired = ["Drums", "Bass", "Guitar", "Vocal", "Acoustic Guitar"];
+  els.bandPlan.innerHTML = desired
+    .map((name) => {
+      const track = state.session.tracks.find((candidate) => candidate.name === name);
+      const status = track
+        ? track.status === "waiting"
+          ? "Waiting"
+          : track.inputId
+        : "Not added";
+      return `
+        <article class="${track?.status === "waiting" ? "waiting" : track ? "ready" : ""}">
+          <strong>${name}</strong>
+          <span>${status}</span>
+        </article>
+      `;
+    })
+    .join("");
+}
+
 function renderVenue() {
   els.akaiStatus.textContent = `${state.venue.rig} ${state.venue.connected ? "ready" : "idle"}`;
   els.setupStatus.textContent = state.venue.setupName || "No saved setup";
   els.outputsStatus.textContent = state.venue.outputs
     .map((output) => `${output.label} ${output.muted ? "muted" : output.level}`)
     .join(" / ");
+  els.inputSummary.innerHTML = state.venue.inputs
+    .map((input) => {
+      const track = state.session.tracks.find((candidate) => candidate.inputId === input.id);
+      return `<span>${input.id}: ${track ? track.name : "open"}</span>`;
+    })
+    .join("");
 
   els.akaiInputs.innerHTML = state.venue.inputs
     .map(
@@ -171,6 +201,7 @@ function renderSelectedTrack() {
 
   els.trackDetail.innerHTML = `
     <article><span>Input</span><strong>${track.inputId}</strong></article>
+    <article><span>Status</span><strong>${track.status === "waiting" ? "waiting" : "ready"}</strong></article>
     <article><span>Takes</span><strong>${track.takes}</strong></article>
     <article><span>EQ</span><strong>${track.eq.enabled ? `${track.eq.tone}${track.eq.lowCut ? " / low cut" : ""}` : "off"}</strong></article>
     <article><span>Compression</span><strong>${track.comp.enabled ? track.comp.amount : "off"}</strong></article>
@@ -186,6 +217,7 @@ function renderLog() {
 
 function render() {
   renderStatus();
+  renderBandPlan();
   renderTracks();
   renderVenue();
   renderSelectedTrack();

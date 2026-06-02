@@ -36,6 +36,11 @@
           </div>
 
           <div class="panel-head compact">
+            <h3>Band Arrival</h3>
+          </div>
+          <div id="bandPlan" class="band-plan"></div>
+
+          <div class="panel-head compact">
             <h3>Tracks</h3>
             <button id="addTrackButton" type="button">Add</button>
           </div>
@@ -77,6 +82,7 @@
               <span id="setupStatus">No saved setup</span>
               <span id="outputsStatus">phones 62 / main 45</span>
             </div>
+            <div id="inputSummary" class="input-summary" aria-label="Recognized inputs"></div>
             <div id="akaiInputs" class="akai-inputs" aria-label="Akai EIE inputs"></div>
           </section>
 
@@ -131,10 +137,11 @@
 
             <div class="quick-commands" aria-label="Quick commands">
               <button type="button" data-command="new session">New session</button>
-              <button type="button" data-command="create vocal track on input 1">Vocal input 1</button>
-              <button type="button" data-command="record this track">Record track</button>
+              <button type="button" data-command="open previous session">Open previous</button>
+              <button type="button" data-command="setup band tracks">Setup band</button>
+              <button type="button" data-command="record all tracks">Record all</button>
               <button type="button" data-command="make this louder">Louder</button>
-              <button type="button" data-command="compress this track">Compress</button>
+              <button type="button" data-command="recognize inputs">Inputs</button>
               <button type="button" data-command="move this session to set">To set</button>
             </div>
 

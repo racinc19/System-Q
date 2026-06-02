@@ -102,6 +102,23 @@ h3 {
   padding: 8px 12px;
 }
 
+.input-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.input-summary span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: white;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 7px 10px;
+}
+
 .workspace {
   display: grid;
   grid-template-columns: 270px minmax(520px, 1fr) 360px;
@@ -173,9 +190,37 @@ h3 {
 }
 
 .track-list,
-.set-list {
+.set-list,
+.band-plan {
   display: grid;
   gap: 8px;
+}
+
+.band-plan article {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  padding: 9px 10px;
+}
+
+.band-plan article.ready {
+  border-color: rgba(15, 118, 110, 0.34);
+  background: #eef8f5;
+}
+
+.band-plan article.waiting {
+  border-color: rgba(165, 66, 59, 0.34);
+  background: #fff5f3;
+}
+
+.band-plan span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 800;
 }
 
 .track-item {
