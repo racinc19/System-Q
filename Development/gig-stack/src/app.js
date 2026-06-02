@@ -12,6 +12,8 @@ const fallbackState = {
     name: "My Mix",
     masterLevel: 72,
     masterMuted: false,
+    clickOn: false,
+    sheetsOpen: false,
     console: "Personal Console",
     consoleOpen: false,
     venueConsoleAssigned: false,
@@ -35,17 +37,14 @@ const els = {
   venueNote: document.querySelector("#venueNote"),
   mixName: document.querySelector("#mixName"),
   assistStatus: document.querySelector("#assistStatus"),
-  assistDetail: document.querySelector("#assistDetail"),
   consoleState: document.querySelector("#consoleState"),
+  clickStatus: document.querySelector("#clickStatus"),
   channelGrid: document.querySelector("#channelGrid"),
   masterFader: document.querySelector("#masterFader"),
   masterMuteButton: document.querySelector("#masterMuteButton"),
   voiceOrb: document.querySelector("#voiceOrb"),
-  takesList: document.querySelector("#takesList"),
-  setList: document.querySelector("#setList"),
   commandForm: document.querySelector("#commandForm"),
   commandInput: document.querySelector("#commandInput"),
-  commandLog: document.querySelector("#commandLog"),
 };
 
 async function postJson(url, payload) {
@@ -77,15 +76,14 @@ function renderStatus() {
   els.sessionName.textContent = state.session.name;
   els.venueNote.textContent = state.venue.note;
   els.mixName.textContent = state.mix.name;
-  els.assistStatus.textContent = `${state.mix.assist.name}: ${state.mix.assist.mode}`;
-  els.assistDetail.textContent = state.mix.assist.detail;
+  els.assistStatus.textContent = state.mix.sheetsOpen ? "Sheets" : state.mix.assist.mode;
+  els.clickStatus.textContent = state.mix.clickOn ? "Click On" : "Click Off";
   els.consoleState.textContent = state.mix.venueConsoleOpen
     ? "Venue Console"
     : state.mix.consoleOpen
       ? state.mix.console
       : "Faders";
   els.masterFader.value = state.mix.masterLevel;
-  els.masterMuteButton.textContent = state.mix.masterMuted ? "Unmute" : "Mute";
   els.masterMuteButton.classList.toggle("active", state.mix.masterMuted);
 }
 
@@ -106,8 +104,8 @@ function channelStrip(item, extraClass = "") {
       </div>
       <input class="fader" type="range" min="0" max="100" value="${item.level}" data-level-id="${item.id}" aria-label="${item.name} fader" />
       <div class="channel-actions">
-        <button type="button" data-command="${item.muted ? "unmute" : "mute"} ${item.name}">${item.muted ? "Unmute" : "Mute"}</button>
-        <button type="button" data-command="${item.solo ? "unsolo" : "solo"} ${item.name}">${item.solo ? "Unsolo" : "Solo"}</button>
+        <button class="${item.muted ? "active mute-active" : ""}" type="button" data-command="${item.muted ? "unmute" : "mute"} ${item.name}">Mute</button>
+        <button class="${item.solo ? "active solo-active" : ""}" type="button" data-command="${item.solo ? "unsolo" : "solo"} ${item.name}">Solo</button>
       </div>
       <div class="channel-badges">${badges.map((badge) => `<span>${badge}</span>`).join("")}</div>
     </article>
@@ -142,27 +140,9 @@ function findChannel(id) {
   return state.channels.flatMap((item) => [item, ...(item.children || [])]).find((item) => item.id === id);
 }
 
-function renderTakesAndSets() {
-  els.takesList.innerHTML = state.session.takes.length
-    ? state.session.takes.map((take) => `<article><strong>${take.name}</strong><span>${take.status}</span></article>`).join("")
-    : `<p class="empty-note">Recorded takes show up here.</p>`;
-
-  els.setList.innerHTML = state.sets.length
-    ? state.sets.map((set) => `<article><strong>${set.name}</strong><span>${set.takes} takes</span></article>`).join("")
-    : `<p class="empty-note">Finished sessions move here as sets.</p>`;
-}
-
-function renderLog() {
-  els.commandLog.innerHTML = state.log
-    .map((entry) => `<li><strong>${entry.command}</strong><span>${entry.result}</span></li>`)
-    .join("");
-}
-
 function render() {
   renderStatus();
   renderChannels();
-  renderTakesAndSets();
-  renderLog();
 }
 
 document.querySelectorAll("[data-command]").forEach((button) => {

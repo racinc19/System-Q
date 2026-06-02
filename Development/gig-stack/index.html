@@ -15,6 +15,7 @@
         <div class="status-strip" aria-label="System status">
           <span id="transportStatus">Stopped</span>
           <span id="consoleState">Faders</span>
+          <span id="clickStatus">Click Off</span>
           <span id="syncStatus">Local</span>
         </div>
       </section>
@@ -32,6 +33,9 @@
             <button type="button" data-command="new session">New</button>
             <button type="button" data-command="open previous session">Previous</button>
           </details>
+          <button type="button" data-command="move this session to set">Set</button>
+          <button type="button" data-command="open sheets">Sheets</button>
+          <button type="button" data-command="click">Click</button>
           <details class="menu">
             <summary>New Track</summary>
             <button type="button" data-command="new guitar track">Guitar</button>
@@ -76,17 +80,14 @@
           <div id="channelGrid" class="channel-grid"></div>
         </section>
 
-        <aside class="side-panel" aria-label="Takes sets and voice commands">
+        <aside class="side-panel" aria-label="Voice command">
           <section class="command-panel" aria-label="Voice command surface">
             <div class="control-head">
               <h2>Control</h2>
               <button id="voiceOrb" class="voice-orb" type="button" aria-label="Voice control"></button>
             </div>
 
-            <div class="assist-card">
-              <strong id="assistStatus">Console Assist: Offline</strong>
-              <span id="assistDetail">Waiting for Venue.</span>
-            </div>
+            <strong id="assistStatus" class="control-status">Ready</strong>
 
             <form id="commandForm" class="command-form">
               <input
@@ -98,31 +99,6 @@
               />
               <button type="submit">Send</button>
             </form>
-
-            <div class="quick-commands" aria-label="Quick commands">
-              <button type="button" data-command="open drums">Open drums</button>
-              <button type="button" data-command="open my console">Console</button>
-              <button type="button" data-command="make vocal louder">Vocal up</button>
-              <button type="button" data-command="shape snare target">Snare assist</button>
-              <button type="button" data-command="turn drums down">Drums down</button>
-              <button type="button" data-command="open venue console">Venue Console</button>
-            </div>
-
-            <ol id="commandLog" class="command-log" aria-label="Command log"></ol>
-          </section>
-
-          <section class="list-panel" aria-label="Takes">
-            <div class="panel-head compact">
-              <h2>Takes</h2>
-            </div>
-            <div id="takesList" class="stack-list"></div>
-          </section>
-
-          <section class="list-panel" aria-label="Sets">
-            <div class="panel-head compact">
-              <h2>Sets</h2>
-            </div>
-            <div id="setList" class="stack-list"></div>
           </section>
         </aside>
       </section>
