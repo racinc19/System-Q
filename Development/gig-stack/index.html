@@ -29,8 +29,8 @@
         </div>
         <div class="toolbar">
           <button id="sessionViewButton" type="button">Session</button>
-          <button type="button" data-command="move this session to set">Set</button>
-          <button type="button" data-command="open sheets">Sheets</button>
+          <button id="setViewButton" type="button">Set</button>
+          <button id="sheetsViewButton" type="button">Sheets</button>
           <button type="button" data-command="click">Click</button>
           <details class="menu">
             <summary>New Track</summary>
@@ -70,6 +70,31 @@
           <button type="button" data-session-command="open previous session">Open Previous</button>
         </div>
         <div id="sessionList" class="session-list"></div>
+      </section>
+
+      <section id="setView" class="screen-view" hidden aria-label="Set browser">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Set</p>
+            <h2>Choose Set</h2>
+          </div>
+          <button id="closeSetViewButton" type="button">Done</button>
+        </div>
+        <div class="session-actions">
+          <button type="button" data-set-command="move this session to set">Build From Session</button>
+        </div>
+        <div id="setList" class="session-list"></div>
+      </section>
+
+      <section id="sheetsView" class="screen-view" hidden aria-label="Sheets browser">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Sheets</p>
+            <h2>Choose Sheet</h2>
+          </div>
+          <button id="closeSheetsViewButton" type="button">Done</button>
+        </div>
+        <div id="sheetsList" class="session-list"></div>
       </section>
 
       <section class="workspace" aria-label="GIG workspace">

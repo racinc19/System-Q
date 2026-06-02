@@ -49,12 +49,27 @@ const state = {
       { id: "take-1", name: "Scratch pass", status: "ready" },
     ],
   },
+  activeSetId: "set-friday",
+  activeSheetId: "sheet-friday-chart",
   sessions: [
     { id: "session-1", name: "Untitled Session", type: "Current", updated: "Now", songs: 1, notes: "Scratch pass ready." },
     { id: "session-friday", name: "Friday Full Band", type: "Recent", updated: "Yesterday", songs: 4, notes: "Drums, bass, guitar, vocal, acoustic." },
     { id: "session-acoustic", name: "Acoustic Night", type: "Recent", updated: "May 31", songs: 7, notes: "Vocal, acoustic, room mic, click optional." },
     { id: "session-writes", name: "Writing Room", type: "Recent", updated: "May 29", songs: 3, notes: "Guitar ideas and vocal roughs." },
     { id: "session-rehearsal", name: "Sunday Rehearsal", type: "Archive", updated: "May 24", songs: 9, notes: "Saved personal mixes and sheets." },
+  ],
+  sets: [
+    { id: "set-friday", name: "Friday Night Set", type: "Active", updated: "Today", songs: 8, notes: "Full band order with click and sheets ready." },
+    { id: "set-acoustic", name: "Acoustic Porch Set", type: "Recent", updated: "May 31", songs: 6, notes: "Acoustic, vocal, light percussion." },
+    { id: "set-rehearsal", name: "Rehearsal Run", type: "Draft", updated: "May 29", songs: 5, notes: "Working order for new material." },
+    { id: "set-encore", name: "Encore Ideas", type: "Archive", updated: "May 22", songs: 4, notes: "Loose songs with saved musician mixes." },
+  ],
+  sheets: [
+    { id: "sheet-friday-chart", name: "Friday Full Band Chart", type: "Chart", key: "E", updated: "Today", notes: "Verse, chorus, bridge, hits, and ending." },
+    { id: "sheet-new-south", name: "New South", type: "Lyrics + Chords", key: "G", updated: "Yesterday", notes: "Capo 2 acoustic chart with vocal cues." },
+    { id: "sheet-acoustic-night", name: "Acoustic Night Packet", type: "Packet", key: "Mixed", updated: "May 31", notes: "Seven-song lyric packet." },
+    { id: "sheet-drum-cues", name: "Drum Cues", type: "Notes", key: "-", updated: "May 30", notes: "Starts, stops, count-ins, and breaks." },
+    { id: "sheet-bass-map", name: "Bass Roadmap", type: "Chart", key: "A", updated: "May 28", notes: "Arrangement map and stops." },
   ],
   channels: [
     { ...channel("drums", "Drums", "input 1-8", 64), type: "group", expanded: false, children: DRUM_CHILDREN },
@@ -63,7 +78,6 @@ const state = {
     channel("vocal", "Vocal", "input-11", 61),
     channel("acoustic", "Acoustic", "input-12", 50),
   ],
-  sets: [],
   log: [],
   undoStack: [],
 };
@@ -100,8 +114,12 @@ function snapshotUndo(label) {
     venue: structuredClone(state.venue),
     mix: structuredClone(state.mix),
     session: structuredClone(state.session),
+    activeSetId: state.activeSetId,
+    activeSheetId: state.activeSheetId,
+    sessions: structuredClone(state.sessions),
     channels: structuredClone(state.channels),
     sets: structuredClone(state.sets),
+    sheets: structuredClone(state.sheets),
   });
   state.undoStack = state.undoStack.slice(-16);
 }
@@ -113,8 +131,12 @@ function undoLast() {
   state.venue = previous.venue;
   state.mix = previous.mix;
   state.session = previous.session;
+  state.activeSetId = previous.activeSetId;
+  state.activeSheetId = previous.activeSheetId;
+  state.sessions = previous.sessions;
   state.channels = previous.channels;
   state.sets = previous.sets;
+  state.sheets = previous.sheets;
   return `Undone: ${previous.label}.`;
 }
 
@@ -198,6 +220,29 @@ function openSessionById(id) {
   return `${saved.name} opened.`;
 }
 
+function openSetById(id) {
+  const set = state.sets.find((item) => item.id === id);
+  if (!set) return "Set not found.";
+  state.activeSetId = set.id;
+  state.sets = [
+    { ...set, type: "Active", updated: "Now" },
+    ...state.sets.filter((item) => item.id !== id).map((item) => ({ ...item, type: item.type === "Active" ? "Recent" : item.type })),
+  ];
+  return `${set.name} selected.`;
+}
+
+function openSheetById(id) {
+  const sheet = state.sheets.find((item) => item.id === id);
+  if (!sheet) return "Sheet not found.";
+  state.activeSheetId = sheet.id;
+  state.mix.sheetsOpen = true;
+  state.sheets = [
+    { ...sheet, updated: "Now" },
+    ...state.sheets.filter((item) => item.id !== id),
+  ];
+  return `${sheet.name} opened.`;
+}
+
 function recordAll() {
   const armed = allChannels().filter((item) => item.armed && !item.children);
   state.transport = "Recording";
@@ -277,6 +322,12 @@ function runCommand(rawCommand) {
   } else if (command.startsWith("open session ")) {
     snapshotUndo("open session");
     result = openSessionById(rawCommand.replace(/open session/i, "").trim());
+  } else if (command.startsWith("open set ")) {
+    snapshotUndo("open set");
+    result = openSetById(rawCommand.replace(/open set/i, "").trim());
+  } else if (command.startsWith("open sheet ")) {
+    snapshotUndo("open sheet");
+    result = openSheetById(rawCommand.replace(/open sheet/i, "").trim());
   } else if (command.includes("new session")) {
     snapshotUndo("new session");
     result = createSession();
@@ -347,7 +398,16 @@ function runCommand(rawCommand) {
   } else if (command.includes("move") && command.includes("set")) {
     snapshotUndo("move to set");
     state.session.mixed = true;
-    state.sets.unshift({ id: `set-${Date.now()}`, name: state.session.name, takes: state.session.takes.length });
+    const set = {
+      id: `set-${Date.now()}`,
+      name: state.session.name,
+      type: "Active",
+      updated: "Now",
+      songs: Math.max(1, state.session.takes.length),
+      notes: "Built from the current session.",
+    };
+    state.activeSetId = set.id;
+    state.sets.unshift(set);
     result = `${state.session.name} moved to set.`;
   } else if (command.includes("open drums") || command.includes("show drums") || command.includes("expand drums")) {
     snapshotUndo("open drums");
@@ -408,9 +468,12 @@ function publicState() {
     venue: state.venue,
     mix: state.mix,
     session: state.session,
+    activeSetId: state.activeSetId,
+    activeSheetId: state.activeSheetId,
     sessions: state.sessions,
     channels: state.channels,
     sets: state.sets,
+    sheets: state.sheets,
     log: state.log,
   };
 }

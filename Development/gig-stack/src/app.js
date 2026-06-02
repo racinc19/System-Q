@@ -21,7 +21,10 @@ const fallbackState = {
     assist: { name: "Console Assist", mode: "Offline", detail: "Waiting for Venue." },
   },
   session: { name: "No session", mixed: false, takes: [] },
+  activeSetId: "",
+  activeSheetId: "",
   sessions: [],
+  sheets: [],
   channels: [],
   sets: [],
   log: [],
@@ -41,9 +44,17 @@ const els = {
   consoleState: document.querySelector("#consoleState"),
   clickStatus: document.querySelector("#clickStatus"),
   sessionViewButton: document.querySelector("#sessionViewButton"),
+  setViewButton: document.querySelector("#setViewButton"),
+  sheetsViewButton: document.querySelector("#sheetsViewButton"),
   sessionView: document.querySelector("#sessionView"),
+  setView: document.querySelector("#setView"),
+  sheetsView: document.querySelector("#sheetsView"),
   closeSessionViewButton: document.querySelector("#closeSessionViewButton"),
+  closeSetViewButton: document.querySelector("#closeSetViewButton"),
+  closeSheetsViewButton: document.querySelector("#closeSheetsViewButton"),
   sessionList: document.querySelector("#sessionList"),
+  setList: document.querySelector("#setList"),
+  sheetsList: document.querySelector("#sheetsList"),
   channelGrid: document.querySelector("#channelGrid"),
   masterFader: document.querySelector("#masterFader"),
   masterMuteButton: document.querySelector("#masterMuteButton"),
@@ -136,7 +147,55 @@ function renderSessionList() {
   els.sessionList.querySelectorAll("[data-session-id]").forEach((button) => {
     button.addEventListener("click", async () => {
       await sendCommand(`open session ${button.dataset.sessionId}`);
-      closeSessionView();
+      closeScreenViews();
+    });
+  });
+}
+
+function renderSetList() {
+  els.setList.innerHTML = state.sets
+    .map(
+      (set) => `
+        <button class="session-card ${set.id === state.activeSetId ? "active" : ""}" type="button" data-set-id="${set.id}">
+          <div>
+            <strong>${set.name}</strong>
+            <span>${set.type} / ${set.updated}</span>
+          </div>
+          <small>${set.songs} songs</small>
+          <p>${set.notes}</p>
+        </button>
+      `,
+    )
+    .join("");
+
+  els.setList.querySelectorAll("[data-set-id]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      await sendCommand(`open set ${button.dataset.setId}`);
+      closeScreenViews();
+    });
+  });
+}
+
+function renderSheetsList() {
+  els.sheetsList.innerHTML = state.sheets
+    .map(
+      (sheet) => `
+        <button class="session-card ${sheet.id === state.activeSheetId ? "active" : ""}" type="button" data-sheet-id="${sheet.id}">
+          <div>
+            <strong>${sheet.name}</strong>
+            <span>${sheet.type} / ${sheet.updated}</span>
+          </div>
+          <small>${sheet.key}</small>
+          <p>${sheet.notes}</p>
+        </button>
+      `,
+    )
+    .join("");
+
+  els.sheetsList.querySelectorAll("[data-sheet-id]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      await sendCommand(`open sheet ${button.dataset.sheetId}`);
+      closeScreenViews();
     });
   });
 }
@@ -172,16 +231,21 @@ function findChannel(id) {
 function render() {
   renderStatus();
   renderSessionList();
+  renderSetList();
+  renderSheetsList();
   renderChannels();
 }
 
-function openSessionView() {
-  els.sessionView.hidden = false;
+function openScreenView(view) {
+  closeScreenViews();
+  view.hidden = false;
   document.body.classList.add("screen-open");
 }
 
-function closeSessionView() {
+function closeScreenViews() {
   els.sessionView.hidden = true;
+  els.setView.hidden = true;
+  els.sheetsView.hidden = true;
   document.body.classList.remove("screen-open");
 }
 
@@ -192,12 +256,23 @@ document.querySelectorAll("[data-command]").forEach((button) => {
 document.querySelectorAll("[data-session-command]").forEach((button) => {
   button.addEventListener("click", async () => {
     await sendCommand(button.dataset.sessionCommand);
-    closeSessionView();
+    closeScreenViews();
   });
 });
 
-els.sessionViewButton.addEventListener("click", openSessionView);
-els.closeSessionViewButton.addEventListener("click", closeSessionView);
+document.querySelectorAll("[data-set-command]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    await sendCommand(button.dataset.setCommand);
+    closeScreenViews();
+  });
+});
+
+els.sessionViewButton.addEventListener("click", () => openScreenView(els.sessionView));
+els.setViewButton.addEventListener("click", () => openScreenView(els.setView));
+els.sheetsViewButton.addEventListener("click", () => openScreenView(els.sheetsView));
+els.closeSessionViewButton.addEventListener("click", closeScreenViews);
+els.closeSetViewButton.addEventListener("click", closeScreenViews);
+els.closeSheetsViewButton.addEventListener("click", closeScreenViews);
 
 els.masterFader.addEventListener("change", () => sendCommand(`set master level ${els.masterFader.value}`));
 els.masterMuteButton.addEventListener("click", () => sendCommand(`${state.mix.masterMuted ? "unmute" : "mute"} master`));
