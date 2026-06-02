@@ -409,9 +409,10 @@ function runCommand(rawCommand) {
     const [namePart, idsPart] = payload.includes("::") ? payload.split("::") : ["", payload];
     const songIds = idsPart.split(",").map((item) => item.trim());
     result = buildSetFromSession(songIds, namePart);
-  } else if (command.includes("new session")) {
+  } else if (command.startsWith("new session")) {
     snapshotUndo("new session");
-    result = createSession();
+    const name = rawCommand.replace(/new session/i, "").trim() || "Untitled Session";
+    result = createSession(name);
   } else if (command.startsWith("name this session")) {
     snapshotUndo("name session");
     const name = rawCommand.replace(/name this session/i, "").trim() || "Untitled Session";

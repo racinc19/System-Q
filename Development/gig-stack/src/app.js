@@ -47,6 +47,8 @@ const els = {
   sessionViewButton: document.querySelector("#sessionViewButton"),
   setViewButton: document.querySelector("#setViewButton"),
   sheetsViewButton: document.querySelector("#sheetsViewButton"),
+  newSessionButton: document.querySelector("#newSessionButton"),
+  newSessionNameInput: document.querySelector("#newSessionNameInput"),
   buildSetViewButton: document.querySelector("#buildSetViewButton"),
   sessionView: document.querySelector("#sessionView"),
   setView: document.querySelector("#setView"),
@@ -347,6 +349,12 @@ document.querySelectorAll("[data-set-command]").forEach((button) => {
 els.sessionViewButton.addEventListener("click", () => openScreenView(els.sessionView));
 els.setViewButton.addEventListener("click", () => openScreenView(els.setView));
 els.sheetsViewButton.addEventListener("click", () => openScreenView(els.sheetsView));
+els.newSessionButton.addEventListener("click", async () => {
+  const name = els.newSessionNameInput.value.trim();
+  await sendCommand(`new session ${name}`);
+  els.newSessionNameInput.value = "";
+  openScreenView(els.sessionView);
+});
 els.buildSetViewButton.addEventListener("click", () => {
   selectedBuildSongIds.clear();
   (state.session.songs || []).forEach((songItem) => selectedBuildSongIds.add(songItem.id));
