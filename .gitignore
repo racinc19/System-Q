@@ -17,6 +17,7 @@ desktop.ini
 # Env / secrets
 .env
 .env.*
+node_modules/
 
 # Patent / IP drafts
 patent_work/

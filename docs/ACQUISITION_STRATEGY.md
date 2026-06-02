@@ -18,6 +18,8 @@ Apogee makes sense because the concept starts from trust in recording quality, c
 
 Music Tribe / Behringer remains useful as a secondary broad-platform buyer profile, but it is no longer the active primary target.
 
+Sweetwater should be treated differently from an acquisition buyer. It is a possible market-validation, product-development funding, and exclusive launch partner. See `SWEETWATER_PRODUCT_DEVELOPMENT_PLAN.md`.
+
 ## Working definition of the asset being sold
 
 The asset is not just a website and not just one device.

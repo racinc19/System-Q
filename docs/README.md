@@ -15,6 +15,7 @@ This folder contains the current strategy, architecture, and outreach package fo
 9. [OUTREACH_BRIEF.md](C:/Users/racin/Desktop/recording-environment/docs/OUTREACH_BRIEF.md)
 10. [BOB_CLEARMOUNTAIN_REVIEW_REQUEST.md](C:/Users/racin/Desktop/recording-environment/docs/BOB_CLEARMOUNTAIN_REVIEW_REQUEST.md)
 11. [PAUL_WOLFF_TECHNICAL_REVIEW_REQUEST.md](C:/Users/racin/Desktop/recording-environment/docs/PAUL_WOLFF_TECHNICAL_REVIEW_REQUEST.md)
+12. [SWEETWATER_PRODUCT_DEVELOPMENT_PLAN.md](C:/Users/racin/Desktop/recording-environment/docs/SWEETWATER_PRODUCT_DEVELOPMENT_PLAN.md)
 
 ## File guide
 
@@ -56,6 +57,9 @@ This folder contains the current strategy, architecture, and outreach package fo
 
 - [PAUL_WOLFF_TECHNICAL_REVIEW_REQUEST.md](C:/Users/racin/Desktop/recording-environment/docs/PAUL_WOLFF_TECHNICAL_REVIEW_REQUEST.md)
   Send-ready Paul Wolff technical review request for analog card, rack, and Tape Cylinder feasibility.
+
+- [SWEETWATER_PRODUCT_DEVELOPMENT_PLAN.md](C:/Users/racin/Desktop/recording-environment/docs/SWEETWATER_PRODUCT_DEVELOPMENT_PLAN.md)
+  Staged plan for using Sweetwater as a validation, product-development funding, and possible exclusive launch partner.
 
 ## Notes
 

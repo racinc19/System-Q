@@ -27,6 +27,40 @@ The strategic value is continuity: musicians rehearse, record, refine, and play
 back inside one operating model instead of stitching together disconnected
 interfaces, mixers, plugins, monitor paths, and live tools.
 
+Computer control layer
+----------------------
+
+Computer control is the layer that makes the whole environment act like one
+system instead of a pile of hardware boxes.
+
+The computer would not replace the analog path. It would drive the decisions
+around the analog path:
+
+- Session state: opens the song, recalls channel names, routing, fader levels,
+  monitor mixes, cue sends, processor states, and Venue/playback setup.
+- Routing: assigns musicians, Cube inputs, rack channels, auxes, groups,
+  analog returns, print paths, and Venue outputs from one shared session map.
+- Hardware control: sends commands to digitally controlled preamps, relays,
+  stepped analog controls, motorized faders, switchable cards, inserts, mutes,
+  solo logic, talkback, and monitor paths.
+- DSP and hybrid processing: decides which work happens in software and which
+  work is handed to the analog rack, while keeping both represented in the same
+  UI and recall model.
+- Controller focus: lets one tactile controller target a channel, group, aux,
+  master, processor stage, or transport command without the user rebuilding the
+  workflow.
+- Automation: records and replays fader moves, mutes, sends, processor changes,
+  scene changes, and Venue level decisions over time.
+- Personal Stations: gives each musician a controlled local view of monitoring,
+  playback, talkback, sheet music, instrument input, and session participation.
+- Venue translation: carries the finished session into live playback or FOH
+  support by sending known levels, routing, and mix intent to the Venue device.
+
+In practical terms, the computer is the conductor. The audio can still pass
+through premium analog stages, but the computer knows what the session is, where
+every signal should go, what each piece of hardware is supposed to do, and how
+the room should behave from rehearsal through recording, mixing, and playback.
+
 Naming
 ------
 
