@@ -450,6 +450,79 @@ h2 {
   gap: 8px;
 }
 
+.sheet-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.sheet-tabs,
+.sheet-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sheet-tabs button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.sheet-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sheet-meta span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 850;
+  padding: 7px 10px;
+}
+
+.sheet-page {
+  --sheet-scale: 1;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffef8;
+  display: grid;
+  gap: calc(14px * var(--sheet-scale));
+  margin-bottom: 14px;
+  min-height: 46vh;
+  padding: calc(18px * var(--sheet-scale));
+}
+
+.sheet-section {
+  display: grid;
+  gap: 5px;
+}
+
+.sheet-section h3 {
+  font-size: calc(1.02rem * var(--sheet-scale));
+  text-transform: uppercase;
+}
+
+.chord-line {
+  color: var(--accent-dark);
+  font-family: "Segoe UI Mono", Consolas, monospace;
+  font-size: calc(1.28rem * var(--sheet-scale));
+  font-weight: 900;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+.lyric-line {
+  font-size: calc(1.02rem * var(--sheet-scale));
+  line-height: 1.5;
+}
+
 .transport button:nth-child(3) {
   background: var(--danger);
   border-color: var(--danger);

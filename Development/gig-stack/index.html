@@ -149,11 +149,34 @@
         <div class="screen-head">
           <div>
             <p class="eyebrow">Sheets</p>
-            <h2>Choose Sheet</h2>
+            <h2 id="sheetSongTitle">Current Song</h2>
           </div>
           <button id="closeSheetsViewButton" type="button">Done</button>
         </div>
-        <div id="sheetsList" class="session-list"></div>
+        <div class="sheet-toolbar">
+          <div class="sheet-tabs" role="tablist" aria-label="Sheet view">
+            <button id="sheetChartButton" type="button">Chart</button>
+            <button id="sheetLyricsButton" type="button">Lyrics</button>
+            <button id="sheetNotesButton" type="button">Notes</button>
+          </div>
+          <div class="sheet-actions" aria-label="Sheet controls">
+            <button id="sheetSizeDownButton" type="button">-</button>
+            <button id="sheetSizeUpButton" type="button">+</button>
+            <button id="transposeDownButton" type="button">Transpose -</button>
+            <button id="transposeUpButton" type="button">Transpose +</button>
+          </div>
+        </div>
+        <div id="sheetMeta" class="sheet-meta"></div>
+        <article id="sheetPage" class="sheet-page"></article>
+        <div class="set-song-list">
+          <div class="set-song-head">
+            <div>
+              <p class="eyebrow">Songs</p>
+              <h3>Set</h3>
+            </div>
+          </div>
+          <div id="sheetsList" class="session-list compact-list"></div>
+        </div>
       </section>
 
       <section class="workspace" aria-label="GIG workspace">

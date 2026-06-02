@@ -37,6 +37,10 @@ let sessionTapTimer = 0;
 let editingSetId = "";
 let setTapTimer = 0;
 let addingSetSongs = false;
+let activeSheetSongId = "";
+let sheetMode = "chart";
+let sheetSize = 1;
+let transposeSteps = 0;
 
 const els = {
   venueStatus: document.querySelector("#venueStatus"),
@@ -86,6 +90,16 @@ const els = {
   buildSongList: document.querySelector("#buildSongList"),
   buildSetNameInput: document.querySelector("#buildSetNameInput"),
   sheetsList: document.querySelector("#sheetsList"),
+  sheetSongTitle: document.querySelector("#sheetSongTitle"),
+  sheetMeta: document.querySelector("#sheetMeta"),
+  sheetPage: document.querySelector("#sheetPage"),
+  sheetChartButton: document.querySelector("#sheetChartButton"),
+  sheetLyricsButton: document.querySelector("#sheetLyricsButton"),
+  sheetNotesButton: document.querySelector("#sheetNotesButton"),
+  sheetSizeDownButton: document.querySelector("#sheetSizeDownButton"),
+  sheetSizeUpButton: document.querySelector("#sheetSizeUpButton"),
+  transposeDownButton: document.querySelector("#transposeDownButton"),
+  transposeUpButton: document.querySelector("#transposeUpButton"),
   saveBuiltSetButton: document.querySelector("#saveBuiltSetButton"),
   channelGrid: document.querySelector("#channelGrid"),
   masterFader: document.querySelector("#masterFader"),
@@ -118,6 +132,53 @@ async function sendCommand(command) {
 
 function songCount(songs) {
   return Array.isArray(songs) ? songs.length : Number(songs || 0);
+}
+
+function uniqueSongs(songs) {
+  const seen = new Set();
+  return songs.filter((songItem) => {
+    if (!songItem?.id || seen.has(songItem.id)) return false;
+    seen.add(songItem.id);
+    return true;
+  });
+}
+
+function sheetSongs() {
+  const activeSet = state.sets.find((set) => set.id === state.activeSetId);
+  return uniqueSongs([
+    state.session.song,
+    ...((activeSet?.songs) || []),
+  ].filter(Boolean));
+}
+
+function activeSheetSong() {
+  const songs = sheetSongs();
+  if (!activeSheetSongId || !songs.some((songItem) => songItem.id === activeSheetSongId)) {
+    activeSheetSongId = state.session.song?.id || songs[0]?.id || "";
+  }
+  return songs.find((songItem) => songItem.id === activeSheetSongId) || songs[0] || null;
+}
+
+function transposeChord(chord) {
+  const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  const flatMap = { Db: "C#", Eb: "D#", Gb: "F#", Ab: "G#", Bb: "A#" };
+  return chord.replace(/[A-G](?:#|b)?/g, (note) => {
+    const normalized = flatMap[note] || note;
+    const index = notes.indexOf(normalized);
+    if (index < 0) return note;
+    return notes[(index + transposeSteps + 120) % 12];
+  });
+}
+
+function sheetSections(songItem) {
+  const root = songItem.key && songItem.key !== "-" ? songItem.key : "G";
+  return [
+    { name: "Intro", chords: `${root}  Cadd9  Em7  D`, lyric: "Four count, guitar in, band builds on the last bar." },
+    { name: "Verse", chords: `${root}  D/F#  Em  C`, lyric: "Keep the vocal forward, bass simple, acoustic tucked underneath." },
+    { name: "Chorus", chords: `C  ${root}  D  Em`, lyric: "Full band lift, drums open, hold the last line for the turnaround." },
+    { name: "Bridge", chords: `Am  C  ${root}  D`, lyric: "Drop to vocal and acoustic, bring bass back on bar three." },
+    { name: "Outro", chords: `${root}  D  C  ${root}`, lyric: "Repeat chorus tag twice, hard stop on one." },
+  ];
 }
 
 function renderStatus() {
@@ -401,25 +462,75 @@ function renderBuildSongList() {
 }
 
 function renderSheetsList() {
-  els.sheetsList.innerHTML = state.sheets
-    .map(
-      (sheet) => `
-        <button class="session-card ${sheet.id === state.activeSheetId ? "active" : ""}" type="button" data-sheet-id="${sheet.id}">
-          <div>
-            <strong>${sheet.name}</strong>
-            <span>${sheet.type} / ${sheet.updated}</span>
-          </div>
-          <small>${sheet.key}</small>
-          <p>${sheet.notes}</p>
-        </button>
-      `,
-    )
+  const songs = sheetSongs();
+  const songItem = activeSheetSong();
+  const transposeLabel = transposeSteps === 0 ? "Original key" : `${transposeSteps > 0 ? "+" : ""}${transposeSteps} semitones`;
+  const modeLabel = sheetMode[0].toUpperCase() + sheetMode.slice(1);
+
+  if (!songItem) {
+    els.sheetSongTitle.textContent = "No Song";
+    els.sheetMeta.textContent = "Open or create a Session.";
+    els.sheetPage.innerHTML = `<p class="empty-note">No sheet is available yet.</p>`;
+    els.sheetsList.innerHTML = "";
+    return;
+  }
+
+  els.sheetSongTitle.textContent = songItem.name;
+  els.sheetMeta.innerHTML = `
+    <span>Key ${songItem.key || "-"}</span>
+    <span>${songItem.tempo || "-"} BPM</span>
+    <span>${transposeLabel}</span>
+    <span>${modeLabel}</span>
+  `;
+  els.sheetPage.style.setProperty("--sheet-scale", sheetSize);
+  els.sheetChartButton.classList.toggle("active", sheetMode === "chart");
+  els.sheetLyricsButton.classList.toggle("active", sheetMode === "lyrics");
+  els.sheetNotesButton.classList.toggle("active", sheetMode === "notes");
+
+  if (sheetMode === "lyrics") {
+    els.sheetPage.innerHTML = `
+      <div class="sheet-section">
+        <h3>${songItem.name}</h3>
+        ${sheetSections(songItem).map((section) => `
+          <p class="lyric-line"><strong>${section.name}</strong> ${section.lyric}</p>
+        `).join("")}
+      </div>
+    `;
+  } else if (sheetMode === "notes") {
+    els.sheetPage.innerHTML = `
+      <div class="sheet-section">
+        <h3>Notes</h3>
+        <p class="lyric-line">${state.session.notes || "No session notes yet."}</p>
+        <p class="lyric-line">Mix: ${songItem.mixSaved ? "saved" : "rough"} / Click: ${songItem.click ? "ready" : "off"} / Sheets: ${songItem.sheets ? "ready" : "missing"}</p>
+      </div>
+    `;
+  } else {
+    els.sheetPage.innerHTML = sheetSections(songItem).map((section) => `
+      <div class="sheet-section">
+        <h3>${section.name}</h3>
+        <p class="chord-line">${transposeChord(section.chords)}</p>
+        <p class="lyric-line">${section.lyric}</p>
+      </div>
+    `).join("");
+  }
+
+  els.sheetsList.innerHTML = songs
+    .map((setSong) => `
+      <button class="session-card song-card ${setSong.id === activeSheetSongId ? "active" : ""}" type="button" data-sheet-song-id="${setSong.id}">
+        <div>
+          <strong>${setSong.name}</strong>
+          <span>${setSong.status} / ${setSong.length}</span>
+        </div>
+        <small>${setSong.key} / ${setSong.tempo}</small>
+        <p>Chart ready</p>
+      </button>
+    `)
     .join("");
 
-  els.sheetsList.querySelectorAll("[data-sheet-id]").forEach((button) => {
+  els.sheetsList.querySelectorAll("[data-sheet-song-id]").forEach((button) => {
     button.addEventListener("click", async () => {
-      await sendCommand(`open sheet ${button.dataset.sheetId}`);
-      closeScreenViews();
+      activeSheetSongId = button.dataset.sheetSongId;
+      renderSheetsList();
     });
   });
 }
@@ -510,7 +621,11 @@ document.querySelectorAll("[data-set-command]").forEach((button) => {
 
 els.sessionViewButton.addEventListener("click", () => openScreenView(els.sessionView));
 els.setViewButton.addEventListener("click", () => openScreenView(els.setView));
-els.sheetsViewButton.addEventListener("click", () => openScreenView(els.sheetsView));
+els.sheetsViewButton.addEventListener("click", () => {
+  activeSheetSongId = state.session.song?.id || activeSheetSongId;
+  renderSheetsList();
+  openScreenView(els.sheetsView);
+});
 els.saveSessionNoteButton.addEventListener("click", () => {
   sendCommand(`set session note ${els.sessionNoteInput.value.trim()}`);
 });
@@ -578,6 +693,34 @@ els.addSetSongsButton.addEventListener("click", () => {
 els.editSetNameInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") els.saveSetTitleButton.click();
   if (event.key === "Escape") els.cancelEditSetButton.click();
+});
+els.sheetChartButton.addEventListener("click", () => {
+  sheetMode = "chart";
+  renderSheetsList();
+});
+els.sheetLyricsButton.addEventListener("click", () => {
+  sheetMode = "lyrics";
+  renderSheetsList();
+});
+els.sheetNotesButton.addEventListener("click", () => {
+  sheetMode = "notes";
+  renderSheetsList();
+});
+els.sheetSizeDownButton.addEventListener("click", () => {
+  sheetSize = Math.max(0.86, Number((sheetSize - 0.08).toFixed(2)));
+  renderSheetsList();
+});
+els.sheetSizeUpButton.addEventListener("click", () => {
+  sheetSize = Math.min(1.34, Number((sheetSize + 0.08).toFixed(2)));
+  renderSheetsList();
+});
+els.transposeDownButton.addEventListener("click", () => {
+  transposeSteps -= 1;
+  renderSheetsList();
+});
+els.transposeUpButton.addEventListener("click", () => {
+  transposeSteps += 1;
+  renderSheetsList();
 });
 els.closeSessionViewButton.addEventListener("click", closeScreenViews);
 els.closeSetViewButton.addEventListener("click", closeScreenViews);
