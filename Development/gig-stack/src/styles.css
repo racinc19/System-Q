@@ -489,6 +489,7 @@ h2 {
 
 .sheet-page {
   --sheet-scale: 1;
+  --flow-speed: 24s;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fffef8;
@@ -497,6 +498,26 @@ h2 {
   margin-bottom: 14px;
   min-height: 46vh;
   padding: calc(18px * var(--sheet-scale));
+  overflow: hidden;
+  position: relative;
+}
+
+.sheet-page.sync-flow::after {
+  animation: sheet-flow var(--flow-speed) linear infinite;
+  background: rgba(19, 113, 102, 0.16);
+  content: "";
+  height: 3px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translateX(-100%);
+}
+
+@keyframes sheet-flow {
+  to {
+    transform: translateX(100%);
+  }
 }
 
 .sheet-section {
@@ -560,6 +581,16 @@ h2 {
 
 .panel-head.compact {
   margin-bottom: 10px;
+}
+
+.sync-button {
+  min-height: 36px;
+}
+
+.sync-button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
 }
 
 .channel-grid {

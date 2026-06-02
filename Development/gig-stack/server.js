@@ -63,6 +63,7 @@ const state = {
     masterMuted: false,
     clickOn: false,
     sheetsOpen: false,
+    sheetSync: false,
     console: "Personal Console",
     consoleOpen: false,
     venueConsoleAssigned: true,
@@ -551,6 +552,11 @@ function runCommand(rawCommand) {
   } else if (command.includes("new") && command.includes("track")) {
     snapshotUndo("new track request");
     result = requestNewTrack(command);
+  } else if (command.includes("sheet sync") || command.includes("sync sheets") || command.includes("sync button")) {
+    snapshotUndo("sheet sync");
+    state.mix.sheetSync = command.includes("off") ? false : command.includes("on") ? true : !state.mix.sheetSync;
+    state.mix.sheetsOpen = state.mix.sheetSync ? true : state.mix.sheetsOpen;
+    result = `Sheet Sync ${state.mix.sheetSync ? "on" : "off"}.`;
   } else if (command.includes("open sheets") || command.includes("show sheets") || command.includes("sheets")) {
     snapshotUndo("open sheets");
     state.mix.sheetsOpen = true;

@@ -14,6 +14,7 @@ const fallbackState = {
     masterMuted: false,
     clickOn: false,
     sheetsOpen: false,
+    sheetSync: false,
     console: "Personal Console",
     consoleOpen: false,
     venueConsoleAssigned: false,
@@ -100,6 +101,7 @@ const els = {
   sheetSizeUpButton: document.querySelector("#sheetSizeUpButton"),
   transposeDownButton: document.querySelector("#transposeDownButton"),
   transposeUpButton: document.querySelector("#transposeUpButton"),
+  sheetSyncButton: document.querySelector("#sheetSyncButton"),
   saveBuiltSetButton: document.querySelector("#saveBuiltSetButton"),
   channelGrid: document.querySelector("#channelGrid"),
   masterFader: document.querySelector("#masterFader"),
@@ -201,6 +203,8 @@ function renderStatus() {
       : "Faders";
   els.masterFader.value = state.mix.masterLevel;
   els.masterMuteButton.classList.toggle("active", state.mix.masterMuted);
+  els.sheetSyncButton.classList.toggle("active", state.mix.sheetSync);
+  els.sheetSyncButton.textContent = state.mix.sheetSync ? "Sync On" : "Sync";
 }
 
 function channelStrip(item, extraClass = "") {
@@ -466,6 +470,7 @@ function renderSheetsList() {
   const songItem = activeSheetSong();
   const transposeLabel = transposeSteps === 0 ? "Original key" : `${transposeSteps > 0 ? "+" : ""}${transposeSteps} semitones`;
   const modeLabel = sheetMode[0].toUpperCase() + sheetMode.slice(1);
+  const tempo = Number(songItem?.tempo || 92);
 
   if (!songItem) {
     els.sheetSongTitle.textContent = "No Song";
@@ -481,8 +486,11 @@ function renderSheetsList() {
     <span>${songItem.tempo || "-"} BPM</span>
     <span>${transposeLabel}</span>
     <span>${modeLabel}</span>
+    <span>${state.mix.sheetSync ? "Sync On" : "Sync Off"}</span>
   `;
   els.sheetPage.style.setProperty("--sheet-scale", sheetSize);
+  els.sheetPage.style.setProperty("--flow-speed", `${Math.max(8, Math.round(2400 / tempo))}s`);
+  els.sheetPage.classList.toggle("sync-flow", state.mix.sheetSync);
   els.sheetChartButton.classList.toggle("active", sheetMode === "chart");
   els.sheetLyricsButton.classList.toggle("active", sheetMode === "lyrics");
   els.sheetNotesButton.classList.toggle("active", sheetMode === "notes");
@@ -628,6 +636,9 @@ els.sheetsViewButton.addEventListener("click", () => {
 });
 els.saveSessionNoteButton.addEventListener("click", () => {
   sendCommand(`set session note ${els.sessionNoteInput.value.trim()}`);
+});
+els.sheetSyncButton.addEventListener("click", () => {
+  sendCommand(`sheet sync ${state.mix.sheetSync ? "off" : "on"}`);
 });
 els.newSessionButton.addEventListener("click", () => {
   els.editSessionPanel.hidden = true;
