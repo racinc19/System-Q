@@ -66,12 +66,17 @@
           <button id="closeSessionViewButton" type="button">Done</button>
         </div>
         <div class="session-actions">
-          <label class="name-field" for="newSessionNameInput">
-            <span>Session Name</span>
-            <input id="newSessionNameInput" type="text" autocomplete="off" placeholder="New song or rehearsal" />
-          </label>
           <button id="newSessionButton" type="button">New Session</button>
-          <button type="button" data-session-command="open previous session">Open Previous</button>
+        </div>
+        <div id="newSessionPanel" class="inline-panel" hidden>
+          <label class="name-field" for="newSessionNameInput">
+            <span>Session Title</span>
+            <input id="newSessionNameInput" type="text" autocomplete="off" />
+          </label>
+          <div class="inline-actions">
+            <button id="createSessionButton" type="button">Create</button>
+            <button id="cancelNewSessionButton" type="button">Cancel</button>
+          </div>
         </div>
         <div id="sessionList" class="session-list"></div>
       </section>

@@ -48,7 +48,10 @@ const els = {
   setViewButton: document.querySelector("#setViewButton"),
   sheetsViewButton: document.querySelector("#sheetsViewButton"),
   newSessionButton: document.querySelector("#newSessionButton"),
+  newSessionPanel: document.querySelector("#newSessionPanel"),
   newSessionNameInput: document.querySelector("#newSessionNameInput"),
+  createSessionButton: document.querySelector("#createSessionButton"),
+  cancelNewSessionButton: document.querySelector("#cancelNewSessionButton"),
   buildSetViewButton: document.querySelector("#buildSetViewButton"),
   sessionView: document.querySelector("#sessionView"),
   setView: document.querySelector("#setView"),
@@ -349,11 +352,25 @@ document.querySelectorAll("[data-set-command]").forEach((button) => {
 els.sessionViewButton.addEventListener("click", () => openScreenView(els.sessionView));
 els.setViewButton.addEventListener("click", () => openScreenView(els.setView));
 els.sheetsViewButton.addEventListener("click", () => openScreenView(els.sheetsView));
-els.newSessionButton.addEventListener("click", async () => {
+els.newSessionButton.addEventListener("click", () => {
+  els.newSessionPanel.hidden = false;
+  els.newSessionNameInput.value = "";
+  els.newSessionNameInput.focus();
+});
+els.createSessionButton.addEventListener("click", async () => {
   const name = els.newSessionNameInput.value.trim();
   await sendCommand(`new session ${name}`);
   els.newSessionNameInput.value = "";
+  els.newSessionPanel.hidden = true;
   openScreenView(els.sessionView);
+});
+els.cancelNewSessionButton.addEventListener("click", () => {
+  els.newSessionNameInput.value = "";
+  els.newSessionPanel.hidden = true;
+});
+els.newSessionNameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") els.createSessionButton.click();
+  if (event.key === "Escape") els.cancelNewSessionButton.click();
 });
 els.buildSetViewButton.addEventListener("click", () => {
   selectedBuildSongIds.clear();

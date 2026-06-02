@@ -293,6 +293,32 @@ h2 {
   padding: 0 12px;
 }
 
+.inline-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcf9;
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px;
+}
+
+.inline-panel[hidden] {
+  display: none;
+}
+
+.inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.inline-actions button:first-child {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
 .session-list {
   display: grid;
   gap: 10px;
