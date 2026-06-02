@@ -77,19 +77,20 @@ const state = {
     id: "session-1",
     name: "Untitled Session",
     mixed: false,
+    notes: "Scratch pass ready.",
     takes: [
       { id: "take-1", name: "Scratch pass", status: "ready" },
     ],
-    songs: structuredClone(SESSION_SONGS["session-1"]),
+    song: structuredClone(SESSION_SONGS["session-1"][0]),
   },
   activeSetId: "set-friday",
   activeSheetId: "sheet-friday-chart",
   sessions: [
-    { id: "session-1", name: "Untitled Session", type: "Current", updated: "Now", songs: structuredClone(SESSION_SONGS["session-1"]), notes: "Scratch pass ready." },
-    { id: "session-friday", name: "Friday Full Band", type: "Recent", updated: "Yesterday", songs: structuredClone(SESSION_SONGS["session-friday"]), notes: "Drums, bass, guitar, vocal, acoustic." },
-    { id: "session-acoustic", name: "Acoustic Night", type: "Recent", updated: "May 31", songs: structuredClone(SESSION_SONGS["session-acoustic"]), notes: "Vocal, acoustic, room mic, click optional." },
-    { id: "session-writes", name: "Writing Room", type: "Recent", updated: "May 29", songs: structuredClone(SESSION_SONGS["session-writes"]), notes: "Guitar ideas and vocal roughs." },
-    { id: "session-rehearsal", name: "Sunday Rehearsal", type: "Archive", updated: "May 24", songs: structuredClone(SESSION_SONGS["session-rehearsal"]), notes: "Saved personal mixes and sheets." },
+    { id: "session-1", name: "Untitled Session", type: "Current", updated: "Now", song: structuredClone(SESSION_SONGS["session-1"][0]), notes: "Scratch pass ready." },
+    { id: "session-friday", name: "Friday Full Band", type: "Recent", updated: "Yesterday", song: structuredClone(SESSION_SONGS["session-friday"][1]), notes: "Drums, bass, guitar, vocal, acoustic." },
+    { id: "session-acoustic", name: "Acoustic Night", type: "Recent", updated: "May 31", song: structuredClone(SESSION_SONGS["session-acoustic"][1]), notes: "Vocal, acoustic, room mic, click optional." },
+    { id: "session-writes", name: "Writing Room", type: "Recent", updated: "May 29", song: structuredClone(SESSION_SONGS["session-writes"][0]), notes: "Guitar ideas and vocal roughs." },
+    { id: "session-rehearsal", name: "Sunday Rehearsal", type: "Archive", updated: "May 24", song: structuredClone(SESSION_SONGS["session-rehearsal"][2]), notes: "Saved personal mixes and sheets." },
   ],
   sets: [
     { id: "set-friday", name: "Friday Night Set", type: "Active", updated: "Today", songs: structuredClone(SESSION_SONGS["session-friday"]), notes: "Full band order with click and sheets ready." },
@@ -208,13 +209,15 @@ function resolveChannel(command) {
 }
 
 function createSession(name = "Untitled Session") {
+  const sessionSong = song(`song-${Date.now()}`, name, "-", 0, "new", "--");
   state.transport = "Stopped";
   state.session = {
     id: `session-${Date.now()}`,
     name,
     mixed: false,
+    notes: "",
     takes: [],
-    songs: [],
+    song: sessionSong,
   };
   state.channels.forEach((item) => {
     item.muted = false;
@@ -227,7 +230,7 @@ function createSession(name = "Untitled Session") {
   state.mix.assist.mode = "Listening";
   state.mix.assist.detail = "Ready to shape the personal mix without touching the house.";
   state.sessions = [
-    { id: state.session.id, name: state.session.name, type: "Current", updated: "Now", songs: [], notes: "New session." },
+    { id: state.session.id, name: state.session.name, type: "Current", updated: "Now", song: structuredClone(sessionSong), notes: "New session." },
     ...state.sessions.map((item) => ({ ...item, type: item.type === "Current" ? "Recent" : item.type })),
   ].slice(0, 8);
   return `New session opened. Venue kept the musician mix faders ready.`;
@@ -239,12 +242,13 @@ function openPreviousSession() {
     id: `session-${Date.now()}`,
     name: "Previous Session",
     mixed: false,
+    notes: "Opened from the previous saved song session.",
     takes: [
       { id: "take-prev-1", name: "Full band take 1", status: "ready" },
       { id: "take-prev-2", name: "Vocal fix", status: "ready" },
       { id: "take-prev-3", name: "Acoustic overdub", status: "ready" },
     ],
-    songs: structuredClone(SESSION_SONGS["session-rehearsal"]),
+    song: structuredClone(SESSION_SONGS["session-rehearsal"][0]),
   };
   return "Previous session opened. The same musician mix faders are ready.";
 }
@@ -257,11 +261,12 @@ function openSessionById(id) {
     id: saved.id,
     name: saved.name,
     mixed: false,
+    notes: saved.notes || "",
     takes: [
       { id: `take-${saved.id}-1`, name: "Band take 1", status: "ready" },
       { id: `take-${saved.id}-2`, name: "Vocal pass", status: "ready" },
     ],
-    songs: structuredClone(saved.songs || []),
+    song: structuredClone(saved.song || song(saved.id, saved.name, "-", 0, "ready", "--")),
   };
   state.sessions = [
     { ...saved, type: "Current", updated: "Now" },
@@ -295,10 +300,12 @@ function openSheetById(id) {
 
 function buildSetFromSession(songIds, name) {
   const requested = new Set(songIds.filter(Boolean));
-  const available = state.session.songs || [];
-  const selected = requested.size ? available.filter((item) => requested.has(item.id)) : available;
+  const available = state.sessions.map((session) => session.song || song(session.id, session.name, "-", 0, "ready", "--"));
+  const selected = requested.size
+    ? state.sessions.filter((session) => requested.has(session.id)).map((session) => session.song || song(session.id, session.name, "-", 0, "ready", "--"))
+    : available;
 
-  if (!selected.length) return "Pick at least one song from this session.";
+  if (!selected.length) return "Pick at least one session song.";
 
   const setName = String(name || "").trim() || `${state.session.name} Set`;
   const set = {
@@ -307,7 +314,7 @@ function buildSetFromSession(songIds, name) {
     type: "Active",
     updated: "Now",
     songs: structuredClone(selected),
-    notes: `Built from ${state.session.name}.`,
+    notes: "Built from selected sessions.",
   };
 
   state.activeSetId = set.id;
@@ -417,8 +424,17 @@ function runCommand(rawCommand) {
     snapshotUndo("name session");
     const name = rawCommand.replace(/name this session/i, "").trim() || "Untitled Session";
     state.session.name = name;
-    state.sessions.unshift({ id: state.session.id, name, type: "Current", updated: "Now", songs: state.session.songs || [], notes: "New session." });
+    state.session.song = { ...(state.session.song || song(state.session.id, name, "-", 0, "ready", "--")), name };
+    state.sessions.unshift({ id: state.session.id, name, type: "Current", updated: "Now", song: state.session.song, notes: state.session.notes || "New session." });
     result = `Session named ${name}.`;
+  } else if (command.startsWith("set session note ")) {
+    snapshotUndo("set session note");
+    const note = rawCommand.replace(/set session note/i, "").trim();
+    state.session.notes = note;
+    state.sessions = state.sessions.map((item) => (
+      item.id === state.session.id ? { ...item, notes: note || "No notes." } : item
+    ));
+    result = "Session note saved.";
   } else if (command.includes("record all") || command.includes("record everything")) {
     snapshotUndo("record all");
     result = recordAll();
@@ -485,7 +501,7 @@ function runCommand(rawCommand) {
       name: state.session.name,
       type: "Active",
       updated: "Now",
-      songs: structuredClone(state.session.songs || []),
+      songs: state.session.song ? [structuredClone(state.session.song)] : [],
       notes: "Built from the current session.",
     };
     state.activeSetId = set.id;

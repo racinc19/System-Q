@@ -26,7 +26,8 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
 }
 
@@ -129,6 +130,33 @@ h2 {
   align-items: flex-start;
   margin-bottom: 14px;
   padding: 16px;
+}
+
+.session-note-field {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+  max-width: 520px;
+}
+
+.session-note-field span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.session-note-field textarea {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-height: 58px;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+.small-action {
+  min-height: 36px;
+  margin-top: 8px;
 }
 
 .screen-note {

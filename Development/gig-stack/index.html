@@ -23,6 +23,11 @@
       <section class="session-bar" aria-label="Session controls">
         <div>
           <h2 id="sessionName">No session</h2>
+          <label class="session-note-field" for="sessionNoteInput">
+            <span>Session Notes</span>
+            <textarea id="sessionNoteInput" rows="2" autocomplete="off"></textarea>
+          </label>
+          <button id="saveSessionNoteButton" class="small-action" type="button">Add Note</button>
           <p id="venueNote" class="screen-note">Waiting for Venue.</p>
           <span id="venueStatus" class="screen-note">Venue offline</span>
           <span id="consoleStatus" class="screen-note">Console idle</span>

@@ -20,7 +20,7 @@ const fallbackState = {
     venueConsoleOpen: false,
     assist: { name: "Console Assist", mode: "Offline", detail: "Waiting for Venue." },
   },
-  session: { name: "No session", mixed: false, takes: [] },
+  session: { name: "No session", mixed: false, notes: "", takes: [] },
   activeSetId: "",
   activeSheetId: "",
   sessions: [],
@@ -39,6 +39,8 @@ const els = {
   transportStatus: document.querySelector("#transportStatus"),
   syncStatus: document.querySelector("#syncStatus"),
   sessionName: document.querySelector("#sessionName"),
+  sessionNoteInput: document.querySelector("#sessionNoteInput"),
+  saveSessionNoteButton: document.querySelector("#saveSessionNoteButton"),
   venueNote: document.querySelector("#venueNote"),
   mixName: document.querySelector("#mixName"),
   assistStatus: document.querySelector("#assistStatus"),
@@ -107,6 +109,9 @@ function renderStatus() {
   els.transportStatus.textContent = state.transport;
   els.syncStatus.textContent = state.connected ? "Synced" : "Local";
   els.sessionName.textContent = state.session.name;
+  if (document.activeElement !== els.sessionNoteInput) {
+    els.sessionNoteInput.value = state.session.notes || "";
+  }
   els.venueNote.textContent = state.venue.note;
   els.mixName.textContent = state.mix.name;
   els.assistStatus.textContent = state.mix.sheetsOpen ? "Sheets" : state.mix.assist.mode;
@@ -154,7 +159,7 @@ function renderSessionList() {
             <strong>${session.name}</strong>
             <span>${session.type} / ${session.updated}</span>
           </div>
-          <small>${songCount(session.songs)} songs</small>
+          <small>${session.song?.status || "song"}</small>
           <p>${session.notes}</p>
         </button>
       `,
@@ -227,12 +232,14 @@ function renderActiveSetSongs() {
 }
 
 function renderBuildSongList() {
-  const songs = state.session.songs || [];
-  els.buildSongList.innerHTML = songs.length
-    ? songs
+  const sessions = state.sessions || [];
+  els.buildSongList.innerHTML = sessions.length
+    ? sessions
       .map(
-        (songItem) => `
-          <button class="session-card song-card ${selectedBuildSongIds.has(songItem.id) ? "active" : ""}" type="button" data-build-song-id="${songItem.id}">
+        (session) => {
+          const songItem = session.song || { name: session.name, key: "-", tempo: 0, status: "ready", length: "--", sheets: true, click: false, mixSaved: false };
+          return `
+          <button class="session-card song-card ${selectedBuildSongIds.has(session.id) ? "active" : ""}" type="button" data-build-song-id="${session.id}">
             <div>
               <strong>${songItem.name}</strong>
               <span>${songItem.status} / ${songItem.length}</span>
@@ -240,10 +247,11 @@ function renderBuildSongList() {
             <small>${songItem.key} / ${songItem.tempo}</small>
             <p>Sheets ${songItem.sheets ? "ready" : "missing"} / Click ${songItem.click ? "on" : "off"} / Mix ${songItem.mixSaved ? "saved" : "rough"}</p>
           </button>
-        `,
+        `;
+        },
       )
       .join("")
-    : `<p class="empty-note">No songs in this session yet.</p>`;
+    : `<p class="empty-note">No sessions yet.</p>`;
 
   els.buildSongList.querySelectorAll("[data-build-song-id]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -352,6 +360,9 @@ document.querySelectorAll("[data-set-command]").forEach((button) => {
 els.sessionViewButton.addEventListener("click", () => openScreenView(els.sessionView));
 els.setViewButton.addEventListener("click", () => openScreenView(els.setView));
 els.sheetsViewButton.addEventListener("click", () => openScreenView(els.sheetsView));
+els.saveSessionNoteButton.addEventListener("click", () => {
+  sendCommand(`set session note ${els.sessionNoteInput.value.trim()}`);
+});
 els.newSessionButton.addEventListener("click", () => {
   els.newSessionPanel.hidden = false;
   els.newSessionNameInput.value = "";
@@ -374,7 +385,7 @@ els.newSessionNameInput.addEventListener("keydown", (event) => {
 });
 els.buildSetViewButton.addEventListener("click", () => {
   selectedBuildSongIds.clear();
-  (state.session.songs || []).forEach((songItem) => selectedBuildSongIds.add(songItem.id));
+  (state.sessions || []).forEach((session) => selectedBuildSongIds.add(session.id));
   els.buildSetNameInput.value = `${state.session.name} Set`;
   renderBuildSongList();
   openScreenView(els.buildSetView);
