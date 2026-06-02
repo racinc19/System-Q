@@ -293,16 +293,17 @@ function openSheetById(id) {
   return `${sheet.name} opened.`;
 }
 
-function buildSetFromSession(songIds) {
+function buildSetFromSession(songIds, name) {
   const requested = new Set(songIds.filter(Boolean));
   const available = state.session.songs || [];
   const selected = requested.size ? available.filter((item) => requested.has(item.id)) : available;
 
   if (!selected.length) return "Pick at least one song from this session.";
 
+  const setName = String(name || "").trim() || `${state.session.name} Set`;
   const set = {
     id: `set-${Date.now()}`,
-    name: `${state.session.name} Set`,
+    name: setName,
     type: "Active",
     updated: "Now",
     songs: structuredClone(selected),
@@ -404,8 +405,10 @@ function runCommand(rawCommand) {
     result = openSheetById(rawCommand.replace(/open sheet/i, "").trim());
   } else if (command.startsWith("build set ")) {
     snapshotUndo("build set");
-    const songIds = rawCommand.replace(/build set/i, "").trim().split(",").map((item) => item.trim());
-    result = buildSetFromSession(songIds);
+    const payload = rawCommand.replace(/build set/i, "").trim();
+    const [namePart, idsPart] = payload.includes("::") ? payload.split("::") : ["", payload];
+    const songIds = idsPart.split(",").map((item) => item.trim());
+    result = buildSetFromSession(songIds, namePart);
   } else if (command.includes("new session")) {
     snapshotUndo("new session");
     result = createSession();
@@ -481,7 +484,7 @@ function runCommand(rawCommand) {
       name: state.session.name,
       type: "Active",
       updated: "Now",
-      songs: Math.max(1, state.session.takes.length),
+      songs: structuredClone(state.session.songs || []),
       notes: "Built from the current session.",
     };
     state.activeSetId = set.id;

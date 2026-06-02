@@ -273,6 +273,26 @@ h2 {
   margin-bottom: 12px;
 }
 
+.name-field {
+  display: grid;
+  gap: 4px;
+  min-width: min(100%, 320px);
+}
+
+.name-field span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.name-field input {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
 .session-list {
   display: grid;
   gap: 10px;
@@ -317,6 +337,29 @@ h2 {
 .empty-note {
   color: var(--muted);
   margin: 0;
+}
+
+.set-song-list {
+  border-top: 1px solid var(--line);
+  margin-top: 14px;
+  padding-top: 14px;
+}
+
+.set-song-head {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.set-song-head small {
+  color: var(--muted);
+  font-weight: 850;
+}
+
+.compact-list {
+  gap: 8px;
 }
 
 .transport button:nth-child(3) {

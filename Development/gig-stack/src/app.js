@@ -58,7 +58,9 @@ const els = {
   closeSheetsViewButton: document.querySelector("#closeSheetsViewButton"),
   sessionList: document.querySelector("#sessionList"),
   setList: document.querySelector("#setList"),
+  activeSetSongs: document.querySelector("#activeSetSongs"),
   buildSongList: document.querySelector("#buildSongList"),
+  buildSetNameInput: document.querySelector("#buildSetNameInput"),
   sheetsList: document.querySelector("#sheetsList"),
   saveBuiltSetButton: document.querySelector("#saveBuiltSetButton"),
   channelGrid: document.querySelector("#channelGrid"),
@@ -181,9 +183,42 @@ function renderSetList() {
   els.setList.querySelectorAll("[data-set-id]").forEach((button) => {
     button.addEventListener("click", async () => {
       await sendCommand(`open set ${button.dataset.setId}`);
-      closeScreenViews();
+      openScreenView(els.setView);
     });
   });
+}
+
+function renderActiveSetSongs() {
+  const activeSet = state.sets.find((set) => set.id === state.activeSetId);
+  const songs = activeSet?.songs || [];
+
+  els.activeSetSongs.innerHTML = activeSet
+    ? `
+      <div class="set-song-head">
+        <div>
+          <p class="eyebrow">Songs</p>
+          <h3>${activeSet.name}</h3>
+        </div>
+        <small>${songCount(songs)} songs</small>
+      </div>
+      <div class="session-list compact-list">
+        ${
+          songs.length
+            ? songs.map((songItem) => `
+              <button class="session-card song-card" type="button" data-sheet-name="${songItem.name}">
+                <div>
+                  <strong>${songItem.name}</strong>
+                  <span>${songItem.status} / ${songItem.length}</span>
+                </div>
+                <small>${songItem.key} / ${songItem.tempo}</small>
+                <p>Sheets ${songItem.sheets ? "ready" : "missing"} / Click ${songItem.click ? "on" : "off"} / Mix ${songItem.mixSaved ? "saved" : "rough"}</p>
+              </button>
+            `).join("")
+            : `<p class="empty-note">No songs attached to this set.</p>`
+        }
+      </div>
+    `
+    : `<p class="empty-note">Choose a set to see its songs.</p>`;
 }
 
 function renderBuildSongList() {
@@ -271,6 +306,7 @@ function render() {
   renderStatus();
   renderSessionList();
   renderSetList();
+  renderActiveSetSongs();
   renderBuildSongList();
   renderSheetsList();
   renderChannels();
@@ -314,6 +350,7 @@ els.sheetsViewButton.addEventListener("click", () => openScreenView(els.sheetsVi
 els.buildSetViewButton.addEventListener("click", () => {
   selectedBuildSongIds.clear();
   (state.session.songs || []).forEach((songItem) => selectedBuildSongIds.add(songItem.id));
+  els.buildSetNameInput.value = `${state.session.name} Set`;
   renderBuildSongList();
   openScreenView(els.buildSetView);
 });
@@ -322,8 +359,13 @@ els.closeSetViewButton.addEventListener("click", closeScreenViews);
 els.closeBuildSetViewButton.addEventListener("click", closeScreenViews);
 els.closeSheetsViewButton.addEventListener("click", closeScreenViews);
 els.saveBuiltSetButton.addEventListener("click", async () => {
-  await sendCommand(`build set ${[...selectedBuildSongIds].join(",")}`);
-  closeScreenViews();
+  if (!selectedBuildSongIds.size) {
+    els.assistStatus.textContent = "Pick at least one song";
+    return;
+  }
+  const name = els.buildSetNameInput.value.trim() || `${state.session.name} Set`;
+  await sendCommand(`build set ${name} :: ${[...selectedBuildSongIds].join(",")}`);
+  openScreenView(els.setView);
 });
 
 els.masterFader.addEventListener("change", () => sendCommand(`set master level ${els.masterFader.value}`));

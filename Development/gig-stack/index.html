@@ -84,6 +84,7 @@
           <button id="buildSetViewButton" type="button">Build From Session</button>
         </div>
         <div id="setList" class="session-list"></div>
+        <div id="activeSetSongs" class="set-song-list"></div>
       </section>
 
       <section id="buildSetView" class="screen-view" hidden aria-label="Build set from session">
@@ -95,6 +96,10 @@
           <button id="closeBuildSetViewButton" type="button">Done</button>
         </div>
         <div class="session-actions">
+          <label class="name-field" for="buildSetNameInput">
+            <span>Set Name</span>
+            <input id="buildSetNameInput" type="text" autocomplete="off" />
+          </label>
           <button id="saveBuiltSetButton" type="button">Save Set</button>
         </div>
         <div id="buildSongList" class="session-list"></div>
