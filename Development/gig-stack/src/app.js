@@ -15,6 +15,8 @@ const fallbackState = {
     clickOn: false,
     sheetsOpen: false,
     sheetSync: false,
+    sheetSinks: [],
+    talkTarget: "",
     talk: { target: "", message: "", at: "" },
     console: "Personal Console",
     consoleOpen: false,
@@ -190,27 +192,6 @@ function sheetSections(songItem) {
   ];
 }
 
-function sheetModeForChannel(channelId) {
-  if (channelId === "vocal") return "lyrics";
-  if (channelId === "drums" || channelId === "kick" || channelId === "snare") return "notes";
-  return "chart";
-}
-
-function openChannelSheet(channelId) {
-  sheetMode = sheetModeForChannel(channelId);
-  activeSheetSongId = state.session.song?.id || activeSheetSongId;
-  renderSheetsList();
-  openScreenView(els.sheetsView);
-}
-
-function openTalkPanel(target) {
-  els.talkTargetLabel.textContent = target === "all" ? "Talk All" : `Talk to ${target}`;
-  els.talkPanel.dataset.talkTarget = target;
-  els.talkMessageInput.value = "";
-  els.talkPanel.hidden = false;
-  els.talkMessageInput.focus();
-}
-
 function renderStatus() {
   els.venueStatus.textContent = state.venue.connected ? "Venue connected" : "Venue offline";
   els.consoleStatus.textContent = state.venue.console || "Console idle";
@@ -222,7 +203,11 @@ function renderStatus() {
   }
   els.venueNote.textContent = state.venue.note;
   els.mixName.textContent = state.mix.name;
-  els.assistStatus.textContent = state.mix.sheetsOpen ? "Sheets" : state.mix.assist.mode;
+  els.assistStatus.textContent = state.mix.talkTarget
+    ? `Talk: ${state.mix.talkTarget}`
+    : state.mix.sheetsOpen
+      ? "Sheets"
+      : state.mix.assist.mode;
   els.clickStatus.textContent = state.mix.clickOn ? "Click On" : "Click Off";
   els.consoleState.textContent = state.mix.venueConsoleOpen
     ? "Venue Console"
@@ -233,12 +218,20 @@ function renderStatus() {
   els.masterMuteButton.classList.toggle("active", state.mix.masterMuted);
   els.sheetSyncButton.classList.toggle("active", state.mix.sheetSync);
   els.sheetSyncButton.textContent = state.mix.sheetSync ? "Sync On" : "Sync";
+  els.talkAllButton.classList.toggle("active", state.mix.talkTarget === "all");
+  els.commandInput.placeholder = state.mix.talkTarget
+    ? `Type to ${state.mix.talkTarget}`
+    : "Try: more vocal in my mix";
 }
 
 function channelStrip(item, extraClass = "") {
+  const sheetActive = (state.mix.sheetSinks || []).includes(item.id);
+  const talkActive = state.mix.talkTarget === item.name;
   const badges = [
     item.muted ? "Muted" : "",
     item.solo ? "Solo" : "",
+    sheetActive ? "Sheet" : "",
+    talkActive ? "Talk" : "",
   ].filter(Boolean);
 
   return `
@@ -254,8 +247,8 @@ function channelStrip(item, extraClass = "") {
       <div class="channel-actions">
         <button class="${item.muted ? "active mute-active" : ""}" type="button" data-command="${item.muted ? "unmute" : "mute"} ${item.name}">Mute</button>
         <button class="${item.solo ? "active solo-active" : ""}" type="button" data-command="${item.solo ? "unsolo" : "solo"} ${item.name}">Solo</button>
-        <button type="button" data-sheet-channel-id="${item.id}">Sheet</button>
-        <button type="button" data-talk-target="${item.name}">Talk</button>
+        <button class="${sheetActive ? "active sheet-active" : ""}" type="button" data-sheet-channel-id="${item.id}">Sheet</button>
+        <button class="${talkActive ? "active talk-active" : ""}" type="button" data-talk-target="${item.name}">Talk</button>
       </div>
       <div class="channel-badges">${badges.map((badge) => `<span>${badge}</span>`).join("")}</div>
     </article>
@@ -589,11 +582,11 @@ function renderChannels() {
   });
 
   els.channelGrid.querySelectorAll("[data-sheet-channel-id]").forEach((button) => {
-    button.addEventListener("click", () => openChannelSheet(button.dataset.sheetChannelId));
+    button.addEventListener("click", () => sendCommand(`toggle sheet sink ${button.dataset.sheetChannelId}`));
   });
 
   els.channelGrid.querySelectorAll("[data-talk-target]").forEach((button) => {
-    button.addEventListener("click", () => openTalkPanel(button.dataset.talkTarget));
+    button.addEventListener("click", () => sendCommand(`talk target ${button.dataset.talkTarget}`));
   });
 
   els.channelGrid.querySelectorAll("[data-level-id]").forEach((slider) => {
@@ -678,12 +671,11 @@ els.saveSessionNoteButton.addEventListener("click", () => {
 els.sheetSyncButton.addEventListener("click", () => {
   sendCommand(`sheet sync ${state.mix.sheetSync ? "off" : "on"}`);
 });
-els.talkAllButton.addEventListener("click", () => openTalkPanel("all"));
+els.talkAllButton.addEventListener("click", () => sendCommand("talk target all"));
 els.sendTalkButton.addEventListener("click", async () => {
-  const target = els.talkPanel.dataset.talkTarget || "all";
   const message = els.talkMessageInput.value.trim();
   if (!message) return;
-  await sendCommand(`talk ${target} :: ${message}`);
+  await sendCommand(`talk ${state.mix.talkTarget || "all"} :: ${message}`);
   els.talkMessageInput.value = "";
   els.talkPanel.hidden = true;
 });
@@ -806,13 +798,15 @@ els.masterFader.addEventListener("change", () => sendCommand(`set master level $
 els.masterMuteButton.addEventListener("click", () => sendCommand(`${state.mix.masterMuted ? "unmute" : "mute"} master`));
 els.voiceOrb.addEventListener("click", () => {
   els.voiceOrb.classList.add("listening");
-  sendCommand("console assist listen");
+  sendCommand(state.mix.talkTarget ? `talk ${state.mix.talkTarget} :: voice message` : "console assist listen");
   window.setTimeout(() => els.voiceOrb.classList.remove("listening"), 900);
 });
 
 els.commandForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  sendCommand(els.commandInput.value);
+  const value = els.commandInput.value.trim();
+  if (state.mix.talkTarget && value) sendCommand(`talk ${state.mix.talkTarget} :: ${value}`);
+  else sendCommand(value);
   els.commandInput.value = "";
 });
 

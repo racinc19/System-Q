@@ -600,6 +600,12 @@ h2 {
   justify-content: flex-end;
 }
 
+.mix-head-actions button.active {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: white;
+}
+
 .talk-panel {
   margin-bottom: 10px;
 }
@@ -727,6 +733,18 @@ h2 {
 .channel-actions button.solo-active {
   background: #15803d;
   border-color: #15803d;
+  color: white;
+}
+
+.channel-actions button.sheet-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.channel-actions button.talk-active {
+  background: var(--blue);
+  border-color: var(--blue);
   color: white;
 }
 

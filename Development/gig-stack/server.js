@@ -64,6 +64,8 @@ const state = {
     clickOn: false,
     sheetsOpen: false,
     sheetSync: false,
+    sheetSinks: [],
+    talkTarget: "",
     talk: {
       target: "",
       message: "",
@@ -562,10 +564,23 @@ function runCommand(rawCommand) {
     state.mix.sheetSync = command.includes("off") ? false : command.includes("on") ? true : !state.mix.sheetSync;
     state.mix.sheetsOpen = state.mix.sheetSync ? true : state.mix.sheetsOpen;
     result = `Sheet Sync ${state.mix.sheetSync ? "on" : "off"}.`;
+  } else if (command.startsWith("toggle sheet sink ")) {
+    snapshotUndo("sheet sink");
+    const sink = rawCommand.replace(/toggle sheet sink/i, "").trim();
+    const sinks = new Set(state.mix.sheetSinks || []);
+    if (sinks.has(sink)) sinks.delete(sink);
+    else sinks.add(sink);
+    state.mix.sheetSinks = [...sinks];
+    result = `${sink} ${sinks.has(sink) ? "following" : "not following"} sheets.`;
+  } else if (command.startsWith("talk target ")) {
+    snapshotUndo("talk target");
+    const target = rawCommand.replace(/talk target/i, "").trim();
+    state.mix.talkTarget = state.mix.talkTarget === target ? "" : target;
+    result = state.mix.talkTarget ? `Talk target ${state.mix.talkTarget}.` : "Talk target cleared.";
   } else if (command.startsWith("talk ")) {
     snapshotUndo("talk");
     const payload = rawCommand.replace(/talk/i, "").trim();
-    const [targetPart, messagePart] = payload.includes("::") ? payload.split("::") : ["all", payload];
+    const [targetPart, messagePart] = payload.includes("::") ? payload.split("::") : [state.mix.talkTarget || "all", payload];
     const target = targetPart.trim() || "all";
     const message = messagePart.trim();
     state.mix.talk = { target, message, at: new Date().toISOString() };
