@@ -1,8 +1,8 @@
 {
-  "name": "gig-stack",
+  "name": "gig-browser",
   "version": "0.1.0",
   "private": true,
-  "description": "GIG Stack browser prototype for musician voice control over Venue, Console, sessions, tracks, and sets.",
+  "description": "GIG browser prototype for musician voice control over Venue, Console, sessions, channels, takes, and sets.",
   "scripts": {
     "start": "node server.js"
   },

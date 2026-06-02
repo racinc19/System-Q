@@ -5,32 +5,43 @@ const path = require("node:path");
 const PORT = Number(process.env.PORT || 4180);
 const ROOT = __dirname;
 
+const DRUM_CHILDREN = [
+  channel("kick", "Kick", "input-1", 62),
+  channel("snare", "Snare", "input-2", 58),
+  channel("hat", "Hat", "input-3", 44),
+  channel("tom-1", "Tom 1", "input-4", 50),
+  channel("tom-2", "Tom 2", "input-5", 48),
+  channel("oh-l", "OH L", "input-6", 52),
+  channel("oh-r", "OH R", "input-7", 52),
+  channel("room", "Room", "input-8", 38),
+];
+
 const state = {
   transport: "Stopped",
   venue: {
     connected: true,
-    rig: "Akai EIE USB",
-    setupName: "",
-    inputs: [
-      { id: "input-1", label: "Input 1", level: 58, muted: false },
-      { id: "input-2", label: "Input 2", level: 54, muted: false },
-      { id: "input-3", label: "Input 3", level: 50, muted: false },
-      { id: "input-4", label: "Input 4", level: 50, muted: false },
-    ],
-    outputs: [
-      { id: "phones", label: "phones", level: 62, muted: false },
-      { id: "main", label: "main", level: 45, muted: false },
-    ],
+    rig: "Venue box",
+    console: "Console ready on Venue",
+    hardware: "Akai EIE USB attached",
+    note: "Inputs are recognized and routed on Venue. This browser is the simple musician remote.",
   },
   session: {
     id: "session-1",
     name: "Untitled Session",
     mixed: false,
-    selectedTrackId: "track-1",
-    tracks: [
-      makeTrack("track-1", "Vocal", "input-1", "ready"),
+    takes: [
+      { id: "take-1", name: "Scratch pass", status: "ready" },
     ],
   },
+  channels: [
+    { ...channel("drums", "Drums", "input 1-8", 64), type: "group", expanded: false, children: DRUM_CHILDREN },
+    channel("bass", "Bass", "input-9", 57),
+    channel("guitar", "Guitar", "input-10", 54),
+    channel("vocal", "Vocal", "input-11", 61),
+    channel("acoustic", "Acoustic", "input-12", 50),
+    { ...channel("main", "Main", "main output", 46), type: "output" },
+    { ...channel("phones", "Phones", "phones output", 62), type: "output" },
+  ],
   sets: [],
   log: [],
   undoStack: [],
@@ -38,21 +49,17 @@ const state = {
 
 const clients = new Set();
 
-function makeTrack(id, name, inputId, status = "ready", note = "") {
+function channel(id, name, source, level) {
   return {
     id,
     name,
-    inputId,
-    status,
-    note,
-    level: 60,
+    source,
+    level,
     muted: false,
     solo: false,
-    armed: false,
-    takes: 0,
+    armed: id !== "main" && id !== "phones",
     eq: { enabled: false, tone: "flat", lowCut: false },
     comp: { enabled: false, amount: "off" },
-    reverb: { enabled: false, amount: "dry" },
   };
 }
 
@@ -71,6 +78,7 @@ function snapshotUndo(label) {
     transport: state.transport,
     venue: structuredClone(state.venue),
     session: structuredClone(state.session),
+    channels: structuredClone(state.channels),
     sets: structuredClone(state.sets),
   });
   state.undoStack = state.undoStack.slice(-16);
@@ -82,112 +90,82 @@ function undoLast() {
   state.transport = previous.transport;
   state.venue = previous.venue;
   state.session = previous.session;
+  state.channels = previous.channels;
   state.sets = previous.sets;
   return `Undone: ${previous.label}.`;
 }
 
-function selectedTrack() {
-  return state.session.tracks.find((track) => track.id === state.session.selectedTrackId) || state.session.tracks[0] || null;
+function allChannels() {
+  return state.channels.flatMap((item) => [item, ...(item.children || [])]);
 }
 
-function wordToNumber(value) {
-  const words = { one: 1, two: 2, three: 3, four: 4 };
-  return words[value] || Number(value);
-}
+function resolveChannel(command) {
+  const normalized = command.replace(/input[-\s]*(\d+)/g, "input-$1");
+  const byName = allChannels().find((item) => normalized.includes(item.name.toLowerCase()));
+  if (byName) return byName;
 
-function resolveInput(command) {
-  const match = command.match(/\binput[-\s]*(1|2|3|4|one|two|three|four)\b/);
-  if (!match) return null;
-  const number = wordToNumber(match[1]);
-  return state.venue.inputs.find((input) => input.id === `input-${number}`) || null;
-}
-
-function resolveTrack(command) {
-  const current = selectedTrack();
-  if (command.includes("this track") || command.includes("selected track") || command.includes(" it") || command.includes("this ")) {
-    return current;
+  const inputMatch = normalized.match(/\binput-(\d+)\b/);
+  if (inputMatch) {
+    return allChannels().find((item) => item.source === `input-${inputMatch[1]}`) || null;
   }
-  const byName = state.session.tracks.find((track) => command.includes(track.name.toLowerCase()));
-  return byName || current;
+
+  if (normalized.includes("this") || normalized.includes("selected") || normalized.includes("it")) {
+    return state.channels.find((item) => item.id === "vocal") || state.channels[0];
+  }
+  return null;
 }
 
 function createSession(name = "Untitled Session") {
+  state.transport = "Stopped";
   state.session = {
     id: `session-${Date.now()}`,
     name,
     mixed: false,
-    selectedTrackId: "",
-    tracks: [],
+    takes: [],
   };
-  return `New session opened: ${state.session.name}.`;
-}
-
-function addTrack(name = "Track", inputId = "input-1", status = "ready", note = "") {
-  const id = `track-${Date.now()}-${state.session.tracks.length + 1}`;
-  const track = makeTrack(id, name, inputId, status, note);
-  state.session.tracks.push(track);
-  state.session.selectedTrackId = id;
-  return status === "waiting"
-    ? `${name} track created and waiting for an input.`
-    : `${name} track created on ${inputId}.`;
+  state.channels.forEach((item) => {
+    item.muted = false;
+    item.solo = false;
+    item.armed = item.type !== "output";
+    item.level = item.id === "main" ? 46 : item.id === "phones" ? 62 : item.level;
+  });
+  return `New session opened. Venue kept the recognized channels ready.`;
 }
 
 function openPreviousSession() {
+  state.transport = "Stopped";
   state.session = {
     id: `session-${Date.now()}`,
     name: "Previous Session",
     mixed: false,
-    selectedTrackId: "track-prev-1",
-    tracks: [
-      makeTrack("track-prev-1", "Drums", "input-1", "ready", "Submixed drums on the current four-input rig."),
-      makeTrack("track-prev-2", "Bass", "input-2"),
-      makeTrack("track-prev-3", "Guitar", "input-3"),
-      makeTrack("track-prev-4", "Vocal", "input-4"),
-      makeTrack("track-prev-5", "Acoustic Guitar", "waiting", "waiting", "Needs another input or an overdub pass on the Akai EIE."),
+    takes: [
+      { id: "take-prev-1", name: "Full band take 1", status: "ready" },
+      { id: "take-prev-2", name: "Vocal fix", status: "ready" },
+      { id: "take-prev-3", name: "Acoustic overdub", status: "ready" },
     ],
   };
-  return "Previous session opened with the saved band tracks.";
+  return "Previous session opened. The same Venue mix channels are ready.";
 }
 
-function setupBandTracks() {
-  state.session.tracks = [
-    makeTrack(`track-${Date.now()}-drums`, "Drums", "input-1", "ready", "Submixed drums on Akai input 1."),
-    makeTrack(`track-${Date.now()}-bass`, "Bass", "input-2"),
-    makeTrack(`track-${Date.now()}-guitar`, "Guitar", "input-3"),
-    makeTrack(`track-${Date.now()}-vocal`, "Vocal", "input-4"),
-    makeTrack(
-      `track-${Date.now()}-acoustic`,
-      "Acoustic Guitar",
-      "waiting",
-      "waiting",
-      "Akai EIE has four inputs. Plug acoustic into an open input later or overdub it after the first pass.",
-    ),
-  ];
-  state.session.selectedTrackId = state.session.tracks[0].id;
-  return "Band tracks are ready: drums, bass, guitar, and vocal are on inputs 1-4; acoustic guitar is waiting for an input or overdub.";
-}
-
-function recordAllReadyTracks() {
-  const ready = state.session.tracks.filter((track) => track.status !== "waiting" && track.inputId !== "waiting");
-  for (const track of ready) {
-    track.armed = true;
-    track.takes += 1;
-  }
+function recordAll() {
+  const armed = allChannels().filter((item) => item.armed && item.type !== "output" && !item.children);
   state.transport = "Recording";
-  const waiting = state.session.tracks.filter((track) => track.status === "waiting").map((track) => track.name);
-  return waiting.length
-    ? `Recording ${ready.length} ready tracks. ${waiting.join(", ")} is waiting for an input or overdub.`
-    : `Recording all ${ready.length} tracks.`;
+  state.session.takes.unshift({
+    id: `take-${Date.now()}`,
+    name: `Band take ${state.session.takes.length + 1}`,
+    status: `recording ${armed.length} channels`,
+  });
+  return `Recording ${armed.length} Venue channels.`;
 }
 
-function setInputLevel(input, amount) {
-  input.level = clamp(input.level + amount);
-  return `${input.label} is ${amount > 0 ? "up" : "down"} ${Math.abs(amount)} points.`;
+function setChannelLevel(item, amount) {
+  item.level = clamp(item.level + amount);
+  return `${item.name} is ${amount > 0 ? "up" : "down"} ${Math.abs(amount)} points.`;
 }
 
-function setTrackLevel(track, amount) {
-  track.level = clamp(track.level + amount);
-  return `${track.name} is ${amount > 0 ? "up" : "down"} ${Math.abs(amount)} points.`;
+function setChannelLevelExact(item, level) {
+  item.level = clamp(level);
+  return `${item.name} level set to ${item.level}.`;
 }
 
 function runCommand(rawCommand) {
@@ -197,7 +175,7 @@ function runCommand(rawCommand) {
   let result = "Command not recognized yet.";
   let changed = true;
 
-  if (command === "undo" || command.includes("undo")) {
+  if (command.includes("undo")) {
     changed = false;
     result = undoLast();
   } else if (command.includes("open previous")) {
@@ -206,69 +184,14 @@ function runCommand(rawCommand) {
   } else if (command.includes("new session")) {
     snapshotUndo("new session");
     result = createSession();
-  } else if (command.includes("recognize") && command.includes("input")) {
-    changed = false;
-    result = "Venue recognizes Akai EIE inputs input-1 through input-4, plus phones and main outputs.";
   } else if (command.startsWith("name this session")) {
     snapshotUndo("name session");
     const name = rawCommand.replace(/name this session/i, "").trim() || "Untitled Session";
     state.session.name = name;
     result = `Session named ${name}.`;
-  } else if (command.includes("start akai") || command.includes("start eie")) {
-    snapshotUndo("start akai");
-    state.venue.connected = true;
-    result = "Venue is ready with Akai EIE USB: input-1 through input-4, phones, and main.";
-  } else if (command.includes("save this setup") || command.includes("save setup")) {
-    snapshotUndo("save setup");
-    state.venue.setupName = `Akai EIE setup ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
-    result = `Saved setup: ${state.venue.setupName}.`;
-  } else if (
-    command.includes("setup band") ||
-    command.includes("set up band") ||
-    command.includes("band tracks") ||
-    command.includes("drums bass guitar vocal") ||
-    command.includes("drums, bass, guitar")
-  ) {
-    snapshotUndo("setup band tracks");
-    result = setupBandTracks();
-  } else if (command.includes("create") || command.includes("add track") || command.includes("new track")) {
-    snapshotUndo("add track");
-    const input = resolveInput(command) || state.venue.inputs[0];
-    let name = "Track";
-    if (command.includes("acoustic")) name = "Acoustic Guitar";
-    else if (command.includes("vocal")) name = "Vocal";
-    else if (command.includes("guitar")) name = "Guitar";
-    else if (command.includes("bass")) name = "Bass";
-    else if (command.includes("drum")) name = "Drums";
-    else if (command.includes("keys")) name = "Keys";
-    result = addTrack(name, input.id);
-  } else if (command.startsWith("select track-")) {
-    snapshotUndo("select track");
-    const id = command.replace("select ", "").trim();
-    if (state.session.tracks.some((track) => track.id === id)) {
-      state.session.selectedTrackId = id;
-      result = `Selected ${selectedTrack().name}.`;
-    } else {
-      changed = false;
-      result = "Track not found.";
-    }
-  } else if (command.includes("record all")) {
-    snapshotUndo("record all tracks");
-    result = recordAllReadyTracks();
-  } else if (command.includes("record")) {
-    snapshotUndo("record track");
-    const track = resolveTrack(command);
-    if (track) {
-      if (track.status === "waiting" || track.inputId === "waiting") {
-        changed = false;
-        result = `${track.name} is waiting for an input before recording.`;
-      } else {
-      track.armed = true;
-      track.takes += 1;
-      state.transport = "Recording";
-      result = `Recording ${track.name}, take ${track.takes}.`;
-      }
-    }
+  } else if (command.includes("record all") || command.includes("record everything")) {
+    snapshotUndo("record all");
+    result = recordAll();
   } else if (command.includes("play")) {
     snapshotUndo("play");
     state.transport = "Playing";
@@ -277,76 +200,58 @@ function runCommand(rawCommand) {
     snapshotUndo("stop");
     state.transport = "Stopped";
     result = "Stopped.";
-  } else if (resolveInput(command) && (command.includes("mute") || command.includes("unmute"))) {
-    snapshotUndo("input mute");
-    const input = resolveInput(command);
-    input.muted = !command.includes("unmute");
-    result = `${input.label} ${input.muted ? "muted" : "unmuted"}.`;
-  } else if (resolveInput(command) && (command.includes("louder") || command.includes("up") || command.includes("more"))) {
-    snapshotUndo("input louder");
-    result = setInputLevel(resolveInput(command), 2);
-  } else if (resolveInput(command) && (command.includes("quieter") || command.includes("down") || command.includes("less") || command.includes("lower"))) {
-    snapshotUndo("input quieter");
-    result = setInputLevel(resolveInput(command), -2);
-  } else if (command.includes("set this track level")) {
-    snapshotUndo("track level");
-    const track = selectedTrack();
-    const level = Number(command.match(/\d+/)?.[0] || track.level);
-    track.level = clamp(level);
-    result = `${track.name} level set to ${track.level}.`;
-  } else if (command.includes("mute this track") || command.includes("mute track")) {
-    snapshotUndo("mute track");
-    const track = resolveTrack(command);
-    track.muted = true;
-    result = `${track.name} muted.`;
-  } else if (command.includes("unmute this track") || command.includes("unmute track")) {
-    snapshotUndo("unmute track");
-    const track = resolveTrack(command);
-    track.muted = false;
-    result = `${track.name} unmuted.`;
-  } else if (command.includes("solo")) {
-    snapshotUndo("solo track");
-    const track = resolveTrack(command);
-    track.solo = !command.includes("unsolo");
-    result = `${track.name} ${track.solo ? "soloed" : "unsoloed"}.`;
-  } else if (command.includes("arm")) {
-    snapshotUndo("arm track");
-    const track = resolveTrack(command);
-    track.armed = !track.armed;
-    result = `${track.name} ${track.armed ? "armed" : "disarmed"}.`;
-  } else if (command.includes("louder") || command.includes("turn this up") || command.includes("make this up")) {
-    snapshotUndo("track louder");
-    result = setTrackLevel(resolveTrack(command), 2);
-  } else if (command.includes("quieter") || command.includes("turn this down") || command.includes("make this down")) {
-    snapshotUndo("track quieter");
-    result = setTrackLevel(resolveTrack(command), -2);
-  } else if (command.includes("eq") || command.includes("brighter") || command.includes("low end") || command.includes("mud")) {
-    snapshotUndo("eq track");
-    const track = resolveTrack(command);
-    track.eq.enabled = true;
-    if (command.includes("bright")) track.eq.tone = "brighter";
-    if (command.includes("mud") || command.includes("low end") || command.includes("low cut")) track.eq.lowCut = true;
-    result = `EQ updated on ${track.name}.`;
-  } else if (command.includes("compress")) {
-    snapshotUndo("compress track");
-    const track = resolveTrack(command);
-    track.comp.enabled = true;
-    track.comp.amount = command.includes("heavy") ? "heavy" : "medium";
-    result = `Compression set on ${track.name}.`;
-  } else if (command.includes("reverb")) {
-    snapshotUndo("reverb track");
-    const track = resolveTrack(command);
-    track.reverb.enabled = true;
-    track.reverb.amount = command.includes("little") ? "small" : "room";
-    result = `Reverb added to ${track.name}.`;
+  } else if (command.includes("save this mix") || command.includes("save this setup") || command.includes("save setup")) {
+    snapshotUndo("save mix");
+    result = "Saved the current Venue mix for this session.";
   } else if (command.includes("move") && command.includes("set")) {
     snapshotUndo("move to set");
     state.session.mixed = true;
-    const setName = state.session.name.replace(/session/i, "Set");
-    state.sets.unshift({ id: `set-${Date.now()}`, name: setName, tracks: state.session.tracks.length });
+    state.sets.unshift({ id: `set-${Date.now()}`, name: state.session.name, takes: state.session.takes.length });
     result = `${state.session.name} moved to set.`;
+  } else if (command.includes("open drums") || command.includes("show drums") || command.includes("expand drums")) {
+    snapshotUndo("open drums");
+    state.channels.find((item) => item.id === "drums").expanded = true;
+    result = "Drum channels are open.";
+  } else if (command.includes("close drums") || command.includes("hide drums")) {
+    snapshotUndo("close drums");
+    state.channels.find((item) => item.id === "drums").expanded = false;
+    result = "Drum channels are folded back to one fader.";
   } else {
-    changed = false;
+    const item = resolveChannel(command);
+    if (!item) {
+      changed = false;
+    } else if (command.includes("level")) {
+      snapshotUndo("channel level");
+      const level = Number(command.match(/\d+/)?.[0] || item.level);
+      result = setChannelLevelExact(item, level);
+    } else if (command.includes("mute") || command.includes("unmute")) {
+      snapshotUndo("channel mute");
+      item.muted = !command.includes("unmute");
+      result = `${item.name} ${item.muted ? "muted" : "unmuted"}.`;
+    } else if (command.includes("solo") || command.includes("unsolo")) {
+      snapshotUndo("channel solo");
+      item.solo = !command.includes("unsolo");
+      result = `${item.name} ${item.solo ? "soloed" : "unsoloed"}.`;
+    } else if (command.includes("louder") || command.includes("turn up") || command.includes("up") || command.includes("more")) {
+      snapshotUndo("channel louder");
+      result = setChannelLevel(item, 2);
+    } else if (command.includes("quieter") || command.includes("turn down") || command.includes("down") || command.includes("less") || command.includes("lower")) {
+      snapshotUndo("channel quieter");
+      result = setChannelLevel(item, -2);
+    } else if (command.includes("compress")) {
+      snapshotUndo("compress channel");
+      item.comp.enabled = true;
+      item.comp.amount = command.includes("heavy") ? "heavy" : "medium";
+      result = `Compression set on ${item.name}.`;
+    } else if (command.includes("eq") || command.includes("bright") || command.includes("low end") || command.includes("mud")) {
+      snapshotUndo("eq channel");
+      item.eq.enabled = true;
+      if (command.includes("bright")) item.eq.tone = "brighter";
+      if (command.includes("low") || command.includes("mud")) item.eq.lowCut = true;
+      result = `EQ updated on ${item.name}.`;
+    } else {
+      changed = false;
+    }
   }
 
   addLog(rawCommand, result);
@@ -359,6 +264,7 @@ function publicState() {
     transport: state.transport,
     venue: state.venue,
     session: state.session,
+    channels: state.channels,
     sets: state.sets,
     log: state.log,
   };
@@ -461,5 +367,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`GIG Stack listening at http://localhost:${PORT}`);
+  console.log(`GIG listening at http://localhost:${PORT}`);
 });

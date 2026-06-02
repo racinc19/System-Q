@@ -3,125 +3,59 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>GIG Stack</title>
+    <title>GIG</title>
     <link rel="stylesheet" href="src/styles.css" />
   </head>
   <body>
     <main class="app-shell">
-      <section class="topbar" aria-label="GIG Stack header">
+      <section class="topbar" aria-label="GIG header">
         <div>
-          <p class="eyebrow">GIG</p>
-          <h1>Stack</h1>
+          <p class="eyebrow">Musician remote</p>
+          <h1>GIG</h1>
         </div>
         <div class="status-strip" aria-label="System status">
           <span id="venueStatus">Venue offline</span>
           <span id="consoleStatus">Console idle</span>
           <span id="transportStatus">Stopped</span>
+          <span id="syncStatus">Local</span>
         </div>
       </section>
 
-      <section class="workspace" aria-label="GIG Stack workspace">
-        <aside class="sidebar" aria-label="Sessions and sets">
+      <section class="session-bar" aria-label="Session controls">
+        <div>
+          <p class="eyebrow">Session</p>
+          <h2 id="sessionName">No session</h2>
+          <p id="venueNote">Waiting for Venue.</p>
+        </div>
+        <div class="transport">
+          <button type="button" data-command="new session">New session</button>
+          <button type="button" data-command="open previous session">Open previous</button>
+          <button type="button" data-command="record all">Record all</button>
+          <button type="button" data-command="play">Play</button>
+          <button type="button" data-command="stop">Stop</button>
+          <button type="button" data-command="save this mix">Save mix</button>
+          <button type="button" data-command="move this session to set">To set</button>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="GIG workspace">
+        <section class="mixer-panel" aria-label="Touch mixer">
           <div class="panel-head">
             <div>
-              <p class="eyebrow">Session</p>
-              <h2 id="sessionName">No session</h2>
-            </div>
-            <button id="newSessionButton" type="button">New</button>
-          </div>
-
-          <div class="flow-card">
-            <span>Workflow</span>
-            <strong>Session -> Tracks -> Set</strong>
-          </div>
-
-          <div class="panel-head compact">
-            <h3>Band Arrival</h3>
-          </div>
-          <div id="bandPlan" class="band-plan"></div>
-
-          <div class="panel-head compact">
-            <h3>Tracks</h3>
-            <button id="addTrackButton" type="button">Add</button>
-          </div>
-          <div id="trackList" class="track-list"></div>
-
-          <div class="panel-head compact sets-head">
-            <h3>Sets</h3>
-            <button id="moveToSetButton" type="button">Move</button>
-          </div>
-          <div id="setList" class="set-list"></div>
-        </aside>
-
-        <section class="main-panel" aria-label="Selected track controls">
-          <div class="panel-head">
-            <div>
-              <p class="eyebrow">Console Control</p>
-              <h2 id="selectedTrackTitle">No track selected</h2>
-            </div>
-            <div class="transport">
-              <button id="recordButton" type="button">Record</button>
-              <button id="playButton" type="button">Play</button>
-              <button id="stopButton" type="button">Stop</button>
+              <p class="eyebrow">Mix</p>
+              <h2>Channels</h2>
             </div>
           </div>
-
-          <section class="venue-panel" aria-label="Venue rig">
-            <div class="panel-head compact">
-              <div>
-                <p class="eyebrow">Venue</p>
-                <h2>Akai EIE USB</h2>
-              </div>
-              <div class="rig-actions">
-                <button type="button" data-command="start akai eie">Start Akai</button>
-                <button type="button" data-command="save this setup">Save Setup</button>
-              </div>
-            </div>
-            <div class="rig-status">
-              <span id="akaiStatus">Akai idle</span>
-              <span id="setupStatus">No saved setup</span>
-              <span id="outputsStatus">phones 62 / main 45</span>
-            </div>
-            <div id="inputSummary" class="input-summary" aria-label="Recognized inputs"></div>
-            <div id="akaiInputs" class="akai-inputs" aria-label="Akai EIE inputs"></div>
-          </section>
-
-          <section class="track-editor" aria-label="Track editor">
-            <div class="track-meter">
-              <label>
-                <span>Level</span>
-                <input id="trackLevel" type="range" min="0" max="100" value="60" />
-                <output id="trackLevelOutput">60</output>
-              </label>
-            </div>
-
-            <div class="track-buttons">
-              <button id="muteTrackButton" type="button">Mute</button>
-              <button id="soloTrackButton" type="button">Solo</button>
-              <button id="armTrackButton" type="button">Arm</button>
-            </div>
-
-            <div class="stage-grid" aria-label="Simple Console stages">
-              <button type="button" data-command="show preamp">PRE</button>
-              <button type="button" data-command="add eq">EQ</button>
-              <button type="button" data-command="make it brighter">Bright</button>
-              <button type="button" data-command="cut the low end">Low Cut</button>
-              <button type="button" data-command="compress this track">Compress</button>
-              <button type="button" data-command="add reverb">Reverb</button>
-            </div>
-
-            <div id="trackDetail" class="track-detail"></div>
-          </section>
+          <div id="channelGrid" class="channel-grid"></div>
         </section>
 
-        <aside class="stack-panel" aria-label="Musician Stack voice interface">
-          <div class="stack-frame">
+        <aside class="side-panel" aria-label="Takes sets and voice commands">
+          <section class="command-panel" aria-label="Voice command surface">
             <div class="panel-head compact">
               <div>
-                <p class="eyebrow">Musician Interface</p>
-                <h2>Stack</h2>
+                <p class="eyebrow">Say it or tap it</p>
+                <h2>Control</h2>
               </div>
-              <span id="stackSync">Local</span>
             </div>
 
             <form id="commandForm" class="command-form">
@@ -129,24 +63,37 @@
                 id="commandInput"
                 type="text"
                 autocomplete="off"
-                placeholder="Try: create vocal track on input 1"
+                placeholder="Try: make vocal louder"
                 aria-label="Command"
               />
               <button type="submit">Send</button>
             </form>
 
             <div class="quick-commands" aria-label="Quick commands">
-              <button type="button" data-command="new session">New session</button>
-              <button type="button" data-command="open previous session">Open previous</button>
-              <button type="button" data-command="setup band tracks">Setup band</button>
-              <button type="button" data-command="record all tracks">Record all</button>
-              <button type="button" data-command="make this louder">Louder</button>
-              <button type="button" data-command="recognize inputs">Inputs</button>
-              <button type="button" data-command="move this session to set">To set</button>
+              <button type="button" data-command="open drums">Open drums</button>
+              <button type="button" data-command="mute guitar">Mute guitar</button>
+              <button type="button" data-command="make vocal louder">Vocal up</button>
+              <button type="button" data-command="compress bass">Bass comp</button>
+              <button type="button" data-command="brighten acoustic">Bright acoustic</button>
+              <button type="button" data-command="turn drums down">Drums down</button>
             </div>
 
             <ol id="commandLog" class="command-log" aria-label="Command log"></ol>
-          </div>
+          </section>
+
+          <section class="list-panel" aria-label="Takes">
+            <div class="panel-head compact">
+              <h2>Takes</h2>
+            </div>
+            <div id="takesList" class="stack-list"></div>
+          </section>
+
+          <section class="list-panel" aria-label="Sets">
+            <div class="panel-head compact">
+              <h2>Sets</h2>
+            </div>
+            <div id="setList" class="stack-list"></div>
+          </section>
         </aside>
       </section>
     </main>

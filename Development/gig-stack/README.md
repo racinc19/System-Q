@@ -1,15 +1,16 @@
-# GIG Stack
+# GIG
 
-Browser prototype for the musician-facing Stack interface inside GIG.
+Browser prototype for the musician-facing GIG control surface.
 
 ## Naming
 
 - GIG: the whole musician environment.
-- Stack: the musician phone, iPad, or browser interface.
-- Venue: the brain/host rig that runs the work and connects to Cube, Racks, Akai EIE, outputs, and future live playback.
-- Console: the deeper control model and software engine.
+- Venue: the brain/host rig that runs the work, owns hardware input recognition, and connects to Cube, Racks, Akai EIE, outputs, and future live playback.
+- Console: the deeper control model and software engine running on the Venue computer for editing, troubleshooting, and full control.
+- GIG browser: the dead-simple musician phone, iPad, or browser remote.
 - Session: the active project.
-- Track: an audio lane inside a session.
+- Channel: a touchable mix fader controlled by Venue/Console.
+- Take: a recorded pass inside a session.
 - Set: a mixed/ready session moved into playlist/live-use form.
 
 ## Run locally
@@ -28,29 +29,28 @@ http://localhost:4180
 
 ## Current prototype flow
 
-- Open a new session.
-- Add tracks and assign Akai EIE inputs.
-- Record, play, stop, mute, solo, arm, and adjust a selected track.
-- Apply simple musician-language Console controls such as EQ, low cut, compression, and reverb.
-- Save the Akai EIE setup.
-- Move the mixed session to a set.
+- Open a new or previous session.
+- Let Venue own all recognized inputs and routing.
+- Mix touch faders for Drums, Bass, Guitar, Vocal, Acoustic, Main, and Phones.
+- Open Drums into Kick, Snare, Hat, Tom 1, Tom 2, OH L, OH R, and Room.
+- Record all armed channels into takes.
+- Apply simple musician-language Console controls such as mute, solo, EQ, compression, and level changes.
+- Save the mix and move the mixed session to a set.
 
 ## Command examples
 
 - `new session`
-- `name this session Friday Demo`
-- `create vocal track on input 1`
-- `create guitar track on input 2`
-- `record this track`
-- `make this louder`
-- `mute input 2`
-- `compress this track`
-- `make it brighter`
-- `cut the low end`
-- `add reverb`
-- `save this setup`
+- `open previous session`
+- `record all`
+- `open drums`
+- `make vocal louder`
+- `mute guitar`
+- `turn drums down`
+- `compress bass`
+- `brighten acoustic`
+- `save this mix`
 - `move this session to set`
 
 ## Next integration target
 
-Connect this Stack API to the existing System Q Console Python model so browser commands update real `ConsoleEngine` and `ChannelState` fields instead of prototype state.
+Connect this GIG browser API to the existing System Q Console Python model on Venue so browser commands update real `ConsoleEngine` and `ChannelState` fields instead of prototype state.
