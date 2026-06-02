@@ -28,11 +28,7 @@
           <span id="consoleStatus" class="screen-note">Console idle</span>
         </div>
         <div class="toolbar">
-          <details class="menu">
-            <summary>Session</summary>
-            <button type="button" data-command="new session">New</button>
-            <button type="button" data-command="open previous session">Previous</button>
-          </details>
+          <button id="sessionViewButton" type="button">Session</button>
           <button type="button" data-command="move this session to set">Set</button>
           <button type="button" data-command="open sheets">Sheets</button>
           <button type="button" data-command="click">Click</button>
@@ -59,6 +55,21 @@
           <button type="button" data-command="open my console">Console</button>
           <button type="button" data-command="open venue console">Venue Console</button>
         </div>
+      </section>
+
+      <section id="sessionView" class="screen-view" hidden aria-label="Session browser">
+        <div class="screen-head">
+          <div>
+            <p class="eyebrow">Session</p>
+            <h2>Choose Session</h2>
+          </div>
+          <button id="closeSessionViewButton" type="button">Done</button>
+        </div>
+        <div class="session-actions">
+          <button type="button" data-session-command="new session">New Session</button>
+          <button type="button" data-session-command="open previous session">Open Previous</button>
+        </div>
+        <div id="sessionList" class="session-list"></div>
       </section>
 
       <section class="workspace" aria-label="GIG workspace">

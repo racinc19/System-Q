@@ -21,6 +21,7 @@ const fallbackState = {
     assist: { name: "Console Assist", mode: "Offline", detail: "Waiting for Venue." },
   },
   session: { name: "No session", mixed: false, takes: [] },
+  sessions: [],
   channels: [],
   sets: [],
   log: [],
@@ -39,6 +40,10 @@ const els = {
   assistStatus: document.querySelector("#assistStatus"),
   consoleState: document.querySelector("#consoleState"),
   clickStatus: document.querySelector("#clickStatus"),
+  sessionViewButton: document.querySelector("#sessionViewButton"),
+  sessionView: document.querySelector("#sessionView"),
+  closeSessionViewButton: document.querySelector("#closeSessionViewButton"),
+  sessionList: document.querySelector("#sessionList"),
   channelGrid: document.querySelector("#channelGrid"),
   masterFader: document.querySelector("#masterFader"),
   masterMuteButton: document.querySelector("#masterMuteButton"),
@@ -112,6 +117,30 @@ function channelStrip(item, extraClass = "") {
   `;
 }
 
+function renderSessionList() {
+  els.sessionList.innerHTML = state.sessions
+    .map(
+      (session) => `
+        <button class="session-card ${session.id === state.session.id ? "active" : ""}" type="button" data-session-id="${session.id}">
+          <div>
+            <strong>${session.name}</strong>
+            <span>${session.type} / ${session.updated}</span>
+          </div>
+          <small>${session.songs} songs</small>
+          <p>${session.notes}</p>
+        </button>
+      `,
+    )
+    .join("");
+
+  els.sessionList.querySelectorAll("[data-session-id]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      await sendCommand(`open session ${button.dataset.sessionId}`);
+      closeSessionView();
+    });
+  });
+}
+
 function renderChannels() {
   els.channelGrid.innerHTML = state.channels
     .map((item) => {
@@ -142,12 +171,33 @@ function findChannel(id) {
 
 function render() {
   renderStatus();
+  renderSessionList();
   renderChannels();
+}
+
+function openSessionView() {
+  els.sessionView.hidden = false;
+  document.body.classList.add("screen-open");
+}
+
+function closeSessionView() {
+  els.sessionView.hidden = true;
+  document.body.classList.remove("screen-open");
 }
 
 document.querySelectorAll("[data-command]").forEach((button) => {
   button.addEventListener("click", () => sendCommand(button.dataset.command));
 });
+
+document.querySelectorAll("[data-session-command]").forEach((button) => {
+  button.addEventListener("click", async () => {
+    await sendCommand(button.dataset.sessionCommand);
+    closeSessionView();
+  });
+});
+
+els.sessionViewButton.addEventListener("click", openSessionView);
+els.closeSessionViewButton.addEventListener("click", closeSessionView);
 
 els.masterFader.addEventListener("change", () => sendCommand(`set master level ${els.masterFader.value}`));
 els.masterMuteButton.addEventListener("click", () => sendCommand(`${state.mix.masterMuted ? "unmute" : "mute"} master`));

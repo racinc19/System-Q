@@ -49,6 +49,13 @@ const state = {
       { id: "take-1", name: "Scratch pass", status: "ready" },
     ],
   },
+  sessions: [
+    { id: "session-1", name: "Untitled Session", type: "Current", updated: "Now", songs: 1, notes: "Scratch pass ready." },
+    { id: "session-friday", name: "Friday Full Band", type: "Recent", updated: "Yesterday", songs: 4, notes: "Drums, bass, guitar, vocal, acoustic." },
+    { id: "session-acoustic", name: "Acoustic Night", type: "Recent", updated: "May 31", songs: 7, notes: "Vocal, acoustic, room mic, click optional." },
+    { id: "session-writes", name: "Writing Room", type: "Recent", updated: "May 29", songs: 3, notes: "Guitar ideas and vocal roughs." },
+    { id: "session-rehearsal", name: "Sunday Rehearsal", type: "Archive", updated: "May 24", songs: 9, notes: "Saved personal mixes and sheets." },
+  ],
   channels: [
     { ...channel("drums", "Drums", "input 1-8", 64), type: "group", expanded: false, children: DRUM_CHILDREN },
     channel("bass", "Bass", "input-9", 57),
@@ -149,6 +156,10 @@ function createSession(name = "Untitled Session") {
   state.mix.venueConsoleOpen = false;
   state.mix.assist.mode = "Listening";
   state.mix.assist.detail = "Ready to shape the personal mix without touching the house.";
+  state.sessions = [
+    { id: state.session.id, name: state.session.name, type: "Current", updated: "Now", songs: 1, notes: "New session." },
+    ...state.sessions.map((item) => ({ ...item, type: item.type === "Current" ? "Recent" : item.type })),
+  ].slice(0, 8);
   return `New session opened. Venue kept the musician mix faders ready.`;
 }
 
@@ -165,6 +176,26 @@ function openPreviousSession() {
     ],
   };
   return "Previous session opened. The same musician mix faders are ready.";
+}
+
+function openSessionById(id) {
+  const saved = state.sessions.find((item) => item.id === id);
+  if (!saved) return "Session not found.";
+  state.transport = "Stopped";
+  state.session = {
+    id: saved.id,
+    name: saved.name,
+    mixed: false,
+    takes: [
+      { id: `take-${saved.id}-1`, name: "Band take 1", status: "ready" },
+      { id: `take-${saved.id}-2`, name: "Vocal pass", status: "ready" },
+    ],
+  };
+  state.sessions = [
+    { ...saved, type: "Current", updated: "Now" },
+    ...state.sessions.filter((item) => item.id !== id).map((item) => ({ ...item, type: item.type === "Current" ? "Recent" : item.type })),
+  ];
+  return `${saved.name} opened.`;
 }
 
 function recordAll() {
@@ -243,6 +274,9 @@ function runCommand(rawCommand) {
   } else if (command.includes("open previous")) {
     snapshotUndo("open previous session");
     result = openPreviousSession();
+  } else if (command.startsWith("open session ")) {
+    snapshotUndo("open session");
+    result = openSessionById(rawCommand.replace(/open session/i, "").trim());
   } else if (command.includes("new session")) {
     snapshotUndo("new session");
     result = createSession();
@@ -250,6 +284,7 @@ function runCommand(rawCommand) {
     snapshotUndo("name session");
     const name = rawCommand.replace(/name this session/i, "").trim() || "Untitled Session";
     state.session.name = name;
+    state.sessions.unshift({ id: state.session.id, name, type: "Current", updated: "Now", songs: 1, notes: "New session." });
     result = `Session named ${name}.`;
   } else if (command.includes("record all") || command.includes("record everything")) {
     snapshotUndo("record all");
@@ -373,6 +408,7 @@ function publicState() {
     venue: state.venue,
     mix: state.mix,
     session: state.session,
+    sessions: state.sessions,
     channels: state.channels,
     sets: state.sets,
     log: state.log,

@@ -231,6 +231,85 @@ h2 {
   line-height: 1.35;
 }
 
+.screen-open .workspace,
+.screen-open .session-bar {
+  display: none;
+}
+
+.screen-view {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.screen-view[hidden] {
+  display: none;
+}
+
+.screen-head,
+.session-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.screen-head {
+  margin-bottom: 14px;
+}
+
+.screen-head button,
+.session-actions button {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.session-actions {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.session-list {
+  display: grid;
+  gap: 10px;
+}
+
+.session-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 12px;
+  min-height: 76px;
+  padding: 12px;
+  text-align: left;
+}
+
+.session-card.active {
+  border-color: var(--accent);
+  background: #edf7f3;
+}
+
+.session-card strong,
+.session-card span,
+.session-card small,
+.session-card p {
+  display: block;
+}
+
+.session-card span,
+.session-card small,
+.session-card p {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.session-card p {
+  grid-column: 1 / -1;
+}
+
 .transport button:nth-child(3) {
   background: var(--danger);
   border-color: var(--danger);
