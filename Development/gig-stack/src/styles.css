@@ -167,6 +167,12 @@ h2 {
   justify-content: flex-end;
 }
 
+.toolbar button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
 .toolbar > button,
 .menu summary {
   align-items: center;
@@ -610,6 +616,23 @@ h2 {
   margin-bottom: 10px;
 }
 
+.click-panel {
+  margin-top: 12px;
+}
+
+.click-controls {
+  display: grid;
+  grid-template-columns: auto minmax(110px, 150px) minmax(140px, 1fr) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.click-controls button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
 .channel-grid {
   display: grid;
   gap: 8px;
@@ -652,7 +675,7 @@ h2 {
 
 .channel-strip {
   display: grid;
-  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) minmax(224px, 260px) minmax(52px, auto);
+  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) minmax(278px, 330px) minmax(52px, auto);
   align-items: center;
   gap: 12px;
   min-width: 0;
@@ -708,7 +731,7 @@ h2 {
 
 .channel-actions {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 6px;
 }
 
@@ -748,6 +771,12 @@ h2 {
   color: white;
 }
 
+.channel-actions button.click-active {
+  background: var(--warn);
+  border-color: var(--warn);
+  color: white;
+}
+
 .channel-badges {
   display: flex;
   flex-wrap: wrap;
@@ -775,7 +804,7 @@ h2 {
 }
 
 .drum-child {
-  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) minmax(224px, 260px) minmax(52px, auto);
+  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) minmax(278px, 330px) minmax(52px, auto);
   background: white;
 }
 
@@ -869,6 +898,10 @@ h2 {
   .channel-strip {
     grid-template-columns: 1fr;
     padding: 10px;
+  }
+
+  .click-controls {
+    grid-template-columns: 1fr;
   }
 
   .channel-actions {

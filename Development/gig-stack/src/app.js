@@ -13,6 +13,10 @@ const fallbackState = {
     masterLevel: 72,
     masterMuted: false,
     clickOn: false,
+    clickTempo: 92,
+    clickLevel: 62,
+    clickSubdivision: "quarter",
+    clickSinks: [],
     sheetsOpen: false,
     sheetSync: false,
     sheetSinks: [],
@@ -59,6 +63,14 @@ const els = {
   assistStatus: document.querySelector("#assistStatus"),
   consoleState: document.querySelector("#consoleState"),
   clickStatus: document.querySelector("#clickStatus"),
+  clickControlButton: document.querySelector("#clickControlButton"),
+  clickPanel: document.querySelector("#clickPanel"),
+  clickToggleButton: document.querySelector("#clickToggleButton"),
+  clickTempoInput: document.querySelector("#clickTempoInput"),
+  clickLevelInput: document.querySelector("#clickLevelInput"),
+  clickQuarterButton: document.querySelector("#clickQuarterButton"),
+  clickEighthButton: document.querySelector("#clickEighthButton"),
+  saveClickButton: document.querySelector("#saveClickButton"),
   sessionViewButton: document.querySelector("#sessionViewButton"),
   setViewButton: document.querySelector("#setViewButton"),
   sheetsViewButton: document.querySelector("#sheetsViewButton"),
@@ -209,6 +221,13 @@ function renderStatus() {
       ? "Sheets"
       : state.mix.assist.mode;
   els.clickStatus.textContent = state.mix.clickOn ? "Click On" : "Click Off";
+  els.clickControlButton.classList.toggle("active", state.mix.clickOn);
+  els.clickToggleButton.classList.toggle("active", state.mix.clickOn);
+  els.clickToggleButton.textContent = state.mix.clickOn ? "Click On" : "Click Off";
+  if (document.activeElement !== els.clickTempoInput) els.clickTempoInput.value = state.mix.clickTempo || 92;
+  if (document.activeElement !== els.clickLevelInput) els.clickLevelInput.value = state.mix.clickLevel || 62;
+  els.clickQuarterButton.classList.toggle("active", state.mix.clickSubdivision !== "eighth");
+  els.clickEighthButton.classList.toggle("active", state.mix.clickSubdivision === "eighth");
   els.consoleState.textContent = state.mix.venueConsoleOpen
     ? "Venue Console"
     : state.mix.consoleOpen
@@ -226,11 +245,12 @@ function renderStatus() {
 
 function channelStrip(item, extraClass = "") {
   const sheetActive = (state.mix.sheetSinks || []).includes(item.id);
+  const clickActive = (state.mix.clickSinks || []).includes(item.id);
   const talkActive = state.mix.talkTarget === item.name;
   const badges = [
     item.muted ? "Muted" : "",
     item.solo ? "Solo" : "",
-    sheetActive ? "Sheet" : "",
+    clickActive ? "Click" : "",
     talkActive ? "Talk" : "",
   ].filter(Boolean);
 
@@ -249,6 +269,7 @@ function channelStrip(item, extraClass = "") {
         <button class="${item.solo ? "active solo-active" : ""}" type="button" data-command="${item.solo ? "unsolo" : "solo"} ${item.name}">Solo</button>
         <button class="${sheetActive ? "active sheet-active" : ""}" type="button" data-sheet-channel-id="${item.id}">Sheet</button>
         <button class="${talkActive ? "active talk-active" : ""}" type="button" data-talk-target="${item.name}">Talk</button>
+        <button class="${clickActive ? "active click-active" : ""}" type="button" data-click-channel-id="${item.id}">Click</button>
       </div>
       <div class="channel-badges">${badges.map((badge) => `<span>${badge}</span>`).join("")}</div>
     </article>
@@ -589,6 +610,10 @@ function renderChannels() {
     button.addEventListener("click", () => sendCommand(`talk target ${button.dataset.talkTarget}`));
   });
 
+  els.channelGrid.querySelectorAll("[data-click-channel-id]").forEach((button) => {
+    button.addEventListener("click", () => sendCommand(`toggle click sink ${button.dataset.clickChannelId}`));
+  });
+
   els.channelGrid.querySelectorAll("[data-level-id]").forEach((slider) => {
     slider.addEventListener("change", () => {
       const channel = findChannel(slider.dataset.levelId);
@@ -667,6 +692,22 @@ els.sheetsViewButton.addEventListener("click", () => {
 });
 els.saveSessionNoteButton.addEventListener("click", () => {
   sendCommand(`set session note ${els.sessionNoteInput.value.trim()}`);
+});
+els.clickControlButton.addEventListener("click", () => {
+  els.clickPanel.hidden = !els.clickPanel.hidden;
+});
+els.clickToggleButton.addEventListener("click", () => {
+  sendCommand(`click ${state.mix.clickOn ? "off" : "on"}`);
+});
+els.clickQuarterButton.addEventListener("click", () => {
+  sendCommand("set click subdivision quarter");
+});
+els.clickEighthButton.addEventListener("click", () => {
+  sendCommand("set click subdivision eighth");
+});
+els.saveClickButton.addEventListener("click", async () => {
+  await sendCommand(`set click tempo ${els.clickTempoInput.value}`);
+  await sendCommand(`set click level ${els.clickLevelInput.value}`);
 });
 els.sheetSyncButton.addEventListener("click", () => {
   sendCommand(`sheet sync ${state.mix.sheetSync ? "off" : "on"}`);

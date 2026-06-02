@@ -62,6 +62,10 @@ const state = {
     masterLevel: 72,
     masterMuted: false,
     clickOn: false,
+    clickTempo: 92,
+    clickLevel: 62,
+    clickSubdivision: "quarter",
+    clickSinks: [],
     sheetsOpen: false,
     sheetSync: false,
     sheetSinks: [],
@@ -591,8 +595,27 @@ function runCommand(rawCommand) {
     result = "Sheets opened.";
   } else if (command.includes("click")) {
     snapshotUndo("click");
-    state.mix.clickOn = command.includes("off") ? false : command.includes("on") ? true : !state.mix.clickOn;
-    result = `Click ${state.mix.clickOn ? "on" : "off"}.`;
+    if (command.startsWith("toggle click sink ")) {
+      const sink = rawCommand.replace(/toggle click sink/i, "").trim();
+      const sinks = new Set(state.mix.clickSinks || []);
+      if (sinks.has(sink)) sinks.delete(sink);
+      else sinks.add(sink);
+      state.mix.clickSinks = [...sinks];
+      result = `${sink} ${sinks.has(sink) ? "receiving" : "not receiving"} click.`;
+    } else if (command.startsWith("set click tempo")) {
+      state.mix.clickTempo = Math.max(40, Math.min(240, Number(command.match(/\d+/)?.[0] || state.mix.clickTempo)));
+      result = `Click tempo ${state.mix.clickTempo}.`;
+    } else if (command.startsWith("set click level")) {
+      state.mix.clickLevel = Math.max(0, Math.min(100, Number(command.match(/\d+/)?.[0] || state.mix.clickLevel)));
+      result = "Click level set.";
+    } else if (command.startsWith("set click subdivision")) {
+      const subdivision = rawCommand.replace(/set click subdivision/i, "").trim().toLowerCase();
+      state.mix.clickSubdivision = subdivision.includes("eighth") ? "eighth" : "quarter";
+      result = `Click subdivision ${state.mix.clickSubdivision}.`;
+    } else {
+      state.mix.clickOn = command.includes("off") ? false : command.includes("on") ? true : !state.mix.clickOn;
+      result = `Click ${state.mix.clickOn ? "on" : "off"}.`;
+    }
   } else if (command.includes("master mute") || command.includes("mute master") || command.includes("unmute master")) {
     snapshotUndo("master mute");
     state.mix.masterMuted = !command.includes("unmute");

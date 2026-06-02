@@ -36,7 +36,7 @@
           <button id="sessionViewButton" type="button">Session</button>
           <button id="setViewButton" type="button">Set</button>
           <button id="sheetsViewButton" type="button">Sheets</button>
-          <button type="button" data-command="click">Click</button>
+          <button id="clickControlButton" type="button">Click</button>
           <details class="menu">
             <summary>New Track</summary>
             <button type="button" data-command="new guitar track">Guitar</button>
@@ -59,6 +59,24 @@
           </div>
           <button type="button" data-command="open my console">Console</button>
           <button type="button" data-command="open venue console">Venue Console</button>
+        </div>
+        <div id="clickPanel" class="inline-panel click-panel" hidden>
+          <div class="click-controls">
+            <button id="clickToggleButton" type="button">Click Off</button>
+            <label class="name-field" for="clickTempoInput">
+              <span>Tempo</span>
+              <input id="clickTempoInput" type="number" min="40" max="240" step="1" />
+            </label>
+            <label class="name-field" for="clickLevelInput">
+              <span>Level</span>
+              <input id="clickLevelInput" type="range" min="0" max="100" />
+            </label>
+            <div class="inline-actions">
+              <button id="clickQuarterButton" type="button">Quarter</button>
+              <button id="clickEighthButton" type="button">Eighth</button>
+              <button id="saveClickButton" type="button">Save</button>
+            </div>
+          </div>
         </div>
       </section>
 
