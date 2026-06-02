@@ -10,12 +10,9 @@
     <main class="app-shell">
       <section class="topbar" aria-label="GIG header">
         <div>
-          <p class="eyebrow">Musician remote</p>
           <h1>GIG</h1>
         </div>
         <div class="status-strip" aria-label="System status">
-          <span id="venueStatus">Venue offline</span>
-          <span id="consoleStatus">Console idle</span>
           <span id="transportStatus">Stopped</span>
           <span id="consoleState">Faders</span>
           <span id="syncStatus">Local</span>
@@ -24,16 +21,38 @@
 
       <section class="session-bar" aria-label="Session controls">
         <div>
-          <p class="eyebrow">Session</p>
           <h2 id="sessionName">No session</h2>
-          <p id="venueNote">Waiting for Venue.</p>
+          <p id="venueNote" class="screen-note">Waiting for Venue.</p>
+          <span id="venueStatus" class="screen-note">Venue offline</span>
+          <span id="consoleStatus" class="screen-note">Console idle</span>
         </div>
-        <div class="transport">
-          <button type="button" data-command="new session">New session</button>
-          <button type="button" data-command="open previous session">Open previous</button>
-          <button type="button" data-command="record all">Record all</button>
-          <button type="button" data-command="save this mix">Save mix</button>
-          <button type="button" data-command="open my console">My Console</button>
+        <div class="toolbar">
+          <details class="menu">
+            <summary>Session</summary>
+            <button type="button" data-command="new session">New</button>
+            <button type="button" data-command="open previous session">Previous</button>
+          </details>
+          <details class="menu">
+            <summary>New Track</summary>
+            <button type="button" data-command="new guitar track">Guitar</button>
+            <button type="button" data-command="new vocal track">Vocal</button>
+            <button type="button" data-command="new bass track">Bass</button>
+            <button type="button" data-command="new acoustic track">Acoustic</button>
+            <button type="button" data-command="new drum overdub track">Drum overdub</button>
+          </details>
+          <details class="menu">
+            <summary>Save Mix</summary>
+            <button type="button" data-command="save this mix">Save</button>
+            <button type="button" data-command="save as preset">Save preset</button>
+            <button type="button" data-command="recall previous mix">Recall previous</button>
+            <button type="button" data-command="reset my mix">Reset</button>
+          </details>
+          <div class="transport" aria-label="Transport">
+            <button type="button" data-command="record all">Record</button>
+            <button type="button" data-command="play">Play</button>
+            <button type="button" data-command="stop">Stop</button>
+          </div>
+          <button type="button" data-command="open my console">Console</button>
           <button type="button" data-command="open venue console">Venue Console</button>
         </div>
       </section>
@@ -46,16 +65,22 @@
               <h2 id="mixName">My Mix</h2>
             </div>
           </div>
+          <section class="master-strip" aria-label="Master volume">
+            <div>
+              <strong>Master</strong>
+              <span>Personal mix</span>
+            </div>
+            <input id="masterFader" type="range" min="0" max="100" value="72" aria-label="Master volume" />
+            <button id="masterMuteButton" type="button">Mute</button>
+          </section>
           <div id="channelGrid" class="channel-grid"></div>
         </section>
 
         <aside class="side-panel" aria-label="Takes sets and voice commands">
           <section class="command-panel" aria-label="Voice command surface">
-            <div class="panel-head compact">
-              <div>
-                <p class="eyebrow">Say it or tap it</p>
-                <h2>Control</h2>
-              </div>
+            <div class="control-head">
+              <h2>Control</h2>
+              <button id="voiceOrb" class="voice-orb" type="button" aria-label="Voice control"></button>
             </div>
 
             <div class="assist-card">
@@ -76,7 +101,7 @@
 
             <div class="quick-commands" aria-label="Quick commands">
               <button type="button" data-command="open drums">Open drums</button>
-              <button type="button" data-command="open my console">My Console</button>
+              <button type="button" data-command="open my console">Console</button>
               <button type="button" data-command="make vocal louder">Vocal up</button>
               <button type="button" data-command="shape snare target">Snare assist</button>
               <button type="button" data-command="turn drums down">Drums down</button>

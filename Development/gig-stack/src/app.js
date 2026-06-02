@@ -10,6 +10,8 @@ const fallbackState = {
   },
   mix: {
     name: "My Mix",
+    masterLevel: 72,
+    masterMuted: false,
     console: "Personal Console",
     consoleOpen: false,
     venueConsoleAssigned: false,
@@ -36,6 +38,9 @@ const els = {
   assistDetail: document.querySelector("#assistDetail"),
   consoleState: document.querySelector("#consoleState"),
   channelGrid: document.querySelector("#channelGrid"),
+  masterFader: document.querySelector("#masterFader"),
+  masterMuteButton: document.querySelector("#masterMuteButton"),
+  voiceOrb: document.querySelector("#voiceOrb"),
   takesList: document.querySelector("#takesList"),
   setList: document.querySelector("#setList"),
   commandForm: document.querySelector("#commandForm"),
@@ -79,6 +84,9 @@ function renderStatus() {
     : state.mix.consoleOpen
       ? state.mix.console
       : "Faders";
+  els.masterFader.value = state.mix.masterLevel;
+  els.masterMuteButton.textContent = state.mix.masterMuted ? "Unmute" : "Mute";
+  els.masterMuteButton.classList.toggle("active", state.mix.masterMuted);
 }
 
 function channelStrip(item, extraClass = "") {
@@ -97,7 +105,10 @@ function channelStrip(item, extraClass = "") {
         ${item.children ? `<button type="button" data-command="${item.expanded ? "close drums" : "open drums"}">${item.expanded ? "Fold" : "Open"}</button>` : ""}
       </div>
       <input class="fader" type="range" min="0" max="100" value="${item.level}" data-level-id="${item.id}" aria-label="${item.name} fader" />
-      <output>${item.level}</output>
+      <div class="channel-actions">
+        <button type="button" data-command="${item.muted ? "unmute" : "mute"} ${item.name}">${item.muted ? "Unmute" : "Mute"}</button>
+        <button type="button" data-command="${item.solo ? "unsolo" : "solo"} ${item.name}">${item.solo ? "Unsolo" : "Solo"}</button>
+      </div>
       <div class="channel-badges">${badges.map((badge) => `<span>${badge}</span>`).join("")}</div>
     </article>
   `;
@@ -156,6 +167,14 @@ function render() {
 
 document.querySelectorAll("[data-command]").forEach((button) => {
   button.addEventListener("click", () => sendCommand(button.dataset.command));
+});
+
+els.masterFader.addEventListener("change", () => sendCommand(`set master level ${els.masterFader.value}`));
+els.masterMuteButton.addEventListener("click", () => sendCommand(`${state.mix.masterMuted ? "unmute" : "mute"} master`));
+els.voiceOrb.addEventListener("click", () => {
+  els.voiceOrb.classList.add("listening");
+  sendCommand("console assist listen");
+  window.setTimeout(() => els.voiceOrb.classList.remove("listening"), 900);
 });
 
 els.commandForm.addEventListener("submit", (event) => {

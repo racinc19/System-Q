@@ -100,7 +100,8 @@ h2 {
 }
 
 .status-strip,
-.transport {
+.transport,
+.toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -131,6 +132,98 @@ h2 {
   padding: 16px;
 }
 
+.screen-note {
+  display: none;
+}
+
+.toolbar {
+  justify-content: flex-end;
+}
+
+.toolbar > button,
+.menu summary {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  font-weight: 800;
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.toolbar > button:nth-last-child(1) {
+  background: var(--warn);
+  border-color: var(--warn);
+  color: white;
+}
+
+.toolbar > button:nth-last-child(2) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.menu {
+  position: relative;
+}
+
+.menu summary {
+  list-style: none;
+}
+
+.menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.menu summary::after {
+  content: "";
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid currentColor;
+  margin-left: 8px;
+}
+
+.menu[open] summary {
+  border-color: var(--accent);
+}
+
+.menu[open] {
+  z-index: 10;
+}
+
+.menu button {
+  width: 100%;
+  justify-content: flex-start;
+  border-radius: 0;
+  border-width: 0 0 1px;
+  min-height: 40px;
+}
+
+.menu button:last-child {
+  border-bottom: 0;
+}
+
+.menu[open]::after {
+  content: "";
+  position: absolute;
+  inset: 42px 0 auto;
+  min-width: 170px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: white;
+  box-shadow: var(--shadow);
+  z-index: -1;
+}
+
+.menu[open] button {
+  background: white;
+  position: relative;
+  z-index: 1;
+}
+
 .session-bar p:last-child {
   max-width: 720px;
   color: var(--muted);
@@ -144,16 +237,9 @@ h2 {
   color: white;
 }
 
-.transport button:nth-child(4),
-.transport button:nth-child(5) {
+.transport button:nth-child(2) {
   background: var(--accent);
   border-color: var(--accent);
-  color: white;
-}
-
-.transport button:nth-child(6) {
-  background: var(--warn);
-  border-color: var(--warn);
   color: white;
 }
 
@@ -187,14 +273,49 @@ h2 {
 
 .channel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 10px;
+  gap: 8px;
+}
+
+.master-strip {
+  display: grid;
+  grid-template-columns: 116px minmax(160px, 1fr) 84px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(19, 113, 102, 0.36);
+  border-radius: 8px;
+  background: #edf7f3;
+  margin-bottom: 10px;
+  padding: 12px;
+}
+
+.master-strip strong,
+.master-strip span {
+  display: block;
+}
+
+.master-strip span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.master-strip input,
+.fader {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.master-strip button.active {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: white;
 }
 
 .channel-strip {
   display: grid;
-  grid-template-rows: auto 230px auto auto;
-  gap: 10px;
+  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) 124px minmax(52px, auto);
+  align-items: center;
+  gap: 12px;
   min-width: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -237,30 +358,31 @@ h2 {
 }
 
 .channel-top button {
-  flex: 1 0 100%;
   min-width: 0;
-  max-width: 100%;
   min-height: 34px;
   padding: 0 10px;
 }
 
 .fader {
-  align-self: center;
-  justify-self: center;
-  width: 210px;
-  accent-color: var(--accent);
-  transform: rotate(-90deg);
+  min-width: 0;
 }
 
-.channel-strip output {
-  justify-self: center;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: white;
-  font-weight: 900;
-  min-width: 52px;
-  padding: 6px 10px;
-  text-align: center;
+.channel-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.channel-actions button {
+  min-height: 36px;
+  min-width: 0;
+  padding: 0 8px;
+}
+
+.channel-actions button:last-child {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: white;
 }
 
 .channel-badges {
@@ -282,7 +404,6 @@ h2 {
 .drum-children {
   display: grid;
   grid-column: 1 / -1;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 8px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -291,12 +412,12 @@ h2 {
 }
 
 .drum-child {
-  grid-template-rows: auto 170px auto auto;
+  grid-template-columns: minmax(104px, 150px) minmax(160px, 1fr) 124px minmax(52px, auto);
   background: white;
 }
 
 .drum-child .fader {
-  width: 170px;
+  width: 100%;
 }
 
 .assist-card {
@@ -313,6 +434,31 @@ h2 {
   color: var(--muted);
   font-size: 0.88rem;
   line-height: 1.35;
+}
+
+.control-head {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.voice-orb {
+  width: 58px;
+  height: 58px;
+  min-height: 58px;
+  border-radius: 50%;
+  border: 0;
+  background:
+    radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0) 28%),
+    linear-gradient(145deg, var(--accent), var(--blue));
+  box-shadow: 0 8px 20px rgba(19, 113, 102, 0.28);
+  padding: 0;
+}
+
+.voice-orb.listening {
+  outline: 5px solid rgba(19, 113, 102, 0.18);
 }
 
 .command-form {
@@ -387,26 +533,26 @@ h2 {
   }
 
   .transport,
-  .status-strip {
+  .status-strip,
+  .toolbar {
     width: 100%;
   }
 
   .transport button,
-  .status-strip span {
+  .status-strip span,
+  .toolbar > button,
+  .menu {
     flex: 1 1 140px;
   }
 
-  .channel-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .master-strip,
   .channel-strip {
-    grid-template-rows: auto 180px auto auto;
+    grid-template-columns: 1fr;
     padding: 10px;
   }
 
-  .fader {
-    width: 170px;
+  .channel-actions {
+    grid-template-columns: 1fr 1fr;
   }
 
   .quick-commands,

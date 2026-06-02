@@ -27,6 +27,8 @@ const state = {
   },
   mix: {
     name: "My Mix",
+    masterLevel: 72,
+    masterMuted: false,
     console: "Personal Console",
     consoleOpen: false,
     venueConsoleAssigned: true,
@@ -140,6 +142,7 @@ function createSession(name = "Untitled Session") {
     item.solo = false;
     item.armed = true;
   });
+  state.mix.masterMuted = false;
   state.mix.consoleOpen = false;
   state.mix.venueConsoleOpen = false;
   state.mix.assist.mode = "Listening";
@@ -183,6 +186,11 @@ function setChannelLevelExact(item, level) {
   return `${item.name} level set to ${item.level}.`;
 }
 
+function setMasterLevelExact(level) {
+  state.mix.masterLevel = clamp(level);
+  return `Master volume set.`;
+}
+
 function openPersonalConsole() {
   state.mix.consoleOpen = true;
   state.mix.venueConsoleOpen = false;
@@ -208,6 +216,16 @@ function updateAssist(command) {
   }
   state.mix.assist.detail = "Listening to channel tone and applying source-aware Console moves.";
   return "Console Assist is listening and shaping the mix.";
+}
+
+function requestNewTrack(command) {
+  let name = "Track";
+  if (command.includes("acoustic")) name = "Acoustic";
+  else if (command.includes("vocal")) name = "Vocal";
+  else if (command.includes("guitar")) name = "Guitar";
+  else if (command.includes("bass")) name = "Bass";
+  else if (command.includes("drum")) name = "Drum Overdub";
+  return `${name} track requested. Waiting for Venue Console to arm.`;
 }
 
 function runCommand(rawCommand) {
@@ -245,6 +263,33 @@ function runCommand(rawCommand) {
   } else if (command.includes("save this mix") || command.includes("save this setup") || command.includes("save setup")) {
     snapshotUndo("save mix");
     result = "Saved this musician's personal mix.";
+  } else if (command.includes("save as preset")) {
+    snapshotUndo("save preset");
+    result = "Saved this musician's mix as a preset.";
+  } else if (command.includes("recall previous mix")) {
+    snapshotUndo("recall mix");
+    result = "Previous personal mix recalled.";
+  } else if (command.includes("reset my mix")) {
+    snapshotUndo("reset mix");
+    state.mix.masterMuted = false;
+    state.mix.masterLevel = 72;
+    state.channels.forEach((item) => {
+      item.muted = false;
+      item.solo = false;
+      item.level = item.id === "drums" ? 64 : item.id === "bass" ? 57 : item.id === "guitar" ? 54 : item.id === "vocal" ? 61 : 50;
+    });
+    result = "Personal mix reset.";
+  } else if (command.includes("new") && command.includes("track")) {
+    snapshotUndo("new track request");
+    result = requestNewTrack(command);
+  } else if (command.includes("master mute") || command.includes("mute master") || command.includes("unmute master")) {
+    snapshotUndo("master mute");
+    state.mix.masterMuted = !command.includes("unmute");
+    result = `Master ${state.mix.masterMuted ? "muted" : "unmuted"}.`;
+  } else if (command.includes("master") && command.includes("level")) {
+    snapshotUndo("master level");
+    const level = Number(command.match(/\d+/)?.[0] || state.mix.masterLevel);
+    result = setMasterLevelExact(level);
   } else if (command.includes("venue console") || command.includes("house console")) {
     snapshotUndo("open venue console");
     result = openVenueConsole();

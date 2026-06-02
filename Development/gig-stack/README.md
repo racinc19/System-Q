@@ -34,7 +34,9 @@ http://localhost:4180
 
 - Open a new or previous session.
 - Let Venue own all recognized inputs, house routing, and recording.
-- Show only the musician's personal mix faders for sources such as Drums, Bass, Guitar, Vocal, and Acoustic.
+- Show only the musician's personal horizontal mix faders for sources such as Drums, Bass, Guitar, Vocal, and Acoustic.
+- Provide personal master volume and master mute.
+- Provide mute and solo controls under each musician source.
 - Keep house/main controls out of the musician fader surface.
 - Open Drums into Kick, Snare, Hat, Tom 1, Tom 2, OH L, OH R, and Room.
 - Record all armed channels into takes.
@@ -51,6 +53,9 @@ http://localhost:4180
 - `record all`
 - `open drums`
 - `make vocal louder`
+- `mute master`
+- `mute bass`
+- `solo vocal`
 - `turn drums down`
 - `open my console`
 - `open venue console`
