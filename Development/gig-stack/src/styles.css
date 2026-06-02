@@ -359,6 +359,12 @@ h2 {
   display: none;
 }
 
+#setView.editing > .session-actions,
+#setView.editing > #setList,
+#setView.editing > #activeSetSongs {
+  display: none;
+}
+
 .session-list {
   display: grid;
   gap: 10px;
