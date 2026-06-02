@@ -8,6 +8,14 @@ const fallbackState = {
     hardware: "No rig",
     note: "Waiting for Venue.",
   },
+  mix: {
+    name: "My Mix",
+    console: "Personal Console",
+    consoleOpen: false,
+    venueConsoleAssigned: false,
+    venueConsoleOpen: false,
+    assist: { name: "Console Assist", mode: "Offline", detail: "Waiting for Venue." },
+  },
   session: { name: "No session", mixed: false, takes: [] },
   channels: [],
   sets: [],
@@ -23,6 +31,10 @@ const els = {
   syncStatus: document.querySelector("#syncStatus"),
   sessionName: document.querySelector("#sessionName"),
   venueNote: document.querySelector("#venueNote"),
+  mixName: document.querySelector("#mixName"),
+  assistStatus: document.querySelector("#assistStatus"),
+  assistDetail: document.querySelector("#assistDetail"),
+  consoleState: document.querySelector("#consoleState"),
   channelGrid: document.querySelector("#channelGrid"),
   takesList: document.querySelector("#takesList"),
   setList: document.querySelector("#setList"),
@@ -59,15 +71,20 @@ function renderStatus() {
   els.syncStatus.textContent = state.connected ? "Synced" : "Local";
   els.sessionName.textContent = state.session.name;
   els.venueNote.textContent = state.venue.note;
+  els.mixName.textContent = state.mix.name;
+  els.assistStatus.textContent = `${state.mix.assist.name}: ${state.mix.assist.mode}`;
+  els.assistDetail.textContent = state.mix.assist.detail;
+  els.consoleState.textContent = state.mix.venueConsoleOpen
+    ? "Venue Console"
+    : state.mix.consoleOpen
+      ? state.mix.console
+      : "Faders";
 }
 
 function channelStrip(item, extraClass = "") {
   const badges = [
     item.muted ? "Muted" : "",
     item.solo ? "Solo" : "",
-    item.armed && item.type !== "output" ? "Armed" : "",
-    item.comp.enabled ? "Comp" : "",
-    item.eq.enabled ? "EQ" : "",
   ].filter(Boolean);
 
   return `
@@ -81,12 +98,6 @@ function channelStrip(item, extraClass = "") {
       </div>
       <input class="fader" type="range" min="0" max="100" value="${item.level}" data-level-id="${item.id}" aria-label="${item.name} fader" />
       <output>${item.level}</output>
-      <div class="channel-buttons">
-        <button type="button" data-command="${item.muted ? "unmute" : "mute"} ${item.name}">${item.muted ? "Unmute" : "Mute"}</button>
-        <button type="button" data-command="${item.solo ? "unsolo" : "solo"} ${item.name}">${item.solo ? "Unsolo" : "Solo"}</button>
-        <button type="button" data-command="compress ${item.name}">Comp</button>
-        <button type="button" data-command="eq ${item.name}">EQ</button>
-      </div>
       <div class="channel-badges">${badges.map((badge) => `<span>${badge}</span>`).join("")}</div>
     </article>
   `;

@@ -145,9 +145,15 @@ h2 {
 }
 
 .transport button:nth-child(4),
-.transport button:nth-child(6) {
+.transport button:nth-child(5) {
   background: var(--accent);
   border-color: var(--accent);
+  color: white;
+}
+
+.transport button:nth-child(6) {
+  background: var(--warn);
+  border-color: var(--warn);
   color: white;
 }
 
@@ -187,7 +193,7 @@ h2 {
 
 .channel-strip {
   display: grid;
-  grid-template-rows: auto 210px auto auto auto;
+  grid-template-rows: auto 230px auto auto;
   gap: 10px;
   min-width: 0;
   border: 1px solid var(--line);
@@ -199,11 +205,6 @@ h2 {
 .channel-strip.group {
   border-color: rgba(19, 113, 102, 0.42);
   background: #edf7f3;
-}
-
-.channel-strip.output {
-  border-color: rgba(44, 93, 134, 0.38);
-  background: #edf3f7;
 }
 
 .channel-strip.muted {
@@ -262,25 +263,6 @@ h2 {
   text-align: center;
 }
 
-.channel-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 7px;
-}
-
-.channel-buttons button {
-  min-width: 0;
-  min-height: 36px;
-  padding: 0 8px;
-}
-
-.channel-buttons button:nth-child(3),
-.channel-buttons button:nth-child(4) {
-  background: var(--blue);
-  border-color: var(--blue);
-  color: white;
-}
-
 .channel-badges {
   display: flex;
   flex-wrap: wrap;
@@ -309,12 +291,28 @@ h2 {
 }
 
 .drum-child {
-  grid-template-rows: auto 160px auto auto auto;
+  grid-template-rows: auto 170px auto auto;
   background: white;
 }
 
 .drum-child .fader {
-  width: 160px;
+  width: 170px;
+}
+
+.assist-card {
+  display: grid;
+  gap: 5px;
+  border: 1px solid rgba(19, 113, 102, 0.28);
+  border-radius: 8px;
+  background: #edf7f3;
+  margin-bottom: 10px;
+  padding: 12px;
+}
+
+.assist-card span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.35;
 }
 
 .command-form {
@@ -403,7 +401,7 @@ h2 {
   }
 
   .channel-strip {
-    grid-template-rows: auto 170px auto auto auto;
+    grid-template-rows: auto 180px auto auto;
     padding: 10px;
   }
 

@@ -23,7 +23,19 @@ const state = {
     rig: "Venue box",
     console: "Console ready on Venue",
     hardware: "Akai EIE USB attached",
-    note: "Inputs are recognized and routed on Venue. This browser is the simple musician remote.",
+    note: "Venue owns inputs, house routing, and recording. This browser controls only the musician's personal mix.",
+  },
+  mix: {
+    name: "My Mix",
+    console: "Personal Console",
+    consoleOpen: false,
+    venueConsoleAssigned: true,
+    venueConsoleOpen: false,
+    assist: {
+      name: "Console Assist",
+      mode: "Listening",
+      detail: "Identifying channel tone and keeping the personal mix musical.",
+    },
   },
   session: {
     id: "session-1",
@@ -39,8 +51,6 @@ const state = {
     channel("guitar", "Guitar", "input-10", 54),
     channel("vocal", "Vocal", "input-11", 61),
     channel("acoustic", "Acoustic", "input-12", 50),
-    { ...channel("main", "Main", "main output", 46), type: "output" },
-    { ...channel("phones", "Phones", "phones output", 62), type: "output" },
   ],
   sets: [],
   log: [],
@@ -57,7 +67,7 @@ function channel(id, name, source, level) {
     level,
     muted: false,
     solo: false,
-    armed: id !== "main" && id !== "phones",
+    armed: true,
     eq: { enabled: false, tone: "flat", lowCut: false },
     comp: { enabled: false, amount: "off" },
   };
@@ -77,6 +87,7 @@ function snapshotUndo(label) {
     label,
     transport: state.transport,
     venue: structuredClone(state.venue),
+    mix: structuredClone(state.mix),
     session: structuredClone(state.session),
     channels: structuredClone(state.channels),
     sets: structuredClone(state.sets),
@@ -89,6 +100,7 @@ function undoLast() {
   if (!previous) return "Nothing to undo.";
   state.transport = previous.transport;
   state.venue = previous.venue;
+  state.mix = previous.mix;
   state.session = previous.session;
   state.channels = previous.channels;
   state.sets = previous.sets;
@@ -126,10 +138,13 @@ function createSession(name = "Untitled Session") {
   state.channels.forEach((item) => {
     item.muted = false;
     item.solo = false;
-    item.armed = item.type !== "output";
-    item.level = item.id === "main" ? 46 : item.id === "phones" ? 62 : item.level;
+    item.armed = true;
   });
-  return `New session opened. Venue kept the recognized channels ready.`;
+  state.mix.consoleOpen = false;
+  state.mix.venueConsoleOpen = false;
+  state.mix.assist.mode = "Listening";
+  state.mix.assist.detail = "Ready to shape the personal mix without touching the house.";
+  return `New session opened. Venue kept the musician mix faders ready.`;
 }
 
 function openPreviousSession() {
@@ -144,11 +159,11 @@ function openPreviousSession() {
       { id: "take-prev-3", name: "Acoustic overdub", status: "ready" },
     ],
   };
-  return "Previous session opened. The same Venue mix channels are ready.";
+  return "Previous session opened. The same musician mix faders are ready.";
 }
 
 function recordAll() {
-  const armed = allChannels().filter((item) => item.armed && item.type !== "output" && !item.children);
+  const armed = allChannels().filter((item) => item.armed && !item.children);
   state.transport = "Recording";
   state.session.takes.unshift({
     id: `take-${Date.now()}`,
@@ -166,6 +181,33 @@ function setChannelLevel(item, amount) {
 function setChannelLevelExact(item, level) {
   item.level = clamp(level);
   return `${item.name} level set to ${item.level}.`;
+}
+
+function openPersonalConsole() {
+  state.mix.consoleOpen = true;
+  state.mix.venueConsoleOpen = false;
+  return "Personal Console opened for this musician's mix only.";
+}
+
+function openVenueConsole() {
+  if (!state.mix.venueConsoleAssigned) return "Venue Console is not assigned on this device.";
+  state.mix.venueConsoleOpen = true;
+  state.mix.consoleOpen = false;
+  return "Assigned Venue Console opened for house and engineering control.";
+}
+
+function updateAssist(command) {
+  state.mix.assist.mode = "Listening";
+  if (command.includes("snare")) {
+    state.mix.assist.detail = "Snare target loaded: controlled crack, less ring, fitted compression and EQ.";
+    return "Console Assist is shaping the snare target.";
+  }
+  if (command.includes("kick")) {
+    state.mix.assist.detail = "Kick target loaded: tighter low end, clear attack, controlled gate and compression.";
+    return "Console Assist is shaping the kick target.";
+  }
+  state.mix.assist.detail = "Listening to channel tone and applying source-aware Console moves.";
+  return "Console Assist is listening and shaping the mix.";
 }
 
 function runCommand(rawCommand) {
@@ -202,7 +244,16 @@ function runCommand(rawCommand) {
     result = "Stopped.";
   } else if (command.includes("save this mix") || command.includes("save this setup") || command.includes("save setup")) {
     snapshotUndo("save mix");
-    result = "Saved the current Venue mix for this session.";
+    result = "Saved this musician's personal mix.";
+  } else if (command.includes("venue console") || command.includes("house console")) {
+    snapshotUndo("open venue console");
+    result = openVenueConsole();
+  } else if (command.includes("open console") || command.includes("my console") || command.includes("personal console")) {
+    snapshotUndo("open personal console");
+    result = openPersonalConsole();
+  } else if (command.includes("console assist") || command.includes("listen") || command.includes("shape") || command.includes("target")) {
+    snapshotUndo("console assist");
+    result = updateAssist(command);
   } else if (command.includes("move") && command.includes("set")) {
     snapshotUndo("move to set");
     state.session.mixed = true;
@@ -242,13 +293,15 @@ function runCommand(rawCommand) {
       snapshotUndo("compress channel");
       item.comp.enabled = true;
       item.comp.amount = command.includes("heavy") ? "heavy" : "medium";
-      result = `Compression set on ${item.name}.`;
+      state.mix.assist.detail = `${item.name} compression adjusted inside this musician's Console mix.`;
+      result = `Compression set on ${item.name} in this mix.`;
     } else if (command.includes("eq") || command.includes("bright") || command.includes("low end") || command.includes("mud")) {
       snapshotUndo("eq channel");
       item.eq.enabled = true;
       if (command.includes("bright")) item.eq.tone = "brighter";
       if (command.includes("low") || command.includes("mud")) item.eq.lowCut = true;
-      result = `EQ updated on ${item.name}.`;
+      state.mix.assist.detail = `${item.name} EQ adjusted inside this musician's Console mix.`;
+      result = `EQ updated on ${item.name} in this mix.`;
     } else {
       changed = false;
     }
@@ -263,6 +316,7 @@ function publicState() {
   return {
     transport: state.transport,
     venue: state.venue,
+    mix: state.mix,
     session: state.session,
     channels: state.channels,
     sets: state.sets,

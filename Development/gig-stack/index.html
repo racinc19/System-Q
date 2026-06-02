@@ -17,6 +17,7 @@
           <span id="venueStatus">Venue offline</span>
           <span id="consoleStatus">Console idle</span>
           <span id="transportStatus">Stopped</span>
+          <span id="consoleState">Faders</span>
           <span id="syncStatus">Local</span>
         </div>
       </section>
@@ -31,10 +32,9 @@
           <button type="button" data-command="new session">New session</button>
           <button type="button" data-command="open previous session">Open previous</button>
           <button type="button" data-command="record all">Record all</button>
-          <button type="button" data-command="play">Play</button>
-          <button type="button" data-command="stop">Stop</button>
           <button type="button" data-command="save this mix">Save mix</button>
-          <button type="button" data-command="move this session to set">To set</button>
+          <button type="button" data-command="open my console">My Console</button>
+          <button type="button" data-command="open venue console">Venue Console</button>
         </div>
       </section>
 
@@ -43,7 +43,7 @@
           <div class="panel-head">
             <div>
               <p class="eyebrow">Mix</p>
-              <h2>Channels</h2>
+              <h2 id="mixName">My Mix</h2>
             </div>
           </div>
           <div id="channelGrid" class="channel-grid"></div>
@@ -58,12 +58,17 @@
               </div>
             </div>
 
+            <div class="assist-card">
+              <strong id="assistStatus">Console Assist: Offline</strong>
+              <span id="assistDetail">Waiting for Venue.</span>
+            </div>
+
             <form id="commandForm" class="command-form">
               <input
                 id="commandInput"
                 type="text"
                 autocomplete="off"
-                placeholder="Try: make vocal louder"
+                placeholder="Try: more vocal in my mix"
                 aria-label="Command"
               />
               <button type="submit">Send</button>
@@ -71,11 +76,11 @@
 
             <div class="quick-commands" aria-label="Quick commands">
               <button type="button" data-command="open drums">Open drums</button>
-              <button type="button" data-command="mute guitar">Mute guitar</button>
+              <button type="button" data-command="open my console">My Console</button>
               <button type="button" data-command="make vocal louder">Vocal up</button>
-              <button type="button" data-command="compress bass">Bass comp</button>
-              <button type="button" data-command="brighten acoustic">Bright acoustic</button>
+              <button type="button" data-command="shape snare target">Snare assist</button>
               <button type="button" data-command="turn drums down">Drums down</button>
+              <button type="button" data-command="open venue console">Venue Console</button>
             </div>
 
             <ol id="commandLog" class="command-log" aria-label="Command log"></ol>
