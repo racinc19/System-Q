@@ -347,6 +347,18 @@ h2 {
   color: white;
 }
 
+.add-song-panel {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 12px;
+}
+
+.add-song-panel[hidden] {
+  display: none;
+}
+
 .session-list {
   display: grid;
   gap: 10px;
@@ -368,6 +380,22 @@ h2 {
 
 .song-card.active {
   box-shadow: inset 4px 0 0 var(--accent);
+}
+
+.song-card.remove-card {
+  border-color: rgba(163, 63, 55, 0.36);
+}
+
+.song-card.remove-card small {
+  color: var(--danger);
+}
+
+.song-card.add-card {
+  border-color: rgba(19, 113, 102, 0.36);
+}
+
+.song-card.add-card small {
+  color: var(--accent);
 }
 
 .session-card strong,

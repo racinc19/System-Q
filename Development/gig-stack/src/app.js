@@ -34,6 +34,8 @@ const state = structuredClone(fallbackState);
 const selectedBuildSongIds = new Set();
 let editingSessionId = "";
 let sessionTapTimer = 0;
+let editingSetId = "";
+let setTapTimer = 0;
 
 const els = {
   venueStatus: document.querySelector("#venueStatus"),
@@ -61,6 +63,14 @@ const els = {
   saveSessionTitleButton: document.querySelector("#saveSessionTitleButton"),
   cancelEditSessionButton: document.querySelector("#cancelEditSessionButton"),
   buildSetViewButton: document.querySelector("#buildSetViewButton"),
+  editSetPanel: document.querySelector("#editSetPanel"),
+  editSetNameInput: document.querySelector("#editSetNameInput"),
+  saveSetTitleButton: document.querySelector("#saveSetTitleButton"),
+  cancelEditSetButton: document.querySelector("#cancelEditSetButton"),
+  addSetSongsButton: document.querySelector("#addSetSongsButton"),
+  addSetSongsPanel: document.querySelector("#addSetSongsPanel"),
+  editSetSongs: document.querySelector("#editSetSongs"),
+  availableSetSongs: document.querySelector("#availableSetSongs"),
   sessionView: document.querySelector("#sessionView"),
   setView: document.querySelector("#setView"),
   buildSetView: document.querySelector("#buildSetView"),
@@ -218,10 +228,31 @@ function renderSetList() {
 
   els.setList.querySelectorAll("[data-set-id]").forEach((button) => {
     button.addEventListener("click", async () => {
-      await sendCommand(`open set ${button.dataset.setId}`);
-      openScreenView(els.setView);
+      const set = state.sets.find((item) => item.id === button.dataset.setId);
+      if (!set) return;
+      if (setTapTimer) {
+        window.clearTimeout(setTapTimer);
+        setTapTimer = 0;
+        openSetEditor(set);
+        return;
+      }
+      setTapTimer = window.setTimeout(async () => {
+        setTapTimer = 0;
+        await sendCommand(`open set ${button.dataset.setId}`);
+        openScreenView(els.setView);
+      }, 260);
     });
   });
+}
+
+function openSetEditor(set) {
+  editingSetId = set.id;
+  els.editSetNameInput.value = set.name;
+  els.editSetPanel.hidden = false;
+  els.addSetSongsPanel.hidden = true;
+  els.editSetNameInput.focus();
+  els.editSetNameInput.select();
+  renderEditSetSongs();
 }
 
 function renderActiveSetSongs() {
@@ -255,6 +286,68 @@ function renderActiveSetSongs() {
       </div>
     `
     : `<p class="empty-note">Choose a set to see its songs.</p>`;
+}
+
+function renderEditSetSongs() {
+  const set = state.sets.find((item) => item.id === editingSetId);
+  const setSongs = set?.songs || [];
+  const setSongIds = new Set(setSongs.map((item) => item.id));
+  const availableSessions = (state.sessions || []).filter((session) => !setSongIds.has(session.song?.id || session.id));
+
+  els.editSetSongs.innerHTML = set
+    ? `
+      <p class="empty-note">Tap a song to remove it from this set.</p>
+      ${
+        setSongs.length
+          ? setSongs.map((songItem) => `
+            <button class="session-card song-card remove-card" type="button" data-remove-set-song-id="${songItem.id}">
+              <div>
+                <strong>${songItem.name}</strong>
+                <span>${songItem.status} / ${songItem.length}</span>
+              </div>
+              <small>Remove</small>
+              <p>${songItem.key} / ${songItem.tempo}</p>
+            </button>
+          `).join("")
+          : `<p class="empty-note">No songs in this set.</p>`
+      }
+    `
+    : "";
+
+  els.availableSetSongs.innerHTML = availableSessions.length
+    ? availableSessions.map((session) => {
+      const songItem = session.song || { name: session.name, key: "-", tempo: 0, status: "ready", length: "--" };
+      return `
+        <button class="session-card song-card add-card" type="button" data-add-set-session-id="${session.id}">
+          <div>
+            <strong>${songItem.name}</strong>
+            <span>${songItem.status} / ${songItem.length}</span>
+          </div>
+          <small>Add</small>
+          <p>${songItem.key} / ${songItem.tempo}</p>
+        </button>
+      `;
+    }).join("")
+    : `<p class="empty-note">All session songs are already in this set.</p>`;
+
+  els.editSetSongs.querySelectorAll("[data-remove-set-song-id]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      await sendCommand(`remove set song ${editingSetId} :: ${button.dataset.removeSetSongId}`);
+      renderEditSetSongs();
+      openScreenView(els.setView);
+      els.editSetPanel.hidden = false;
+    });
+  });
+
+  els.availableSetSongs.querySelectorAll("[data-add-set-session-id]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      await sendCommand(`add set songs ${editingSetId} :: ${button.dataset.addSetSessionId}`);
+      renderEditSetSongs();
+      openScreenView(els.setView);
+      els.editSetPanel.hidden = false;
+      els.addSetSongsPanel.hidden = false;
+    });
+  });
 }
 
 function renderBuildSongList() {
@@ -346,6 +439,7 @@ function render() {
   renderSessionList();
   renderSetList();
   renderActiveSetSongs();
+  renderEditSetSongs();
   renderBuildSongList();
   renderSheetsList();
   renderChannels();
@@ -362,12 +456,17 @@ function closeScreenViews() {
     window.clearTimeout(sessionTapTimer);
     sessionTapTimer = 0;
   }
+  if (setTapTimer) {
+    window.clearTimeout(setTapTimer);
+    setTapTimer = 0;
+  }
   els.sessionView.hidden = true;
   els.setView.hidden = true;
   els.buildSetView.hidden = true;
   els.sheetsView.hidden = true;
   els.newSessionPanel.hidden = true;
   els.editSessionPanel.hidden = true;
+  els.editSetPanel.hidden = true;
   document.body.classList.remove("screen-open");
 }
 
@@ -435,11 +534,33 @@ els.newSessionNameInput.addEventListener("keydown", (event) => {
   if (event.key === "Escape") els.cancelNewSessionButton.click();
 });
 els.buildSetViewButton.addEventListener("click", () => {
+  els.editSetPanel.hidden = true;
   selectedBuildSongIds.clear();
   (state.sessions || []).forEach((session) => selectedBuildSongIds.add(session.id));
   els.buildSetNameInput.value = `${state.session.name} Set`;
   renderBuildSongList();
   openScreenView(els.buildSetView);
+});
+els.saveSetTitleButton.addEventListener("click", async () => {
+  const name = els.editSetNameInput.value.trim();
+  if (!editingSetId || !name) return;
+  await sendCommand(`rename set ${editingSetId} :: ${name}`);
+  els.editSetPanel.hidden = false;
+  openScreenView(els.setView);
+  els.editSetPanel.hidden = false;
+});
+els.cancelEditSetButton.addEventListener("click", () => {
+  editingSetId = "";
+  els.editSetNameInput.value = "";
+  els.editSetPanel.hidden = true;
+  els.addSetSongsPanel.hidden = true;
+});
+els.addSetSongsButton.addEventListener("click", () => {
+  els.addSetSongsPanel.hidden = !els.addSetSongsPanel.hidden;
+});
+els.editSetNameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") els.saveSetTitleButton.click();
+  if (event.key === "Escape") els.cancelEditSetButton.click();
 });
 els.closeSessionViewButton.addEventListener("click", closeScreenViews);
 els.closeSetViewButton.addEventListener("click", closeScreenViews);

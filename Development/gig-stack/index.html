@@ -107,6 +107,22 @@
         <div class="session-actions">
           <button id="buildSetViewButton" type="button">Build From Session</button>
         </div>
+        <div id="editSetPanel" class="inline-panel" hidden>
+          <label class="name-field" for="editSetNameInput">
+            <span>Edit Set</span>
+            <input id="editSetNameInput" type="text" autocomplete="off" />
+          </label>
+          <div class="inline-actions">
+            <button id="saveSetTitleButton" type="button">Save</button>
+            <button id="addSetSongsButton" type="button">Add Songs</button>
+            <button id="cancelEditSetButton" type="button">Cancel</button>
+          </div>
+          <div id="editSetSongs" class="session-list compact-list"></div>
+          <div id="addSetSongsPanel" class="add-song-panel" hidden>
+            <p class="eyebrow">Available Songs</p>
+            <div id="availableSetSongs" class="session-list compact-list"></div>
+          </div>
+        </div>
         <div id="setList" class="session-list"></div>
         <div id="activeSetSongs" class="set-song-list"></div>
       </section>

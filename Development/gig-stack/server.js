@@ -307,6 +307,48 @@ function openSetById(id) {
   return `${set.name} selected.`;
 }
 
+function renameSetById(id, name) {
+  const nextName = String(name || "").trim();
+  const set = state.sets.find((item) => item.id === id);
+  if (!set) return "Set not found.";
+  if (!nextName) return "Set title is blank.";
+  state.sets = state.sets.map((item) => (
+    item.id === id ? { ...item, name: nextName, updated: "Now" } : item
+  ));
+  return `Set renamed ${nextName}.`;
+}
+
+function removeSetSong(setId, songId) {
+  const set = state.sets.find((item) => item.id === setId);
+  if (!set) return "Set not found.";
+  const songs = set.songs || [];
+  const nextSongs = songs.filter((item) => item.id !== songId);
+  if (nextSongs.length === songs.length) return "Song not found in set.";
+  state.sets = state.sets.map((item) => (
+    item.id === setId ? { ...item, songs: nextSongs, updated: "Now" } : item
+  ));
+  return "Song removed from set.";
+}
+
+function addSetSongs(setId, sessionIds) {
+  const set = state.sets.find((item) => item.id === setId);
+  if (!set) return "Set not found.";
+  const requested = new Set(sessionIds.filter(Boolean));
+  const existing = new Set((set.songs || []).map((item) => item.id));
+  const additions = state.sessions
+    .filter((session) => requested.has(session.id))
+    .map((session) => session.song || song(session.id, session.name, "-", 0, "ready", "--"))
+    .filter((item) => !existing.has(item.id));
+
+  if (!additions.length) return "No new songs to add.";
+  state.sets = state.sets.map((item) => (
+    item.id === setId
+      ? { ...item, songs: [...(item.songs || []), ...structuredClone(additions)], updated: "Now" }
+      : item
+  ));
+  return `${additions.length} songs added to set.`;
+}
+
 function openSheetById(id) {
   const sheet = state.sheets.find((item) => item.id === id);
   if (!sheet) return "Sheet not found.";
@@ -433,6 +475,21 @@ function runCommand(rawCommand) {
   } else if (command.startsWith("open set ")) {
     snapshotUndo("open set");
     result = openSetById(rawCommand.replace(/open set/i, "").trim());
+  } else if (command.startsWith("rename set ")) {
+    snapshotUndo("rename set");
+    const payload = rawCommand.replace(/rename set/i, "").trim();
+    const [idPart, namePart] = payload.includes("::") ? payload.split("::") : ["", payload];
+    result = renameSetById(idPart.trim(), namePart);
+  } else if (command.startsWith("remove set song ")) {
+    snapshotUndo("remove set song");
+    const payload = rawCommand.replace(/remove set song/i, "").trim();
+    const [setId, songId] = payload.includes("::") ? payload.split("::") : ["", ""];
+    result = removeSetSong(setId.trim(), songId.trim());
+  } else if (command.startsWith("add set songs ")) {
+    snapshotUndo("add set songs");
+    const payload = rawCommand.replace(/add set songs/i, "").trim();
+    const [setId, idsPart] = payload.includes("::") ? payload.split("::") : ["", ""];
+    result = addSetSongs(setId.trim(), idsPart.split(",").map((item) => item.trim()));
   } else if (command.startsWith("open sheet ")) {
     snapshotUndo("open sheet");
     result = openSheetById(rawCommand.replace(/open sheet/i, "").trim());
