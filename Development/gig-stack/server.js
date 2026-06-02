@@ -275,6 +275,27 @@ function openSessionById(id) {
   return `${saved.name} opened.`;
 }
 
+function renameSessionById(id, name) {
+  const nextName = String(name || "").trim();
+  const saved = state.sessions.find((item) => item.id === id);
+  if (!saved) return "Session not found.";
+  if (!nextName) return "Session title is blank.";
+
+  const renamed = {
+    ...saved,
+    name: nextName,
+    updated: "Now",
+    song: { ...(saved.song || song(saved.id, nextName, "-", 0, "ready", "--")), name: nextName },
+  };
+
+  state.sessions = state.sessions.map((item) => (item.id === id ? renamed : item));
+  if (state.session.id === id) {
+    state.session.name = nextName;
+    state.session.song = structuredClone(renamed.song);
+  }
+  return `Session renamed ${nextName}.`;
+}
+
 function openSetById(id) {
   const set = state.sets.find((item) => item.id === id);
   if (!set) return "Set not found.";
@@ -404,6 +425,11 @@ function runCommand(rawCommand) {
   } else if (command.startsWith("open session ")) {
     snapshotUndo("open session");
     result = openSessionById(rawCommand.replace(/open session/i, "").trim());
+  } else if (command.startsWith("rename session ")) {
+    snapshotUndo("rename session");
+    const payload = rawCommand.replace(/rename session/i, "").trim();
+    const [idPart, namePart] = payload.includes("::") ? payload.split("::") : ["", payload];
+    result = renameSessionById(idPart.trim(), namePart);
   } else if (command.startsWith("open set ")) {
     snapshotUndo("open set");
     result = openSetById(rawCommand.replace(/open set/i, "").trim());

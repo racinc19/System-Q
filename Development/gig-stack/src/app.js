@@ -32,6 +32,8 @@ const fallbackState = {
 
 const state = structuredClone(fallbackState);
 const selectedBuildSongIds = new Set();
+let editingSessionId = "";
+let sessionTapTimer = 0;
 
 const els = {
   venueStatus: document.querySelector("#venueStatus"),
@@ -54,6 +56,10 @@ const els = {
   newSessionNameInput: document.querySelector("#newSessionNameInput"),
   createSessionButton: document.querySelector("#createSessionButton"),
   cancelNewSessionButton: document.querySelector("#cancelNewSessionButton"),
+  editSessionPanel: document.querySelector("#editSessionPanel"),
+  editSessionNameInput: document.querySelector("#editSessionNameInput"),
+  saveSessionTitleButton: document.querySelector("#saveSessionTitleButton"),
+  cancelEditSessionButton: document.querySelector("#cancelEditSessionButton"),
   buildSetViewButton: document.querySelector("#buildSetViewButton"),
   sessionView: document.querySelector("#sessionView"),
   setView: document.querySelector("#setView"),
@@ -168,10 +174,30 @@ function renderSessionList() {
 
   els.sessionList.querySelectorAll("[data-session-id]").forEach((button) => {
     button.addEventListener("click", async () => {
-      await sendCommand(`open session ${button.dataset.sessionId}`);
-      closeScreenViews();
+      const session = state.sessions.find((item) => item.id === button.dataset.sessionId);
+      if (!session) return;
+      if (sessionTapTimer) {
+        window.clearTimeout(sessionTapTimer);
+        sessionTapTimer = 0;
+        openSessionEditor(session);
+        return;
+      }
+      sessionTapTimer = window.setTimeout(async () => {
+        sessionTapTimer = 0;
+        await sendCommand(`open session ${button.dataset.sessionId}`);
+        closeScreenViews();
+      }, 260);
     });
   });
+}
+
+function openSessionEditor(session) {
+  editingSessionId = session.id;
+  els.newSessionPanel.hidden = true;
+  els.editSessionPanel.hidden = false;
+  els.editSessionNameInput.value = session.name;
+  els.editSessionNameInput.focus();
+  els.editSessionNameInput.select();
 }
 
 function renderSetList() {
@@ -332,10 +358,16 @@ function openScreenView(view) {
 }
 
 function closeScreenViews() {
+  if (sessionTapTimer) {
+    window.clearTimeout(sessionTapTimer);
+    sessionTapTimer = 0;
+  }
   els.sessionView.hidden = true;
   els.setView.hidden = true;
   els.buildSetView.hidden = true;
   els.sheetsView.hidden = true;
+  els.newSessionPanel.hidden = true;
+  els.editSessionPanel.hidden = true;
   document.body.classList.remove("screen-open");
 }
 
@@ -364,6 +396,7 @@ els.saveSessionNoteButton.addEventListener("click", () => {
   sendCommand(`set session note ${els.sessionNoteInput.value.trim()}`);
 });
 els.newSessionButton.addEventListener("click", () => {
+  els.editSessionPanel.hidden = true;
   els.newSessionPanel.hidden = false;
   els.newSessionNameInput.value = "";
   els.newSessionNameInput.focus();
@@ -378,6 +411,24 @@ els.createSessionButton.addEventListener("click", async () => {
 els.cancelNewSessionButton.addEventListener("click", () => {
   els.newSessionNameInput.value = "";
   els.newSessionPanel.hidden = true;
+});
+els.saveSessionTitleButton.addEventListener("click", async () => {
+  const name = els.editSessionNameInput.value.trim();
+  if (!editingSessionId || !name) return;
+  await sendCommand(`rename session ${editingSessionId} :: ${name}`);
+  editingSessionId = "";
+  els.editSessionNameInput.value = "";
+  els.editSessionPanel.hidden = true;
+  openScreenView(els.sessionView);
+});
+els.cancelEditSessionButton.addEventListener("click", () => {
+  editingSessionId = "";
+  els.editSessionNameInput.value = "";
+  els.editSessionPanel.hidden = true;
+});
+els.editSessionNameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") els.saveSessionTitleButton.click();
+  if (event.key === "Escape") els.cancelEditSessionButton.click();
 });
 els.newSessionNameInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") els.createSessionButton.click();
