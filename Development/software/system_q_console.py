@@ -26,7 +26,11 @@ class ConsoleApp(UIMixin):
         self.root = root
         self._internal_capture = internal_capture
         self._startup_play = bool(startup_play)
-        self.root.title(f"System Q Console · {SYSTEM_Q_BUILD_ID}")
+        instance_label = os.environ.get("SYSTEM_Q_CONSOLE_LABEL", "").strip()
+        instance_mode = os.environ.get("SYSTEM_Q_CONSOLE_MODE", "").strip()
+        title_scope = f" · {instance_label}" if instance_label else ""
+        title_mode = f" · {instance_mode}" if instance_mode and instance_mode != "personal" else ""
+        self.root.title(f"System Q Console{title_scope}{title_mode} · {SYSTEM_Q_BUILD_ID}")
         self.root.geometry("1560x960")
         self.root.configure(bg="#222831")
         
@@ -85,7 +89,8 @@ def main() -> None:
             logging.StreamHandler(sys.stdout)
         ]
     )
-    _log.info(f"System Q Console Starting. Build: {SYSTEM_Q_BUILD_ID}")
+    instance = os.environ.get("SYSTEM_Q_CONSOLE_INSTANCE", "standalone")
+    _log.info(f"System Q Console Starting. Build: {SYSTEM_Q_BUILD_ID}. Instance: {instance}")
     root = tk.Tk()
     app = ConsoleApp(root)
     root.mainloop()

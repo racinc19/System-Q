@@ -7,7 +7,7 @@ const PORT = Number(process.env.PORT || 4180);
 const ROOT = __dirname;
 const SOFTWARE_ROOT = path.resolve(ROOT, "..", "software");
 const SYSTEM_Q_CONSOLE_SCRIPT = path.join(SOFTWARE_ROOT, "system_q_console.py");
-let systemQConsoleProcess = null;
+const systemQConsoleInstances = new Map();
 
 const DRUM_CHILDREN = [
   channel("kick", "Kick", "input-1", 62),
@@ -430,16 +430,40 @@ function setMasterLevelExact(level) {
   return `Master volume set.`;
 }
 
-function systemQConsoleIsRunning() {
-  return systemQConsoleProcess && systemQConsoleProcess.exitCode === null && !systemQConsoleProcess.killed;
+function cleanConsoleInstanceId(value) {
+  return String(value || "musician")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48) || "musician";
 }
 
-function launchSystemQConsole(mode) {
+function consoleInstanceKey(mode, context = {}) {
+  if (mode === "venue") return "venue";
+  return `personal:${cleanConsoleInstanceId(context.mixId || context.clientId)}`;
+}
+
+function consoleInstanceLabel(mode, context = {}) {
+  if (mode === "venue") return "Venue";
+  return cleanConsoleInstanceId(context.mixId || context.clientId).replace(/-/g, " ");
+}
+
+function systemQConsoleIsRunning(key) {
+  const child = systemQConsoleInstances.get(key);
+  return child && child.exitCode === null && !child.killed;
+}
+
+function launchSystemQConsole(mode, context = {}) {
   if (!fs.existsSync(SYSTEM_Q_CONSOLE_SCRIPT)) {
     return `System Q Console not found at ${SYSTEM_Q_CONSOLE_SCRIPT}.`;
   }
-  if (systemQConsoleIsRunning()) {
-    return "System Q Console is already open.";
+  const key = consoleInstanceKey(mode, context);
+  const label = consoleInstanceLabel(mode, context);
+  if (systemQConsoleIsRunning(key)) {
+    return mode === "venue"
+      ? "Venue Console is already open."
+      : `Console is already open for ${label}.`;
   }
 
   const python = process.env.SYSTEM_Q_PYTHON || "py";
@@ -454,38 +478,48 @@ function launchSystemQConsole(mode) {
       detached: true,
       stdio: "ignore",
       windowsHide: false,
+      env: {
+        ...process.env,
+        SYSTEM_Q_CONSOLE_INSTANCE: key,
+        SYSTEM_Q_CONSOLE_LABEL: label,
+        SYSTEM_Q_CONSOLE_MODE: mode,
+      },
     });
 
-    systemQConsoleProcess = child;
+    systemQConsoleInstances.set(key, child);
     child.once("exit", () => {
-      if (systemQConsoleProcess === child) systemQConsoleProcess = null;
+      if (systemQConsoleInstances.get(key) === child) systemQConsoleInstances.delete(key);
     });
     child.once("error", (error) => {
-      if (systemQConsoleProcess === child) systemQConsoleProcess = null;
+      if (systemQConsoleInstances.get(key) === child) systemQConsoleInstances.delete(key);
       console.error(`System Q Console launch failed: ${error.message}`);
     });
     child.unref();
 
     return mode === "venue"
       ? "System Q Console launched for Venue control."
-      : "System Q Console launched for this musician.";
+      : `System Q Console launched for ${label}.`;
   } catch (error) {
-    systemQConsoleProcess = null;
+    systemQConsoleInstances.delete(key);
     return `Could not launch System Q Console: ${error.message}`;
   }
 }
 
-function openPersonalConsole() {
+function openPersonalConsole(context = {}) {
   state.mix.consoleOpen = true;
   state.mix.venueConsoleOpen = false;
-  return launchSystemQConsole("personal");
+  const result = launchSystemQConsole("personal", context);
+  state.venue.console = result;
+  return result;
 }
 
-function openVenueConsole() {
+function openVenueConsole(context = {}) {
   if (!state.mix.venueConsoleAssigned) return "Venue Console is not assigned on this device.";
   state.mix.venueConsoleOpen = true;
   state.mix.consoleOpen = false;
-  return launchSystemQConsole("venue");
+  const result = launchSystemQConsole("venue", context);
+  state.venue.console = result;
+  return result;
 }
 
 function updateAssist(command) {
@@ -512,7 +546,7 @@ function requestNewTrack(command) {
   return `${name} track requested. Waiting for Venue Console to arm.`;
 }
 
-function runCommand(rawCommand) {
+function runCommand(rawCommand, context = {}) {
   const command = String(rawCommand || "").trim().toLowerCase();
   if (!command) return { result: "No command.", changed: false };
 
@@ -675,10 +709,10 @@ function runCommand(rawCommand) {
     result = setMasterLevelExact(level);
   } else if (command.includes("venue console") || command.includes("house console")) {
     snapshotUndo("open venue console");
-    result = openVenueConsole();
+    result = openVenueConsole(context);
   } else if (command.includes("open console") || command.includes("my console") || command.includes("personal console")) {
     snapshotUndo("open personal console");
-    result = openPersonalConsole();
+    result = openPersonalConsole(context);
   } else if (command.includes("console assist") || command.includes("listen") || command.includes("shape") || command.includes("target")) {
     snapshotUndo("console assist");
     result = updateAssist(command);
@@ -850,7 +884,10 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "POST" && url.pathname === "/api/command") {
       const body = await readJson(req);
-      const outcome = runCommand(body.command);
+      const outcome = runCommand(body.command, {
+        clientId: body.clientId,
+        mixId: body.mixId,
+      });
       sendJson(res, 200, { ...outcome, state: publicState() });
       return;
     }

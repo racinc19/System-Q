@@ -49,6 +49,16 @@ let activeSheetSongId = "";
 let sheetMode = "chart";
 let sheetSize = 1;
 let transposeSteps = 0;
+const clientId = getClientId();
+
+function getClientId() {
+  const key = "gig-client-id";
+  const existing = window.localStorage.getItem(key);
+  if (existing) return existing;
+  const next = `musician-${Math.random().toString(36).slice(2, 8)}`;
+  window.localStorage.setItem(key, next);
+  return next;
+}
 
 const els = {
   venueStatus: document.querySelector("#venueStatus"),
@@ -149,7 +159,7 @@ function applyServerState(nextState) {
 
 async function sendCommand(command) {
   if (!command.trim() || !state.connected) return;
-  const response = await postJson("/api/command", { command });
+  const response = await postJson("/api/command", { command, clientId, mixId: clientId });
   applyServerState(response.state);
 }
 
