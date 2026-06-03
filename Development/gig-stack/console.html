@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Console</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body class="console-body">
+    <main class="console-shell">
+      <header class="console-topbar">
+        <div>
+          <p class="eyebrow">Console</p>
+          <h1 id="consoleTitle">My Mix</h1>
+        </div>
+        <div class="console-actions">
+          <button id="backToGigButton" type="button">Mix</button>
+          <button id="consoleAssistButton" type="button">AI</button>
+          <button id="saveConsoleMixButton" type="button">Save</button>
+        </div>
+      </header>
+
+      <section class="console-master" aria-label="Console master">
+        <div>
+          <strong>Master</strong>
+          <span id="consoleSession">No session</span>
+        </div>
+        <input id="consoleMasterFader" type="range" min="0" max="100" />
+        <button id="consoleMasterMuteButton" type="button">Mute</button>
+      </section>
+
+      <section class="console-grid" aria-label="Console channels" id="consoleGrid"></section>
+
+      <form id="consoleCommandForm" class="console-command">
+        <button id="consoleOrb" class="voice-orb" type="button" aria-label="Console voice"></button>
+        <input id="consoleCommandInput" type="text" autocomplete="off" placeholder="Say or type a Console move" />
+        <button type="submit">Send</button>
+      </form>
+    </main>
+
+    <script src="src/console.js"></script>
+  </body>
+</html>

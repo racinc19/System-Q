@@ -508,7 +508,8 @@ function launchSystemQConsole(mode, context = {}) {
 function openPersonalConsole(context = {}) {
   state.mix.consoleOpen = true;
   state.mix.venueConsoleOpen = false;
-  const result = launchSystemQConsole("personal", context);
+  const label = consoleInstanceLabel("personal", context);
+  const result = `Console opened on this iPad for ${label}.`;
   state.venue.console = result;
   return result;
 }

@@ -84,6 +84,7 @@ const els = {
   sessionViewButton: document.querySelector("#sessionViewButton"),
   setViewButton: document.querySelector("#setViewButton"),
   sheetsViewButton: document.querySelector("#sheetsViewButton"),
+  openConsoleButton: document.querySelector("#openConsoleButton"),
   newSessionButton: document.querySelector("#newSessionButton"),
   newSessionPanel: document.querySelector("#newSessionPanel"),
   newSessionNameInput: document.querySelector("#newSessionNameInput"),
@@ -161,6 +162,10 @@ async function sendCommand(command) {
   if (!command.trim() || !state.connected) return;
   const response = await postJson("/api/command", { command, clientId, mixId: clientId });
   applyServerState(response.state);
+}
+
+function openConsoleOnDevice() {
+  window.location.href = `console.html?mixId=${encodeURIComponent(clientId)}`;
 }
 
 function songCount(songs) {
@@ -700,6 +705,7 @@ els.sheetsViewButton.addEventListener("click", () => {
   renderSheetsList();
   openScreenView(els.sheetsView);
 });
+els.openConsoleButton.addEventListener("click", openConsoleOnDevice);
 els.saveSessionNoteButton.addEventListener("click", () => {
   sendCommand(`set session note ${els.sessionNoteInput.value.trim()}`);
 });
