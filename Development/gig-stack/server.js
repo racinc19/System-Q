@@ -1,9 +1,13 @@
 const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
+const { spawn } = require("node:child_process");
 
 const PORT = Number(process.env.PORT || 4180);
 const ROOT = __dirname;
+const SOFTWARE_ROOT = path.resolve(ROOT, "..", "software");
+const SYSTEM_Q_CONSOLE_SCRIPT = path.join(SOFTWARE_ROOT, "system_q_console.py");
+let systemQConsoleProcess = null;
 
 const DRUM_CHILDREN = [
   channel("kick", "Kick", "input-1", 62),
@@ -426,17 +430,62 @@ function setMasterLevelExact(level) {
   return `Master volume set.`;
 }
 
+function systemQConsoleIsRunning() {
+  return systemQConsoleProcess && systemQConsoleProcess.exitCode === null && !systemQConsoleProcess.killed;
+}
+
+function launchSystemQConsole(mode) {
+  if (!fs.existsSync(SYSTEM_Q_CONSOLE_SCRIPT)) {
+    return `System Q Console not found at ${SYSTEM_Q_CONSOLE_SCRIPT}.`;
+  }
+  if (systemQConsoleIsRunning()) {
+    return "System Q Console is already open.";
+  }
+
+  const python = process.env.SYSTEM_Q_PYTHON || "py";
+  const executable = path.basename(python).toLowerCase();
+  const args = executable === "py" || executable === "py.exe"
+    ? ["-3", SYSTEM_Q_CONSOLE_SCRIPT]
+    : [SYSTEM_Q_CONSOLE_SCRIPT];
+
+  try {
+    const child = spawn(python, args, {
+      cwd: SOFTWARE_ROOT,
+      detached: true,
+      stdio: "ignore",
+      windowsHide: false,
+    });
+
+    systemQConsoleProcess = child;
+    child.once("exit", () => {
+      if (systemQConsoleProcess === child) systemQConsoleProcess = null;
+    });
+    child.once("error", (error) => {
+      if (systemQConsoleProcess === child) systemQConsoleProcess = null;
+      console.error(`System Q Console launch failed: ${error.message}`);
+    });
+    child.unref();
+
+    return mode === "venue"
+      ? "System Q Console launched for Venue control."
+      : "System Q Console launched for this musician.";
+  } catch (error) {
+    systemQConsoleProcess = null;
+    return `Could not launch System Q Console: ${error.message}`;
+  }
+}
+
 function openPersonalConsole() {
   state.mix.consoleOpen = true;
   state.mix.venueConsoleOpen = false;
-  return "Personal Console opened for this musician's mix only.";
+  return launchSystemQConsole("personal");
 }
 
 function openVenueConsole() {
   if (!state.mix.venueConsoleAssigned) return "Venue Console is not assigned on this device.";
   state.mix.venueConsoleOpen = true;
   state.mix.consoleOpen = false;
-  return "Assigned Venue Console opened for house and engineering control.";
+  return launchSystemQConsole("venue");
 }
 
 function updateAssist(command) {

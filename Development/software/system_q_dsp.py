@@ -6,7 +6,8 @@ import time
 import numpy as np
 import sounddevice as sd
 import soundfile as sf
-from scipy.signal import butter, sosfilt, sosfilt_zi
+from scipy.signal import butter, resample_poly, sosfilt, sosfilt_zi
+import system_q_core as core
 from system_q_core import (
     _log, SAMPLE_RATE, BLOCK_SIZE, POL_BANDS, ROOT_DIR, STEMS_DIR,
     CHANNEL_LAYOUT, LOG_LOW, LOG_HIGH, POL_LOW_HZ, POL_HIGH_HZ,
@@ -17,10 +18,13 @@ from system_q_core import (
 class ConsoleEngine:
     def __init__(self) -> None:
         ensure_demo_stems()
+        self.stream = None
+        self.output_device = self._select_output_device()
+        self.output_device_name = self._output_device_name(self.output_device)
+        self.sample_rate = self._select_sample_rate(self.output_device)
         self.channels = [self._load_channel(name, STEMS_DIR / filename) for name, filename in CHANNEL_LAYOUT]
         self.master_channel = ChannelState(name="Master", path=ROOT_DIR / "master_bus")
         self.master_channel.pre_enabled = False
-        self.stream = None
         self.playing = False
         self.loop = False
         self.recording = False
@@ -35,8 +39,6 @@ class ConsoleEngine:
         self.scrub_audition_freeze = False
         self.master_gain = 0.82
         self.master_level = 0.0
-        self.output_device = self._select_output_device()
-        self.output_device_name = self._output_device_name(self.output_device)
         self.output_peak = 0.0
         self._lock = threading.Lock()
         self.generator_mode = "none"
@@ -87,11 +89,20 @@ class ConsoleEngine:
 
     def _load_channel(self, name: str, path: Path) -> ChannelState:
         data, sr = sf.read(str(path), dtype="float32", always_2d=True)
-        if sr != SAMPLE_RATE: raise ValueError(f"SR mismatch: {sr}")
+        if int(round(sr)) != SAMPLE_RATE:
+            _log.info(f"AUDIO_RESAMPLE: {name} {sr} -> {SAMPLE_RATE}")
+            data = self._resample_audio(data, int(round(sr)), SAMPLE_RATE)
         if data.shape[1] == 1: data = np.repeat(data, 2, axis=1)
         ch = ChannelState(name=name, path=path, audio=data[:, :2].astype(np.float32))
         ch.wave_preview = self._build_wave_preview(ch.audio)
         return ch
+
+    @staticmethod
+    def _resample_audio(data: np.ndarray, source_rate: int, target_rate: int) -> np.ndarray:
+        divisor = math.gcd(source_rate, target_rate)
+        up = target_rate // divisor
+        down = source_rate // divisor
+        return resample_poly(data, up, down, axis=0).astype(np.float32)
 
     @staticmethod
     def _build_wave_preview(audio: np.ndarray, buckets: int = 512) -> np.ndarray:
@@ -122,37 +133,89 @@ class ConsoleEngine:
         devices = sd.query_devices()
         if requested:
             for i, dev in enumerate(devices):
-                if dev.get("max_output_channels", 0) > 0 and requested.lower() in str(dev.get("name", "")).lower():
+                if dev.get("max_output_channels", 0) >= 2 and requested.lower() in str(dev.get("name", "")).lower() and self._output_device_works(i, SAMPLE_RATE):
                     return i
             try:
-                return int(requested)
+                requested_index = int(requested)
+                if self._output_device_works(requested_index, SAMPLE_RATE):
+                    return requested_index
             except ValueError:
                 _log.warning(f"AUDIO_OUTPUT_DEVICE_NOT_FOUND: {requested}")
         default_out = sd.default.device[1] if isinstance(sd.default.device, (list, tuple)) else sd.default.device
         try:
+            default_index = int(default_out)
+            if self._output_device_works(default_index, SAMPLE_RATE):
+                return default_index
+        except Exception:
+            pass
+        try:
             default_name = str(sd.query_devices(int(default_out)).get("name", ""))
         except Exception:
             default_name = ""
+        for preferred in ("EIE", "Realtek", "Primary Sound"):
+            for i, dev in enumerate(devices):
+                name = str(dev.get("name", ""))
+                if dev.get("max_output_channels", 0) >= 2 and preferred.lower() in name.lower() and self._output_device_works(i, SAMPLE_RATE):
+                    return i
         for i, dev in enumerate(devices):
             name = str(dev.get("name", ""))
             hostapi = sd.query_hostapis(int(dev.get("hostapi", -1))).get("name", "") if int(dev.get("hostapi", -1)) >= 0 else ""
-            if dev.get("max_output_channels", 0) >= 2 and "WASAPI" in str(hostapi):
+            if dev.get("max_output_channels", 0) >= 2 and "WASAPI" in str(hostapi) and self._output_device_works(i, SAMPLE_RATE):
                 if default_name and default_name.split(",")[0].lower() in name.lower():
-                    return i
-        for preferred in ("Realtek", "Primary Sound"):
-            for i, dev in enumerate(devices):
-                name = str(dev.get("name", ""))
-                hostapi = sd.query_hostapis(int(dev.get("hostapi", -1))).get("name", "") if int(dev.get("hostapi", -1)) >= 0 else ""
-                if dev.get("max_output_channels", 0) >= 2 and "WASAPI" in str(hostapi) and preferred.lower() in name.lower():
                     return i
         for i, dev in enumerate(devices):
             hostapi = sd.query_hostapis(int(dev.get("hostapi", -1))).get("name", "") if int(dev.get("hostapi", -1)) >= 0 else ""
-            if dev.get("max_output_channels", 0) >= 2 and "WASAPI" in str(hostapi):
+            if dev.get("max_output_channels", 0) >= 2 and "WASAPI" in str(hostapi) and self._output_device_works(i, SAMPLE_RATE):
                 return i
         try:
             return int(default_out)
         except Exception:
             return None
+
+    @staticmethod
+    def _output_device_works(device: int | None, sample_rate: int) -> bool:
+        try:
+            stream = sd.OutputStream(device=device, samplerate=sample_rate, channels=2, dtype="float32", blocksize=BLOCK_SIZE)
+            stream.close()
+            return True
+        except Exception:
+            return False
+
+    def _select_sample_rate(self, device: int | None) -> int:
+        global SAMPLE_RATE
+
+        requested = os.environ.get("SYSTEM_Q_SAMPLE_RATE", "").strip()
+        if requested:
+            try:
+                sample_rate = int(float(requested))
+                if not self._output_device_works(device, sample_rate):
+                    raise RuntimeError("output device did not open")
+                SAMPLE_RATE = sample_rate
+                core.SAMPLE_RATE = sample_rate
+                _log.info(f"AUDIO_SAMPLE_RATE: requested={sample_rate}")
+                return sample_rate
+            except Exception as exc:
+                _log.warning(f"AUDIO_SAMPLE_RATE_REQUEST_FAILED: {requested} ({exc})")
+
+        if self._output_device_works(device, SAMPLE_RATE):
+            _log.info(f"AUDIO_SAMPLE_RATE: project={SAMPLE_RATE}")
+            return SAMPLE_RATE
+        _log.warning(f"AUDIO_SAMPLE_RATE_PROJECT_UNAVAILABLE: {SAMPLE_RATE}")
+
+        try:
+            if device is not None:
+                sample_rate = int(round(float(sd.query_devices(device).get("default_samplerate", SAMPLE_RATE))))
+            else:
+                sample_rate = int(round(float(sd.query_devices(kind="output").get("default_samplerate", SAMPLE_RATE))))
+            if not self._output_device_works(device, sample_rate):
+                raise RuntimeError("output device did not open")
+            SAMPLE_RATE = sample_rate
+            core.SAMPLE_RATE = sample_rate
+            _log.info(f"AUDIO_SAMPLE_RATE: device_default={sample_rate}")
+            return sample_rate
+        except Exception as exc:
+            _log.warning(f"AUDIO_SAMPLE_RATE_DEFAULT_FAILED: {exc}")
+            return SAMPLE_RATE
 
     def _output_device_name(self, device: int | None) -> str:
         try:
